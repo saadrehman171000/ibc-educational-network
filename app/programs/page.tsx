@@ -1,333 +1,345 @@
+"use client"
+
+import { useState, useEffect } from "react"
+import { Calendar, MapPin, Clock, Users, Star, ChevronRight } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import { Star, BookOpen, Award, Users, Calendar, MapPin } from "lucide-react"
+
+interface Event {
+  id: string
+  title: string
+  description: string
+  fullDescription?: string
+  date: string
+  endDate?: string
+  time: string
+  location: string
+  address?: string
+  image?: string
+  gallery: string[]
+  category: string
+  status: string
+  featured: boolean
+  tags: string[]
+  requirements: string[]
+  agenda?: any[]
+  organizer?: string
+  contact?: string
+  phone?: string
+  website?: string
+  createdAt: string
+}
+
+interface Pagination {
+  page: number
+  limit: number
+  totalCount: number
+  totalPages: number
+  hasNext: boolean
+  hasPrev: boolean
+}
 
 export default function ProgramsPage() {
-  const events = [
-    {
-      title: "Educational Expo 2024",
-      date: "March 15-17, 2024",
-      location: "Expo Center Karachi",
-      description: "Join us at Pakistan's largest educational exhibition.",
-    },
-    {
-      title: "Teacher Training Workshop",
-      date: "April 20, 2024",
-      location: "IBC Head Office",
-      description: "Professional development workshop for educators.",
-    },
-    {
-      title: "Student Competition",
-      date: "May 10, 2024",
-      location: "Various Schools",
-      description: "Inter-school academic competition for all grades.",
-    },
-  ]
+  const [events, setEvents] = useState<Event[]>([])
+  const [pagination, setPagination] = useState<Pagination | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [selectedCategory, setSelectedCategory] = useState("")
+  const [selectedStatus, setSelectedStatus] = useState("upcoming")
+
+  // Fetch events
+  const fetchEvents = async (page = 1) => {
+    setLoading(true)
+    try {
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: '9',
+        ...(selectedCategory && { category: selectedCategory }),
+        ...(selectedStatus && { status: selectedStatus }),
+      })
+
+      const response = await fetch(`/api/events?${params}`)
+      const data = await response.json()
+
+      setEvents(data.events || [])
+      setPagination(data.pagination)
+    } catch (error) {
+      console.error('Error fetching events:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchEvents(1)
+  }, [selectedCategory, selectedStatus])
+
+  // Get unique categories from events
+  const categories = [...new Set(events.map(event => event.category))].filter(Boolean)
+
+  const getStatusColor = (status: string) => {
+    switch (status.toLowerCase()) {
+      case 'upcoming':
+        return 'bg-blue-100 text-blue-800'
+      case 'ongoing':
+        return 'bg-green-100 text-green-800'
+      case 'completed':
+        return 'bg-gray-100 text-gray-800'
+      case 'cancelled':
+        return 'bg-red-100 text-red-800'
+      default:
+        return 'bg-gray-100 text-gray-800'
+    }
+  }
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <section className="bg-blue-900 text-white section-padding">
+      <section className="bg-gradient-to-r from-blue-900 to-blue-800 text-white py-16">
         <div className="container-max text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">Our Educational Programs</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">Educational Programs & Events</h1>
           <p className="text-xl text-blue-100 max-w-3xl mx-auto">
-            Comprehensive learning pathways designed to support academic excellence from early years through middle
-            school.
+            Join our educational programs, workshops, and events designed to enhance learning experiences
           </p>
         </div>
       </section>
 
-      {/* Early Years Program */}
-      <section id="early-years" className="section-padding bg-white">
+      {/* Program Features */}
+      <section className="py-16 bg-white">
         <div className="container-max">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              <div className="flex items-center space-x-4">
-                <div className="w-16 h-16 bg-orange-100 rounded-lg flex items-center justify-center">
-                  <Star className="w-8 h-8 text-orange-500" />
-                </div>
-                <div>
-                  <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Early Years Program</h2>
-                  <p className="text-lg text-gray-600">Beginner to Step 3</p>
-                </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Calendar className="w-8 h-8 text-blue-600" />
               </div>
-
-              <p className="text-lg text-gray-700 leading-relaxed">
-                Our Early Years Program is designed to build strong foundations for lifelong learning. Through
-                interactive activities, colorful illustrations, and age-appropriate content, we spark curiosity and
-                foster a love for learning in young minds.
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Educational Workshops</h3>
+              <p className="text-gray-600">
+                Interactive learning sessions designed to enhance educational outcomes and teaching methodologies
               </p>
-
-              <div className="space-y-4">
-                <div className="flex items-start space-x-3">
-                  <div className="w-2 h-2 bg-orange-500 rounded-full mt-2"></div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">Foundation Skills Development</h3>
-                    <p className="text-gray-700">
-                      Basic literacy, numeracy, and cognitive skills through play-based learning.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="w-2 h-2 bg-orange-500 rounded-full mt-2"></div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">Interactive Learning</h3>
-                    <p className="text-gray-700">
-                      Hands-on activities and multimedia content to engage young learners.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="w-2 h-2 bg-orange-500 rounded-full mt-2"></div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">Social-Emotional Learning</h3>
-                    <p className="text-gray-700">Building confidence, cooperation, and emotional intelligence.</p>
-                  </div>
-                </div>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Users className="w-8 h-8 text-green-600" />
               </div>
-
-              <Link href="/collections?grade=early-years" className="btn-primary inline-flex items-center">
-                Explore Early Years Books
-              </Link>
-            </div>
-
-            <div className="relative">
-              <Image
-                src="/placeholder.svg?height=500&width=600"
-                alt="Early Years Learning"
-                width={600}
-                height={500}
-                className="rounded-xl shadow-lg"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Primary Program */}
-      <section id="primary" className="section-padding bg-gray-50">
-        <div className="container-max">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="relative order-2 lg:order-1">
-              <Image
-                src="/placeholder.svg?height=500&width=600"
-                alt="Primary Education"
-                width={600}
-                height={500}
-                className="rounded-xl shadow-lg"
-              />
-            </div>
-
-            <div className="space-y-6 order-1 lg:order-2">
-              <div className="flex items-center space-x-4">
-                <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <BookOpen className="w-8 h-8 text-blue-900" />
-                </div>
-                <div>
-                  <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Primary Program</h2>
-                  <p className="text-lg text-gray-600">Class 1 to Class 5</p>
-                </div>
-              </div>
-
-              <p className="text-lg text-gray-700 leading-relaxed">
-                Our Primary Program provides comprehensive curriculum coverage with engaging content, practical
-                exercises, and assessment tools. We focus on building strong academic foundations across all subjects
-                while maintaining student engagement and motivation.
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Teacher Training</h3>
+              <p className="text-gray-600">
+                Professional development programs for educators to improve teaching skills and classroom management
               </p>
-
-              <div className="space-y-4">
-                <div className="flex items-start space-x-3">
-                  <div className="w-2 h-2 bg-blue-900 rounded-full mt-2"></div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">Comprehensive Curriculum</h3>
-                    <p className="text-gray-700">
-                      Complete coverage of English, Mathematics, Science, and Social Studies.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="w-2 h-2 bg-blue-900 rounded-full mt-2"></div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">Skill-Based Learning</h3>
-                    <p className="text-gray-700">Focus on critical thinking, problem-solving, and analytical skills.</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="w-2 h-2 bg-blue-900 rounded-full mt-2"></div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">Assessment Integration</h3>
-                    <p className="text-gray-700">
-                      Regular assessments and progress tracking for optimal learning outcomes.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <Link href="/collections?grade=primary" className="btn-primary inline-flex items-center">
-                Explore Primary Books
-              </Link>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Middle School Program */}
-      <section id="middle-school" className="section-padding bg-white">
-        <div className="container-max">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              <div className="flex items-center space-x-4">
-                <div className="w-16 h-16 bg-teal-100 rounded-lg flex items-center justify-center">
-                  <Award className="w-8 h-8 text-teal-600" />
-                </div>
-                <div>
-                  <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Middle School Program</h2>
-                  <p className="text-lg text-gray-600">Class 6 to Class 8</p>
-                </div>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Star className="w-8 h-8 text-orange-600" />
               </div>
-
-              <p className="text-lg text-gray-700 leading-relaxed">
-                Our Middle School Program features advanced learning materials with critical thinking exercises,
-                research projects, and comprehensive exam preparation. We prepare students for higher academic
-                challenges while building independence and analytical skills.
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Student Competitions</h3>
+              <p className="text-gray-600">
+                Academic competitions and events to encourage student participation and excellence
               </p>
-
-              <div className="space-y-4">
-                <div className="flex items-start space-x-3">
-                  <div className="w-2 h-2 bg-teal-600 rounded-full mt-2"></div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">Advanced Content</h3>
-                    <p className="text-gray-700">
-                      In-depth subject matter with real-world applications and case studies.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="w-2 h-2 bg-teal-600 rounded-full mt-2"></div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">Research & Projects</h3>
-                    <p className="text-gray-700">
-                      Independent research projects and collaborative learning experiences.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="w-2 h-2 bg-teal-600 rounded-full mt-2"></div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">Exam Preparation</h3>
-                    <p className="text-gray-700">
-                      Comprehensive preparation for board exams and competitive assessments.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <Link href="/collections?grade=middle-school" className="btn-primary inline-flex items-center">
-                Explore Middle School Books
-              </Link>
-            </div>
-
-            <div className="relative">
-              <Image
-                src="/placeholder.svg?height=500&width=600"
-                alt="Middle School Learning"
-                width={600}
-                height={500}
-                className="rounded-xl shadow-lg"
-              />
             </div>
           </div>
         </div>
       </section>
 
-      {/* Program Statistics */}
-      <section className="section-padding bg-blue-900 text-white">
+      {/* Filters */}
+      <section className="py-8 bg-gray-50 border-b border-gray-200">
         <div className="container-max">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">Program Impact</h2>
-            <p className="text-xl text-blue-100">Measurable results across all our educational programs</p>
-          </div>
+          <div className="flex flex-wrap gap-4 items-center">
+            <div className="flex items-center space-x-2">
+              <span className="font-medium text-gray-700">Filter by:</span>
+            </div>
+            
+            {/* Status Filter */}
+            <select
+              value={selectedStatus}
+              onChange={(e) => setSelectedStatus(e.target.value)}
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="">All Events</option>
+              <option value="upcoming">Upcoming</option>
+              <option value="ongoing">Ongoing</option>
+              <option value="completed">Completed</option>
+            </select>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Users className="w-8 h-8" />
-              </div>
-              <div className="text-3xl font-bold mb-2">50,000+</div>
-              <div className="opacity-90">Students Enrolled</div>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <BookOpen className="w-8 h-8" />
-              </div>
-              <div className="text-3xl font-bold mb-2">500+</div>
-              <div className="opacity-90">Books Published</div>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Award className="w-8 h-8" />
-              </div>
-              <div className="text-3xl font-bold mb-2">95%</div>
-              <div className="opacity-90">Success Rate</div>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Star className="w-8 h-8" />
-              </div>
-              <div className="text-3xl font-bold mb-2">1,000+</div>
-              <div className="opacity-90">Partner Schools</div>
-            </div>
+            {/* Category Filter */}
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="">All Categories</option>
+              {categories.map((category) => (
+                <option key={category} value={category}>{category}</option>
+              ))}
+            </select>
+
+            <button
+              onClick={() => {
+                setSelectedCategory("")
+                setSelectedStatus("upcoming")
+              }}
+              className="px-4 py-2 text-blue-600 hover:text-blue-700 border border-blue-300 rounded-lg hover:bg-blue-50"
+            >
+              Clear Filters
+            </button>
           </div>
         </div>
       </section>
 
-      {/* Events Section */}
-      <section className="section-padding bg-gray-50">
+      {/* Events Grid */}
+      <section className="py-12">
         <div className="container-max">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Upcoming Events</h2>
-            <p className="text-xl text-gray-700">Join us at educational events and workshops throughout the year</p>
-          </div>
+          {loading ? (
+            <div className="flex justify-center items-center py-20">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            </div>
+          ) : events.length === 0 ? (
+            <div className="text-center py-20">
+              <Calendar className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <p className="text-gray-500 text-lg">No events found</p>
+              <p className="text-gray-400 mt-2">Check back soon for upcoming programs and events!</p>
+            </div>
+          ) : (
+            <>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {events.map((event) => (
+                  <div key={event.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+                    {event.image && (
+                      <div className="aspect-video relative">
+                        <Image
+                          src={event.image}
+                          alt={event.title}
+                          fill
+                          className="object-cover"
+                          onError={(e) => {
+                            e.currentTarget.src = '/placeholder-logo.png'
+                          }}
+                        />
+                        {event.featured && (
+                          <span className="absolute top-2 right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded">
+                            Featured
+                          </span>
+                        )}
+                      </div>
+                    )}
+                    
+                    <div className="p-6">
+                      {/* Event Meta */}
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(event.status)}`}>
+                          {event.status.charAt(0).toUpperCase() + event.status.slice(1)}
+                        </span>
+                        <span className="text-xs text-gray-500">{event.category}</span>
+                      </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {events.map((event, index) => (
-              <div key={index} className="bg-white rounded-xl p-6 card-shadow">
-                <div className="flex items-start space-x-3 mb-4">
-                  <Calendar className="w-6 h-6 text-blue-900 mt-1" />
-                  <div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-1">{event.title}</h3>
-                    <p className="text-blue-900 font-medium">{event.date}</p>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2">{event.title}</h3>
+                      <p className="text-gray-600 mb-4 line-clamp-2">{event.description}</p>
+
+                      {/* Event Details */}
+                      <div className="space-y-2 mb-4">
+                        <div className="flex items-center text-sm text-gray-500">
+                          <Calendar className="w-4 h-4 mr-2" />
+                          <span>{formatDate(event.date)}</span>
+                        </div>
+                        <div className="flex items-center text-sm text-gray-500">
+                          <Clock className="w-4 h-4 mr-2" />
+                          <span>{event.time}</span>
+                        </div>
+                        <div className="flex items-center text-sm text-gray-500">
+                          <MapPin className="w-4 h-4 mr-2" />
+                          <span>{event.location}</span>
+                        </div>
+                      </div>
+
+                      {/* Tags */}
+                      {event.tags && event.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mb-4">
+                          {event.tags.slice(0, 3).map((tag, index) => (
+                            <span key={index} className="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">
+                              {tag}
+                            </span>
+                          ))}
+                          {event.tags.length > 3 && (
+                            <span className="text-gray-500 text-xs">+{event.tags.length - 3} more</span>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Action Button */}
+                      <button className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2">
+                        <span>Learn More</span>
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
-                </div>
-
-                <div className="flex items-center space-x-2 mb-3">
-                  <MapPin className="w-4 h-4 text-gray-500" />
-                  <span className="text-gray-600">{event.location}</span>
-                </div>
-
-                <p className="text-gray-700 leading-relaxed">{event.description}</p>
+                ))}
               </div>
-            ))}
-          </div>
+
+              {/* Pagination */}
+              {pagination && pagination.totalPages > 1 && (
+                <div className="flex justify-center items-center space-x-2 mt-12">
+                  <button
+                    onClick={() => fetchEvents(pagination.page - 1)}
+                    disabled={!pagination.hasPrev}
+                    className="flex items-center space-x-1 px-3 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                  >
+                    <span>Previous</span>
+                  </button>
+
+                  <div className="flex space-x-1">
+                    {Array.from({ length: Math.min(pagination.totalPages, 5) }, (_, i) => {
+                      const pageNum = Math.max(1, pagination.page - 2) + i
+                      if (pageNum > pagination.totalPages) return null
+                      
+                      return (
+                        <button
+                          key={pageNum}
+                          onClick={() => fetchEvents(pageNum)}
+                          className={`px-3 py-2 rounded-lg ${
+                            pageNum === pagination.page
+                              ? 'bg-blue-600 text-white'
+                              : 'border border-gray-300 hover:bg-gray-50'
+                          }`}
+                        >
+                          {pageNum}
+                        </button>
+                      )
+                    })}
+                  </div>
+
+                  <button
+                    onClick={() => fetchEvents(pagination.page + 1)}
+                    disabled={!pagination.hasNext}
+                    className="flex items-center space-x-1 px-3 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                  >
+                    <span>Next</span>
+                  </button>
+                </div>
+              )}
+            </>
+          )}
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="section-padding bg-white">
+      <section className="py-16 bg-blue-50">
         <div className="container-max text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Ready to Get Started?</h2>
-          <p className="text-xl text-gray-700 mb-8 max-w-3xl mx-auto">
-            Choose the program that best fits your educational needs and start your journey with IBC Educational
-            Network.
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Want to Host an Event?</h2>
+          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            Partner with us to organize educational events and workshops for your community
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/collections" className="btn-primary">
-              Browse All Collections
-            </Link>
-            <Link href="/contact" className="btn-secondary">
-              Contact Our Team
-            </Link>
-          </div>
+          <Link
+            href="/contact"
+            className="inline-flex items-center space-x-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+          >
+            <span>Contact Us</span>
+            <ChevronRight className="w-4 h-4" />
+          </Link>
         </div>
       </section>
     </div>

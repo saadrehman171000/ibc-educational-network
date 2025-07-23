@@ -13,6 +13,11 @@ const isAuthRoute = createRouteMatcher([
 ])
 
 export default clerkMiddleware(async (auth, req) => {
+  // Only process authentication for admin and auth routes
+  if (!isAdminRoute(req) && !isAuthRoute(req)) {
+    return NextResponse.next()
+  }
+
   const { userId } = await auth()
   
   // Helper function to check if user is admin
@@ -51,13 +56,15 @@ export default clerkMiddleware(async (auth, req) => {
     // If admin, redirect to admin dashboard
     return NextResponse.redirect(new URL('/admin', req.url))
   }
+  
+  return NextResponse.next()
 })
 
 export const config = {
   matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    // Always run for API routes
-    '/(api|trpc)(.*)',
+    // Only match admin and auth routes
+    '/admin/:path*',
+    '/sign-in/:path*',
+    '/sign-up/:path*'
   ],
 } 

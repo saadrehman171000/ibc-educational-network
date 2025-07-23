@@ -1,0 +1,78 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  price       Float
+  discount    Float?
+  imageUrl    String?
+  category    String   // Class/Grade level (Beginner, Step 1, Class 1, etc.)
+  subject     String?
+  series      String
+  type        String?  // Reader, Copy, etc.
+  isNewCollection Boolean  @default(false)
+  isFeatured   Boolean  @default(false)
+  rating      Float?
+  reviews     Int?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Announcement {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  date        DateTime @default(now())
+  isImportant Boolean  @default(false)
+}
+
+model Order {
+  id          String   @id @default(uuid())
+  items       Json     // Store cart items as JSON [{title, price, quantity, status}]
+  total       Float
+  status      String
+  createdAt   DateTime @default(now())
+  shippingName     String
+  shippingEmail    String
+  shippingPhone    String
+  shippingAddress  String
+  shippingCity     String
+  shippingPostalCode String
+}
+
+model Event {
+  id            String   @id @default(uuid())
+  title         String
+  description   String
+  fullDescription String?
+  date          DateTime
+  endDate       DateTime?
+  time          String
+  location      String
+  address       String?
+  image         String?
+  gallery       String[] // Array of image URLs
+  category      String
+  status        String   // e.g., upcoming, completed, ongoing, cancelled
+  featured      Boolean  @default(false)
+  tags          String[]
+  requirements  String[]
+  agenda        Json?    // Array of { time: string, activity: string }
+  organizer     String?
+  contact       String?
+  phone         String?
+  website       String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}

@@ -1,319 +1,418 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { Search, Filter, Grid, List, ChevronLeft, ChevronRight } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import { Filter, Search } from "lucide-react"
-import { useCart } from "@/contexts/cart-context"
+
+interface Product {
+  id: string
+  title: string
+  description: string
+  category: string
+  subject?: string
+  series: string
+  type?: string
+  price: number
+  discount?: number
+  imageUrl?: string
+  isNewCollection: boolean
+  isFeatured: boolean
+  createdAt: string
+}
+
+interface Pagination {
+  page: number
+  limit: number
+  totalCount: number
+  totalPages: number
+  hasNext: boolean
+  hasPrev: boolean
+}
 
 export default function CollectionsPage() {
-  const [selectedGrade, setSelectedGrade] = useState("All")
-  const [selectedSubject, setSelectedSubject] = useState("All")
-  const [searchTerm, setSearchTerm] = useState("")
-  const { addToCart } = useCart()
-
-  const grades = [
-    "All",
-    "Beginner",
-    "Step 1",
-    "Step 2",
-    "Step 3",
-    "Class 1",
-    "Class 2",
-    "Class 3",
-    "Class 4",
-    "Class 5",
-    "Class 6",
-    "Class 7",
-    "Class 8",
-  ]
-  const subjects = ["All", "English", "Mathematics", "Science", "Social Studies", "Urdu", "Islamic Studies"]
-
-  const books = [
-    {
-      id: "1",
-      title: "English Language Arts - Foundation",
-      grade: "Class 1",
-      subject: "English",
-      price: 450,
-      image: "/placeholder.svg?height=300&width=200",
-      description: "Comprehensive English learning with phonics, vocabulary, and basic grammar.",
-      series: "Foundation Series",
-      type: "Textbook",
-    },
-    {
-      id: "2",
-      title: "Mathematics Made Easy",
-      grade: "Class 2",
-      subject: "Mathematics",
-      price: 520,
-      image: "/placeholder.svg?height=300&width=200",
-      description: "Interactive math concepts with visual learning and practical exercises.",
-      series: "Made Easy Series",
-      type: "Textbook",
-    },
-    {
-      id: "3",
-      title: "Science Explorer - Young Scientists",
-      grade: "Class 3",
-      subject: "Science",
-      price: 480,
-      image: "/placeholder.svg?height=300&width=200",
-      description: "Discover science through hands-on experiments and real-world examples.",
-      series: "Explorer Series",
-      type: "Textbook",
-    },
-    {
-      id: "4",
-      title: "Social Studies Journey",
-      grade: "Class 4",
-      subject: "Social Studies",
-      price: 460,
-      image: "/placeholder.svg?height=300&width=200",
-      description: "Explore cultures, geography, and history with interactive content.",
-      series: "Journey Series",
-      type: "Textbook",
-    },
-    {
-      id: "5",
-      title: "Advanced English Literature",
-      grade: "Class 5",
-      subject: "English",
-      price: 580,
-      image: "/placeholder.svg?height=300&width=200",
-      description: "Develop reading comprehension and literary analysis skills.",
-      series: "Advanced Series",
-      type: "Textbook",
-    },
-    {
-      id: "6",
-      title: "Mathematics Problem Solving",
-      grade: "Class 6",
-      subject: "Mathematics",
-      price: 620,
-      image: "/placeholder.svg?height=300&width=200",
-      description: "Advanced mathematical concepts with problem-solving strategies.",
-      series: "Problem Solving Series",
-      type: "Workbook",
-    },
-    {
-      id: "7",
-      title: "Integrated Science",
-      grade: "Class 7",
-      subject: "Science",
-      price: 650,
-      image: "/placeholder.svg?height=300&width=200",
-      description: "Comprehensive science covering physics, chemistry, and biology.",
-      series: "Integrated Series",
-      type: "Textbook",
-    },
-    {
-      id: "8",
-      title: "World History & Geography",
-      grade: "Class 8",
-      subject: "Social Studies",
-      price: 680,
-      image: "/placeholder.svg?height=300&width=200",
-      description: "Explore world civilizations and geographical concepts.",
-      series: "World Series",
-      type: "Textbook",
-    },
-    {
-      id: "9",
-      title: "Early Learning ABC",
-      grade: "Beginner",
-      subject: "English",
-      price: 320,
-      image: "/placeholder.svg?height=300&width=200",
-      description: "Fun introduction to letters, sounds, and basic words.",
-      series: "Early Learning Series",
-      type: "Activity Book",
-    },
-    {
-      id: "10",
-      title: "Numbers and Counting",
-      grade: "Step 1",
-      subject: "Mathematics",
-      price: 350,
-      image: "/placeholder.svg?height=300&width=200",
-      description: "Learn numbers, counting, and basic math concepts.",
-      series: "Step by Step Series",
-      type: "Activity Book",
-    },
-    {
-      id: "11",
-      title: "My First Science Book",
-      grade: "Step 2",
-      subject: "Science",
-      price: 380,
-      image: "/placeholder.svg?height=300&width=200",
-      description: "Introduction to basic science concepts through fun activities.",
-      series: "My First Series",
-      type: "Activity Book",
-    },
-    {
-      id: "12",
-      title: "Community Helpers",
-      grade: "Step 3",
-      subject: "Social Studies",
-      price: 400,
-      image: "/placeholder.svg?height=300&width=200",
-      description: "Learn about different jobs and community roles.",
-      series: "Community Series",
-      type: "Picture Book",
-    },
-  ]
-
-  const filteredBooks = books.filter((book) => {
-    const matchesGrade = selectedGrade === "All" || book.grade === selectedGrade
-    const matchesSubject = selectedSubject === "All" || book.subject === selectedSubject
-    const matchesSearch =
-      book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      book.description.toLowerCase().includes(searchTerm.toLowerCase())
-
-    return matchesGrade && matchesSubject && matchesSearch
+  const [products, setProducts] = useState<Product[]>([])
+  const [pagination, setPagination] = useState<Pagination | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+  
+  // Filters
+  const [filters, setFilters] = useState({
+    search: '',
+    category: '',
+    subject: '',
+    series: '',
+    newCollection: false,
+    featured: false,
   })
 
-  const handleAddToCart = (book: (typeof books)[0]) => {
-    addToCart({
-      id: book.id,
-      title: book.title,
-      grade: book.grade,
-      price: book.price,
-      image: book.image,
+  // Fetch products
+  const fetchProducts = async (page = 1) => {
+    setLoading(true)
+    try {
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: '12',
+        ...(filters.search && { search: filters.search }),
+        ...(filters.category && { category: filters.category }),
+        ...(filters.subject && { subject: filters.subject }),
+        ...(filters.series && { series: filters.series }),
+        ...(filters.newCollection && { newCollection: 'true' }),
+        ...(filters.featured && { featured: 'true' }),
+      })
+
+      const response = await fetch(`/api/products?${params}`)
+      const data = await response.json()
+
+      setProducts(data.products)
+      setPagination(data.pagination)
+    } catch (error) {
+      console.error('Error fetching products:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchProducts(1)
+  }, [filters])
+
+  const handleFilterChange = (key: string, value: string | boolean) => {
+    setFilters(prev => ({ ...prev, [key]: value }))
+  }
+
+  const clearFilters = () => {
+    setFilters({
+      search: '',
+      category: '',
+      subject: '',
+      series: '',
+      newCollection: false,
+      featured: false,
     })
   }
 
+  // Convert Google Drive URL to display URL
+  const getImageUrl = (url?: string) => {
+    if (!url) return '/placeholder-logo.png'
+    const driveRegex = /https:\/\/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)\/view/
+    const match = url.match(driveRegex)
+    
+    if (match) {
+      return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w400`
+    }
+    
+    return url
+  }
+
+  // Get unique values for filters
+  const getUniqueValues = (field: keyof Product) => {
+    const values = products.map(product => product[field]).filter(Boolean)
+    return [...new Set(values)] as string[]
+  }
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <section className="bg-blue-900 text-white section-padding">
-        <div className="container-max text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">Our Collections</h1>
-          <p className="text-xl text-blue-100 max-w-3xl mx-auto">
-            Discover our comprehensive range of educational materials designed to support learning from Beginner to
-            Class 8.
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="container-max">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Our Collections</h1>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Discover our comprehensive range of educational books designed to inspire learning and academic excellence
           </p>
         </div>
-      </section>
 
-      {/* Filters */}
-      <section className="bg-white border-b border-gray-200 py-6">
-        <div className="container-max">
-          <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
-            <div className="flex flex-col sm:flex-row gap-4 items-center">
-              <div className="flex items-center space-x-2">
-                <Filter className="w-5 h-5 text-gray-600" />
-                <span className="font-medium text-gray-700">Filters:</span>
+        {/* Filters */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
+            {/* Search */}
+            <div className="lg:col-span-2">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search products..."
+                  value={filters.search}
+                  onChange={(e) => handleFilterChange('search', e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
               </div>
+            </div>
 
+            {/* Category Filter */}
+            <div>
               <select
-                value={selectedGrade}
-                onChange={(e) => setSelectedGrade(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                value={filters.category}
+                onChange={(e) => handleFilterChange('category', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
-                {grades.map((grade) => (
-                  <option key={grade} value={grade}>
-                    {grade}
-                  </option>
-                ))}
-              </select>
-
-              <select
-                value={selectedSubject}
-                onChange={(e) => setSelectedSubject(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                {subjects.map((subject) => (
-                  <option key={subject} value={subject}>
-                    {subject}
-                  </option>
+                <option value="">All Categories</option>
+                {getUniqueValues('category').map((category) => (
+                  <option key={category} value={category}>{category}</option>
                 ))}
               </select>
             </div>
 
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+            {/* Subject Filter */}
+            <div>
+              <select
+                value={filters.subject}
+                onChange={(e) => handleFilterChange('subject', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="">All Subjects</option>
+                {getUniqueValues('subject').map((subject) => (
+                  <option key={subject} value={subject}>{subject}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Series Filter */}
+            <div>
+              <select
+                value={filters.series}
+                onChange={(e) => handleFilterChange('series', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="">All Series</option>
+                {getUniqueValues('series').map((series) => (
+                  <option key={series} value={series}>{series}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Additional Filters */}
+          <div className="flex flex-wrap items-center gap-4">
+            <label className="flex items-center space-x-2">
               <input
-                type="text"
-                placeholder="Search books..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full sm:w-80"
+                type="checkbox"
+                checked={filters.newCollection}
+                onChange={(e) => handleFilterChange('newCollection', e.target.checked)}
+                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
               />
+              <span className="text-sm text-gray-700">New Collection Only</span>
+            </label>
+
+            <label className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                checked={filters.featured}
+                onChange={(e) => handleFilterChange('featured', e.target.checked)}
+                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              />
+              <span className="text-sm text-gray-700">Featured Only</span>
+            </label>
+
+            <button
+              onClick={clearFilters}
+              className="text-sm text-blue-600 hover:text-blue-700"
+            >
+              Clear All Filters
+            </button>
+
+            {/* View Mode Toggle */}
+            <div className="ml-auto flex items-center space-x-2">
+              <button
+                onClick={() => setViewMode('grid')}
+                className={`p-2 rounded ${viewMode === 'grid' ? 'bg-blue-100 text-blue-600' : 'text-gray-400'}`}
+              >
+                <Grid className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setViewMode('list')}
+                className={`p-2 rounded ${viewMode === 'list' ? 'bg-blue-100 text-blue-600' : 'text-gray-400'}`}
+              >
+                <List className="w-4 h-4" />
+              </button>
             </div>
           </div>
         </div>
-      </section>
 
-      {/* Books Grid */}
-      <section className="section-padding">
-        <div className="container-max">
-          <div className="mb-8">
+        {/* Results Count */}
+        {pagination && (
+          <div className="mb-6">
             <p className="text-gray-600">
-              Showing {filteredBooks.length} of {books.length} books
+              Showing {((pagination.page - 1) * pagination.limit) + 1} to{' '}
+              {Math.min(pagination.page * pagination.limit, pagination.totalCount)} of{' '}
+              {pagination.totalCount} products
             </p>
           </div>
+        )}
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {filteredBooks.map((book) => (
-              <div key={book.id} className="bg-white rounded-xl card-shadow overflow-hidden group">
-                <div className="relative overflow-hidden">
-                  <div className="aspect-[3/4] relative">
-                    <Image
-                      src={book.image || "/placeholder.svg"}
-                      alt={book.title}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                    />
-                  </div>
-                  <div className="absolute top-4 left-4">
-                    <span className="bg-teal-600 text-white px-3 py-1 rounded-full text-sm font-medium">
-                      {book.grade}
-                    </span>
-                  </div>
-                  <div className="absolute top-4 right-4">
-                    <span className="bg-orange-500 text-white px-2 py-1 rounded text-xs font-medium">{book.type}</span>
-                  </div>
-                </div>
-
-                <div className="p-6">
-                  <div className="mb-2">
-                    <span className="text-sm text-gray-500">{book.series}</span>
-                  </div>
-                  <h3 className="text-lg font-bold text-gray-900 mb-2">{book.title}</h3>
-                  <p className="text-gray-700 text-sm mb-4 leading-relaxed">{book.description}</p>
-
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-2xl font-bold text-blue-900">Rs. {book.price}</span>
-                    <span className="text-sm text-gray-500">{book.subject}</span>
-                  </div>
-
-                  <div className="flex gap-2">
-                    <Link
-                      href={`/collections/${book.id}`}
-                      className="flex-1 bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-center font-medium hover:bg-gray-200 transition-colors"
-                    >
-                      Read More
-                    </Link>
-                    <button onClick={() => handleAddToCart(book)} className="flex-1 btn-primary text-sm py-2">
-                      Add to Cart
-                    </button>
-                  </div>
-                </div>
-              </div>
+        {/* Products Grid/List */}
+        {loading ? (
+          <div className="flex justify-center items-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+          </div>
+        ) : products.length === 0 ? (
+          <div className="text-center py-20">
+            <p className="text-gray-500 text-lg">No products found matching your criteria.</p>
+          </div>
+        ) : (
+          <div className={viewMode === 'grid' 
+            ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8"
+            : "space-y-4 mb-8"
+          }>
+            {products.map((product) => (
+              <Link
+                key={product.id}
+                href={`/collections/${product.id}`}
+                className={viewMode === 'grid' 
+                  ? "bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow block"
+                  : "bg-white rounded-lg shadow-sm border border-gray-200 p-4 flex gap-4 hover:shadow-md transition-shadow block"
+                }
+              >
+                {viewMode === 'grid' ? (
+                  <>
+                    <div className="aspect-[3/4] relative">
+                      <Image
+                        src={getImageUrl(product.imageUrl)}
+                        alt={product.title}
+                        fill
+                        className="object-cover"
+                        onError={(e) => {
+                          e.currentTarget.src = '/placeholder-logo.png'
+                        }}
+                      />
+                      {product.isNewCollection && (
+                        <span className="absolute top-2 right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded">
+                          New
+                        </span>
+                      )}
+                      {product.isFeatured && (
+                        <span className="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-1 rounded">
+                          Featured
+                        </span>
+                      )}
+                    </div>
+                    <div className="p-4">
+                      <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">{product.title}</h3>
+                      <p className="text-sm text-gray-600 mb-2">{product.category} • {product.subject}</p>
+                      <p className="text-sm text-gray-500 mb-3 line-clamp-2">{product.description}</p>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          {product.discount && product.discount > 0 ? (
+                            <div className="flex items-center space-x-2">
+                              <span className="text-lg font-bold text-blue-900">
+                                Rs. {(product.price - (product.price * product.discount / 100)).toFixed(0)}
+                              </span>
+                              <span className="text-sm text-gray-500 line-through">Rs. {product.price}</span>
+                            </div>
+                          ) : (
+                            <span className="text-lg font-bold text-blue-900">Rs. {product.price}</span>
+                          )}
+                        </div>
+                        <button 
+                          onClick={(e) => {
+                            e.preventDefault()
+                            // Add to cart functionality
+                          }}
+                          className="btn-primary text-sm px-4 py-2"
+                        >
+                          Add to Cart
+                        </button>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="w-32 h-40 relative flex-shrink-0">
+                      <Image
+                        src={getImageUrl(product.imageUrl)}
+                        alt={product.title}
+                        fill
+                        className="object-cover rounded"
+                        onError={(e) => {
+                          e.currentTarget.src = '/placeholder-logo.png'
+                        }}
+                      />
+                      {product.isNewCollection && (
+                        <span className="absolute top-1 right-1 bg-orange-500 text-white text-xs px-1 py-0.5 rounded">
+                          New
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-gray-900 mb-2">{product.title}</h3>
+                      <p className="text-sm text-gray-600 mb-2">{product.category} • {product.subject} • {product.series}</p>
+                      <p className="text-sm text-gray-500 mb-3">{product.description}</p>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          {product.discount && product.discount > 0 ? (
+                            <div className="flex items-center space-x-2">
+                              <span className="text-lg font-bold text-blue-900">
+                                Rs. {(product.price - (product.price * product.discount / 100)).toFixed(0)}
+                              </span>
+                              <span className="text-sm text-gray-500 line-through">Rs. {product.price}</span>
+                            </div>
+                          ) : (
+                            <span className="text-lg font-bold text-blue-900">Rs. {product.price}</span>
+                          )}
+                        </div>
+                        <button 
+                          onClick={(e) => {
+                            e.preventDefault()
+                            // Add to cart functionality
+                          }}
+                          className="btn-primary text-sm px-4 py-2"
+                        >
+                          Add to Cart
+                        </button>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </Link>
             ))}
           </div>
+        )}
 
-          {filteredBooks.length === 0 && (
-            <div className="text-center py-16">
-              <p className="text-xl text-gray-600">No books found matching your criteria.</p>
-              <p className="text-gray-500 mt-2">Try adjusting your filters or search terms.</p>
+        {/* Pagination */}
+        {pagination && pagination.totalPages > 1 && (
+          <div className="flex justify-center items-center space-x-2">
+            <button
+              onClick={() => fetchProducts(pagination.page - 1)}
+              disabled={!pagination.hasPrev}
+              className="flex items-center space-x-1 px-3 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+            >
+              <ChevronLeft className="w-4 h-4" />
+              <span>Previous</span>
+            </button>
+
+            {/* Page Numbers */}
+            <div className="flex space-x-1">
+              {Array.from({ length: Math.min(pagination.totalPages, 5) }, (_, i) => {
+                const pageNum = Math.max(1, pagination.page - 2) + i
+                if (pageNum > pagination.totalPages) return null
+                
+                return (
+                  <button
+                    key={pageNum}
+                    onClick={() => fetchProducts(pageNum)}
+                    className={`px-3 py-2 rounded-lg ${
+                      pageNum === pagination.page
+                        ? 'bg-blue-600 text-white'
+                        : 'border border-gray-300 hover:bg-gray-50'
+                    }`}
+                  >
+                    {pageNum}
+                  </button>
+                )
+              })}
             </div>
-          )}
-        </div>
-      </section>
+
+            <button
+              onClick={() => fetchProducts(pagination.page + 1)}
+              disabled={!pagination.hasNext}
+              className="flex items-center space-x-1 px-3 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+            >
+              <span>Next</span>
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

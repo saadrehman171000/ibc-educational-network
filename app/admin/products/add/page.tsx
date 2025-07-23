@@ -1,83 +1,141 @@
 "use client"
 
-import type React from "react"
-
 import { useState } from "react"
-import { ArrowLeft, Upload, X } from "lucide-react"
+import { ArrowLeft, Save, Eye } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
+
+const categories = [
+  'Beginner',
+  'Step 1',
+  'Step 2', 
+  'Step 3',
+  'Class 1',
+  'Class 2',
+  'Class 3',
+  'Class 4',
+  'Class 5',
+  'Class 6',
+  'Class 7',
+  'Class 8',
+]
+
+const subjects = [
+  'English',
+  'Urdu',
+  'Mathematics',
+  'Science',
+  'Social Studies',
+  'Islamic Studies',
+  'General Knowledge',
+  'Drawing',
+  'Handwriting',
+  'Computer',
+]
+
+const seriesOptions = [
+  'KG',
+  'Early Learner',
+  'Primary Series',
+  'Elementary Series',
+  'Advanced Series',
+  'Foundation Series',
+  'Core Series',
+]
+
+const typeOptions = [
+  'Reader',
+  'Copy',
+  'Textbook',
+  'Workbook',
+  'Activity Book',
+  'Guide',
+]
 
 export default function AddProductPage() {
+  const router = useRouter()
+  const [loading, setLoading] = useState(false)
+  
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     category: "",
-    grade: "",
-    price: "",
-    stock: "",
+    subject: "",
     series: "",
     type: "",
-    features: [] as string[],
+    price: "",
+    discount: "",
+    imageUrl: "",
+    isNewCollection: false,
+    isFeatured: false,
   })
-  const [newFeature, setNewFeature] = useState("")
-  const [imagePreview, setImagePreview] = useState<string | null>(null)
-
-  const categories = ["Mathematics", "English", "Science", "Social Studies", "Urdu", "Islamic Studies"]
-  const grades = [
-    "Beginner",
-    "Step 1",
-    "Step 2",
-    "Step 3",
-    "Class 1",
-    "Class 2",
-    "Class 3",
-    "Class 4",
-    "Class 5",
-    "Class 6",
-    "Class 7",
-    "Class 8",
-  ]
-  const types = ["Textbook", "Workbook", "Activity Book", "Picture Book", "Reference Book"]
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    })
+    const { name, value, type } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
+    }))
   }
 
-  const addFeature = () => {
-    if (newFeature.trim() && !formData.features.includes(newFeature.trim())) {
-      setFormData({
-        ...formData,
-        features: [...formData.features, newFeature.trim()],
-      })
-      setNewFeature("")
-    }
-  }
-
-  const removeFeature = (feature: string) => {
-    setFormData({
-      ...formData,
-      features: formData.features.filter((f) => f !== feature),
-    })
-  }
-
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string)
-      }
-      reader.readAsDataURL(file)
-    }
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("Product data:", formData)
-    // Handle form submission
+    setLoading(true)
+
+    try {
+      const price = parseFloat(formData.price)
+      if (isNaN(price) || price < 0) {
+        alert('Please enter a valid price')
+        return
+      }
+
+      const discount = formData.discount ? parseFloat(formData.discount) : undefined
+      if (discount !== undefined && (isNaN(discount) || discount < 0 || discount > 100)) {
+        alert('Please enter a valid discount (0-100)')
+        return
+      }
+
+      const response = await fetch('/api/products', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          price,
+          discount,
+        }),
+      })
+
+      if (response.ok) {
+        alert('Product created successfully!')
+        router.push('/admin/products')
+      } else {
+        const error = await response.json()
+        alert(`Error: ${error.error}`)
+      }
+    } catch (error) {
+      console.error('Error creating product:', error)
+      alert('Failed to create product')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Convert Google Drive sharing URL to direct image URL
+  const getImagePreviewUrl = (url: string) => {
+    if (!url) return ''
+    
+    // Convert Google Drive sharing URL to direct image URL
+    const driveRegex = /https:\/\/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)\/view/
+    const match = url.match(driveRegex)
+    
+    if (match) {
+      return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w400`
+    }
+    
+    return url
   }
 
   return (
@@ -100,7 +158,9 @@ export default function AddProductPage() {
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h2>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Product Title *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Product Title *
+                  </label>
                   <input
                     type="text"
                     name="title"
@@ -113,7 +173,9 @@ export default function AddProductPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Description *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Description *
+                  </label>
                   <textarea
                     name="description"
                     required
@@ -127,7 +189,9 @@ export default function AddProductPage() {
 
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Category *</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Category (Grade) *
+                    </label>
                     <select
                       name="category"
                       required
@@ -145,53 +209,50 @@ export default function AddProductPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Grade *</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Subject
+                    </label>
                     <select
-                      name="grade"
-                      required
-                      value={formData.grade}
+                      name="subject"
+                      value={formData.subject}
                       onChange={handleInputChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
-                      <option value="">Select Grade</option>
-                      {grades.map((grade) => (
-                        <option key={grade} value={grade}>
-                          {grade}
+                      <option value="">Select Subject</option>
+                      {subjects.map((subject) => (
+                        <option key={subject} value={subject}>
+                          {subject}
                         </option>
                       ))}
                     </select>
                   </div>
                 </div>
 
-                <div className="grid sm:grid-cols-3 gap-4">
+                <div className="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Price (Rs.) *</label>
-                    <input
-                      type="number"
-                      name="price"
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Series *
+                    </label>
+                    <select
+                      name="series"
                       required
-                      value={formData.price}
+                      value={formData.series}
                       onChange={handleInputChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="0"
-                    />
+                    >
+                      <option value="">Select Series</option>
+                      {seriesOptions.map((series) => (
+                        <option key={series} value={series}>
+                          {series}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Stock Quantity *</label>
-                    <input
-                      type="number"
-                      name="stock"
-                      required
-                      value={formData.stock}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="0"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Type</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Type
+                    </label>
                     <select
                       name="type"
                       value={formData.type}
@@ -199,7 +260,7 @@ export default function AddProductPage() {
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
                       <option value="">Select Type</option>
-                      {types.map((type) => (
+                      {typeOptions.map((type) => (
                         <option key={type} value={type}>
                           {type}
                         </option>
@@ -208,101 +269,118 @@ export default function AddProductPage() {
                   </div>
                 </div>
 
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Price (Rs.) *
+                    </label>
+                    <input
+                      type="number"
+                      name="price"
+                      required
+                      min="0"
+                      step="0.01"
+                      value={formData.price}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="0.00"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Discount (%)
+                    </label>
+                    <input
+                      type="number"
+                      name="discount"
+                      min="0"
+                      max="100"
+                      step="0.01"
+                      value={formData.discount}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="0"
+                    />
+                  </div>
+                </div>
+
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Series</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Product Image URL (Google Drive) *
+                  </label>
                   <input
-                    type="text"
-                    name="series"
-                    value={formData.series}
+                    type="url"
+                    name="imageUrl"
+                    required
+                    value={formData.imageUrl}
                     onChange={handleInputChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Enter series name"
+                    placeholder="https://drive.google.com/file/d/.../view"
                   />
-                </div>
-              </div>
-            </div>
-
-            {/* Features */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Features</h2>
-              <div className="space-y-4">
-                <div className="flex space-x-2">
-                  <input
-                    type="text"
-                    value={newFeature}
-                    onChange={(e) => setNewFeature(e.target.value)}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Add a feature"
-                    onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addFeature())}
-                  />
-                  <button
-                    type="button"
-                    onClick={addFeature}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                  >
-                    Add
-                  </button>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Share your image from Google Drive and paste the sharing URL here
+                  </p>
                 </div>
 
-                {formData.features.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {formData.features.map((feature, index) => (
-                      <span
-                        key={index}
-                        className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
-                      >
-                        {feature}
-                        <button
-                          type="button"
-                          onClick={() => removeFeature(feature)}
-                          className="ml-2 text-blue-600 hover:text-blue-800"
-                        >
-                          <X className="w-3 h-3" />
-                        </button>
-                      </span>
-                    ))}
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      name="isNewCollection"
+                      id="isNewCollection"
+                      checked={formData.isNewCollection}
+                      onChange={handleInputChange}
+                      className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                    <label htmlFor="isNewCollection" className="text-sm font-medium text-gray-700">
+                      Mark as New Collection
+                    </label>
                   </div>
-                )}
+
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      name="isFeatured"
+                      id="isFeatured"
+                      checked={formData.isFeatured}
+                      onChange={handleInputChange}
+                      className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                    <label htmlFor="isFeatured" className="text-sm font-medium text-gray-700">
+                      Mark as Featured
+                    </label>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Image Upload */}
+          {/* Image Preview & Actions */}
           <div className="space-y-6">
+            {/* Image Preview */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Product Image</h2>
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">Image Preview</h2>
               <div className="space-y-4">
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                  {imagePreview ? (
-                    <div className="space-y-4">
-                      <Image
-                        src={imagePreview || "/placeholder.svg"}
-                        alt="Preview"
-                        width={200}
-                        height={250}
-                        className="mx-auto rounded-lg"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setImagePreview(null)}
-                        className="text-red-600 hover:text-red-700 text-sm"
-                      >
-                        Remove Image
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      <Upload className="w-12 h-12 text-gray-400 mx-auto" />
-                      <div>
-                        <label className="cursor-pointer">
-                          <span className="text-blue-600 hover:text-blue-700 font-medium">Upload an image</span>
-                          <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
-                        </label>
-                        <p className="text-sm text-gray-500 mt-1">PNG, JPG up to 10MB</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
+                {formData.imageUrl ? (
+                  <div className="border border-gray-200 rounded-lg p-4">
+                    <Image
+                      src={getImagePreviewUrl(formData.imageUrl)}
+                      alt="Product preview"
+                      width={200}
+                      height={250}
+                      className="w-full h-auto rounded-lg"
+                      onError={(e) => {
+                        e.currentTarget.src = '/placeholder-logo.png'
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                    <Eye className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                    <p className="text-gray-500">Image preview will appear here</p>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -311,9 +389,11 @@ export default function AddProductPage() {
               <div className="space-y-4">
                 <button
                   type="submit"
-                  className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
+                  disabled={loading}
+                  className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
                 >
-                  Create Product
+                  <Save className="w-4 h-4" />
+                  <span>{loading ? 'Creating...' : 'Create Product'}</span>
                 </button>
                 <Link
                   href="/admin/products"
