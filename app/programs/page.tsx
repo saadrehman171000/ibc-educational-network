@@ -80,37 +80,55 @@ export default function ProgramsPage() {
   const getImageUrl = (url?: string) => {
     if (!url) return '/placeholder-logo.png'
     
-    // Handle Google Drive URLs
-    const driveRegex = /https:\/\/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)(?:\/view)?/
-    const match = url.match(driveRegex)
+    // Handle different Google Drive URL formats
+    const driveRegexes = [
+      /https:\/\/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)(?:\/view)?/,
+      /https:\/\/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/,
+      /https:\/\/docs\.google\.com\/.*\/d\/([a-zA-Z0-9_-]+)/
+    ]
     
-    if (match) {
-      const fileId = match[1]
-      // Use direct download URL which is more reliable
-      return `https://drive.google.com/uc?export=view&id=${fileId}`
+    for (const regex of driveRegexes) {
+      const match = url.match(regex)
+      if (match) {
+        const fileId = match[1]
+        // Use direct download URL which is more reliable
+        return `https://drive.google.com/uc?export=view&id=${fileId}`
+      }
     }
     
+    // If it's already a direct URL or other format, return as is
     return url
   }
 
-  // Handle image load errors with retry
+  // Handle image load errors with multiple retry strategies
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     const target = e.currentTarget
     const originalSrc = target.src
+    
+    console.log('Image load error for:', originalSrc) // Debug log
     
     // If it's already trying the fallback, don't retry
     if (originalSrc.includes('placeholder-logo.png')) {
       return
     }
     
-    // Try alternative Google Drive URL format first
+    // Try different Google Drive URL formats
     if (originalSrc.includes('drive.google.com')) {
-      const driveRegex = /\/file\/d\/([a-zA-Z0-9_-]+)/
+      const driveRegex = /[?&]id=([a-zA-Z0-9_-]+)/
       const match = originalSrc.match(driveRegex)
       
-      if (match && !originalSrc.includes('thumbnail')) {
-        target.src = `https://drive.google.com/thumbnail?id=${match[1]}&sz=w400`
-        return
+      if (match) {
+        const fileId = match[1]
+        // Try thumbnail format
+        if (!originalSrc.includes('thumbnail')) {
+          target.src = `https://drive.google.com/thumbnail?id=${fileId}&sz=w400`
+          return
+        }
+        // Try alternative format
+        if (!originalSrc.includes('uc?export=download')) {
+          target.src = `https://drive.google.com/uc?export=download&id=${fileId}`
+          return
+        }
       }
     }
     
@@ -251,25 +269,26 @@ export default function ProgramsPage() {
             </div>
           ) : (
             <>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {events.map((event) => (
                   <div key={event.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
-                    {event.image && (
-                      <div className="aspect-video relative">
-                        <Image
-                          src={getImageUrl(event.image)}
-                          alt={event.title}
-                          fill
-                          className="object-cover"
-                          onError={handleImageError}
-                        />
-                        {event.featured && (
-                          <span className="absolute top-2 right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded">
-                            Featured
-                          </span>
-                        )}
-                      </div>
-                    )}
+                    <div className="aspect-video relative">
+                      <Image
+                        src={getImageUrl(event.image)}
+                        alt={event.title}
+                        fill
+                        className="object-cover"
+                        onError={handleImageError}
+                        priority={false}
+                        placeholder="blur"
+                        blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyydwTv5Zr7w2H3vhc3f/Z"
+                      />
+                      {event.featured && (
+                        <span className="absolute top-2 right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded">
+                          Featured
+                        </span>
+                      )}
+                    </div>
                     
                     <div className="p-6">
                       {/* Event Meta */}

@@ -70,16 +70,23 @@ export default function ProgramsPage() {
   const getImageUrl = (url?: string) => {
     if (!url) return '/placeholder-logo.png'
     
-    // Handle Google Drive URLs
-    const driveRegex = /https:\/\/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)(?:\/view)?/
-    const match = url.match(driveRegex)
+    // Handle different Google Drive URL formats
+    const driveRegexes = [
+      /https:\/\/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)(?:\/view)?/,
+      /https:\/\/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/,
+      /https:\/\/docs\.google\.com\/.*\/d\/([a-zA-Z0-9_-]+)/
+    ]
     
-    if (match) {
-      const fileId = match[1]
-      // Use direct download URL which is more reliable
-      return `https://drive.google.com/uc?export=view&id=${fileId}`
+    for (const regex of driveRegexes) {
+      const match = url.match(regex)
+      if (match) {
+        const fileId = match[1]
+        // Use direct download URL which is more reliable
+        return `https://drive.google.com/uc?export=view&id=${fileId}`
+      }
     }
     
+    // If it's already a direct URL or other format, return as is
     return url
   }
 
