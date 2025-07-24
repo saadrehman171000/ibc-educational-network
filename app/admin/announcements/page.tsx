@@ -7,9 +7,13 @@ import { Plus, Search, Bell, Edit, Trash2, Eye, ChevronLeft, ChevronRight, Alert
 interface Announcement {
   id: string
   title: string
-  description: string
-  date: string
-  isImportant: boolean
+  summary: string
+  content: string
+  category: string
+  author: string
+  isFeatured: boolean
+  createdAt: string
+  updatedAt: string
 }
 
 interface Pagination {
@@ -26,7 +30,7 @@ export default function AdminAnnouncementsPage() {
   const [pagination, setPagination] = useState<Pagination | null>(null)
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
-  const [importantOnly, setImportantOnly] = useState(false)
+  const [featuredOnly, setFeaturedOnly] = useState(false)
 
   // Fetch announcements
   const fetchAnnouncements = async (page = 1) => {
@@ -36,7 +40,7 @@ export default function AdminAnnouncementsPage() {
         page: page.toString(),
         limit: '10',
         ...(searchTerm && { search: searchTerm }),
-        ...(importantOnly && { important: 'true' }),
+        ...(featuredOnly && { featured: 'true' }),
       })
 
       const response = await fetch(`/api/announcements?${params}`)
@@ -53,7 +57,7 @@ export default function AdminAnnouncementsPage() {
 
   useEffect(() => {
     fetchAnnouncements(1)
-  }, [searchTerm, importantOnly])
+  }, [searchTerm, featuredOnly])
 
   const handleDelete = async (announcementId: string) => {
     if (!confirm('Are you sure you want to delete this announcement?')) return
@@ -192,7 +196,7 @@ export default function AdminAnnouncementsPage() {
                     <td className="px-6 py-4">
                       <div className="flex items-start space-x-3">
                         <div className="flex-shrink-0">
-                          {announcement.isImportant ? (
+                          {announcement.isFeatured ? (
                             <AlertCircle className="w-5 h-5 text-red-500" />
                           ) : (
                             <Bell className="w-5 h-5 text-blue-500" />
@@ -203,15 +207,15 @@ export default function AdminAnnouncementsPage() {
                             {announcement.title}
                           </div>
                           <div className="text-sm text-gray-500 mt-1 line-clamp-2">
-                            {announcement.description}
+                            {announcement.summary}
                           </div>
                         </div>
                     </div>
                   </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {announcement.isImportant ? (
+                      {announcement.isFeatured ? (
                         <span className="px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full font-medium">
-                          Important
+                          Featured
                         </span>
                       ) : (
                         <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full font-medium">
@@ -220,7 +224,7 @@ export default function AdminAnnouncementsPage() {
                       )}
                   </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {formatDate(announcement.date)}
+                      {formatDate(announcement.createdAt)}
                   </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <div className="flex items-center justify-end space-x-2">
