@@ -73,6 +73,48 @@ export default function ProgramsPage() {
     fetchEvents(1)
   }, [selectedCategory, selectedStatus])
 
+  // Convert Google Drive URL to display URL with better handling
+  const getImageUrl = (url?: string) => {
+    if (!url) return '/placeholder-logo.png'
+    
+    // Handle Google Drive URLs
+    const driveRegex = /https:\/\/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)(?:\/view)?/
+    const match = url.match(driveRegex)
+    
+    if (match) {
+      const fileId = match[1]
+      // Use direct download URL which is more reliable
+      return `https://drive.google.com/uc?export=view&id=${fileId}`
+    }
+    
+    return url
+  }
+
+  // Handle image load errors with retry
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const target = e.currentTarget
+    const originalSrc = target.src
+    
+    // If it's already trying the fallback, don't retry
+    if (originalSrc.includes('placeholder-logo.png')) {
+      return
+    }
+    
+    // Try alternative Google Drive URL format first
+    if (originalSrc.includes('drive.google.com')) {
+      const driveRegex = /\/file\/d\/([a-zA-Z0-9_-]+)/
+      const match = originalSrc.match(driveRegex)
+      
+      if (match && !originalSrc.includes('thumbnail')) {
+        target.src = `https://drive.google.com/thumbnail?id=${match[1]}&sz=w400`
+        return
+      }
+    }
+    
+    // Final fallback to placeholder
+    target.src = '/placeholder-logo.png'
+  }
+
   // Get unique categories from events
   const categories = [...new Set(events.map(event => event.category))].filter(Boolean)
 
@@ -212,13 +254,11 @@ export default function ProgramsPage() {
                     {event.image && (
                       <div className="aspect-video relative">
                         <Image
-                          src={event.image}
+                          src={getImageUrl(event.image)}
                           alt={event.title}
                           fill
                           className="object-cover"
-                          onError={(e) => {
-                            e.currentTarget.src = '/placeholder-logo.png'
-                          }}
+                          onError={handleImageError}
                         />
                         {event.featured && (
                           <span className="absolute top-2 right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded">
@@ -271,10 +311,13 @@ export default function ProgramsPage() {
                       )}
 
                       {/* Action Button */}
-                      <button className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2">
+                      <Link 
+                        href={`/programs/${event.id}`}
+                        className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2"
+                      >
                         <span>Learn More</span>
                         <ChevronRight className="w-4 h-4" />
-                      </button>
+                      </Link>
                     </div>
                   </div>
                 ))}

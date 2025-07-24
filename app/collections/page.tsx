@@ -92,17 +92,46 @@ export default function CollectionsPage() {
     })
   }
 
-  // Convert Google Drive URL to display URL
+  // Convert Google Drive URL to display URL with better handling
   const getImageUrl = (url?: string) => {
     if (!url) return '/placeholder-logo.png'
-    const driveRegex = /https:\/\/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)\/view/
+    
+    // Handle Google Drive URLs
+    const driveRegex = /https:\/\/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)(?:\/view)?/
     const match = url.match(driveRegex)
     
     if (match) {
-      return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w400`
+      const fileId = match[1]
+      // Use direct download URL which is more reliable
+      return `https://drive.google.com/uc?export=view&id=${fileId}`
     }
     
     return url
+  }
+
+  // Handle image load errors with retry
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const target = e.currentTarget
+    const originalSrc = target.src
+    
+    // If it's already trying the fallback, don't retry
+    if (originalSrc.includes('placeholder-logo.png')) {
+      return
+    }
+    
+    // Try alternative Google Drive URL format first
+    if (originalSrc.includes('drive.google.com')) {
+      const driveRegex = /\/file\/d\/([a-zA-Z0-9_-]+)/
+      const match = originalSrc.match(driveRegex)
+      
+      if (match && !originalSrc.includes('thumbnail')) {
+        target.src = `https://drive.google.com/thumbnail?id=${match[1]}&sz=w400`
+        return
+      }
+    }
+    
+    // Final fallback to placeholder
+    target.src = '/placeholder-logo.png'
   }
 
   // Get unique values for filters
@@ -271,9 +300,7 @@ export default function CollectionsPage() {
                         alt={product.title}
                         fill
                         className="object-cover"
-                        onError={(e) => {
-                          e.currentTarget.src = '/placeholder-logo.png'
-                        }}
+                        onError={handleImageError}
                       />
                       {product.isNewCollection && (
                         <span className="absolute top-2 right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded">
@@ -323,9 +350,7 @@ export default function CollectionsPage() {
                         alt={product.title}
                         fill
                         className="object-cover rounded"
-                        onError={(e) => {
-                          e.currentTarget.src = '/placeholder-logo.png'
-                        }}
+                        onError={handleImageError}
                       />
                       {product.isNewCollection && (
                         <span className="absolute top-1 right-1 bg-orange-500 text-white text-xs px-1 py-0.5 rounded">

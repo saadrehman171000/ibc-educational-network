@@ -3,10 +3,14 @@
 import type React from "react"
 
 import { useState } from "react"
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft, Save } from "lucide-react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 export default function AddAnnouncementPage() {
+  const router = useRouter()
+  const [loading, setLoading] = useState(false)
+  
   const [formData, setFormData] = useState({
     title: "",
     summary: "",
@@ -26,10 +30,36 @@ export default function AddAnnouncementPage() {
     })
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("Announcement data:", formData)
-    // Handle form submission
+    setLoading(true)
+
+    try {
+      const response = await fetch('/api/announcements', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: formData.title,
+          description: formData.content, // API expects 'description' field
+          isImportant: formData.featured,
+        }),
+      })
+
+      if (response.ok) {
+        alert('Announcement created successfully!')
+        router.push('/admin/announcements')
+      } else {
+        const error = await response.json()
+        alert(`Error: ${error.error}`)
+      }
+    } catch (error) {
+      console.error('Error creating announcement:', error)
+      alert('Failed to create announcement')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -134,9 +164,11 @@ export default function AddAnnouncementPage() {
           <div className="flex space-x-4">
             <button
               type="submit"
-              className="bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700 transition-colors"
+              disabled={loading}
+              className="bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
             >
-              Create Announcement
+              <Save className="w-4 h-4" />
+              <span>{loading ? 'Creating...' : 'Create Announcement'}</span>
             </button>
             <Link
               href="/admin/announcements"
