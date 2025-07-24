@@ -108,7 +108,7 @@ export default function AboutPage() {
             </div>
             <div className="relative">
               <Image
-                src="/placeholder.svg?height=400&width=500&text=Our+Story"
+                src="/about.png"
                 alt="IBC Educational Network Story"
                 width={500}
                 height={400}
