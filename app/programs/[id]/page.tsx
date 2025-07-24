@@ -185,12 +185,13 @@ export default function EventDetailPage() {
         <div className="container-max py-8">
           <div className="grid lg:grid-cols-2 gap-8 items-start">
             {/* Event Image */}
-            <div className="aspect-video relative rounded-lg overflow-hidden">
+            <div className="relative rounded-lg overflow-hidden bg-gray-100">
               <Image
                 src={getImageUrl(event.image)}
                 alt={event.title}
-                fill
-                className="object-cover"
+                width={600}
+                height={400}
+                className="w-full h-auto object-contain"
                 onError={handleImageError}
               />
               {event.featured && (

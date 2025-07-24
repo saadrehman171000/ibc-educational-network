@@ -142,12 +142,13 @@ export default function ProductDetailPage() {
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Product Image */}
           <div className="space-y-4">
-            <div className="aspect-[3/4] relative bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+            <div className="relative bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
               <Image
                 src={getImageUrl(product.imageUrl)}
                 alt={product.title}
-                fill
-                className="object-cover"
+                width={500}
+                height={600}
+                className="w-full h-auto object-contain"
                 onError={() => setImageError(true)}
               />
               {product.isNewCollection && (
