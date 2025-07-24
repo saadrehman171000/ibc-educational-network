@@ -60,8 +60,9 @@ export default function ProgramsPage() {
       const response = await fetch(`/api/events?${params}`)
       const data = await response.json()
 
-      console.log('API Response:', data) // Debug log
+      console.log('Events API Response:', data) // Debug log
       console.log('Events received:', data.events) // Debug log
+      console.log('First event image:', data.events?.[0]?.image) // Debug log
 
       setEvents(data.events || [])
       setPagination(data.pagination)
@@ -78,7 +79,12 @@ export default function ProgramsPage() {
 
   // Convert Google Drive URL to display URL with better handling
   const getImageUrl = (url?: string) => {
-    if (!url) return '/placeholder-logo.png'
+    console.log('getImageUrl called with:', url) // Debug log
+    
+    if (!url) {
+      console.log('No URL provided, returning placeholder')
+      return '/placeholder-logo.png'
+    }
     
     // Handle different Google Drive URL formats
     const driveRegexes = [
@@ -91,12 +97,15 @@ export default function ProgramsPage() {
       const match = url.match(regex)
       if (match) {
         const fileId = match[1]
-        // Use direct download URL which is more reliable
-        return `https://drive.google.com/uc?export=view&id=${fileId}`
+        // Use thumbnail URL which is more reliable for display
+        const processedUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w400`
+        console.log('Processed Google Drive URL:', processedUrl)
+        return processedUrl
       }
     }
     
     // If it's already a direct URL or other format, return as is
+    console.log('Returning original URL:', url)
     return url
   }
 

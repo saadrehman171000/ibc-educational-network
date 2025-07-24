@@ -155,7 +155,7 @@ export default function HomePage() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="relative">
               <Image
-                src="/placeholder.svg?height=400&width=500"
+                src="/hero-2.png"
                 alt="IBC Educational Network"
                 width={500}
                 height={400}
