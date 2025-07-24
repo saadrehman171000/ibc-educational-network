@@ -83,8 +83,8 @@ export default function EventDetailPage() {
       const match = url.match(regex)
       if (match) {
         const fileId = match[1]
-        // Use thumbnail URL which is more reliable for display
-        const processedUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w400`
+        // Use higher resolution thumbnail for detail pages to prevent pixelation
+        const processedUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w1200`
         console.log('Processed Google Drive URL:', processedUrl)
         return processedUrl
       }
@@ -110,9 +110,15 @@ export default function EventDetailPage() {
       const driveRegex = /\/file\/d\/([a-zA-Z0-9_-]+)/
       const match = originalSrc.match(driveRegex)
       
-      if (match && !originalSrc.includes('thumbnail')) {
-        target.src = `https://drive.google.com/thumbnail?id=${match[1]}&sz=w400`
-        return
+      if (match) {
+        const fileId = match[1]
+        // Try thumbnail format
+        if (!originalSrc.includes('thumbnail')) {
+          const thumbnailUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w1200`
+          console.log('Trying thumbnail URL:', thumbnailUrl)
+          target.src = thumbnailUrl
+          return
+        }
       }
     }
     
