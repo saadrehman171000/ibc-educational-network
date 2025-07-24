@@ -65,15 +65,6 @@ export function AdminSidebar({ sidebarOpen, setSidebarOpen }: AdminSidebarProps)
       href: "/admin/orders",
     },
     {
-      title: "Collections",
-      icon: FileText,
-      key: "collections",
-      submenu: [
-        { title: "All Collections", href: "/admin/collections", icon: List },
-        { title: "Add Collection", href: "/admin/collections/add", icon: Plus },
-      ],
-    },
-    {
       title: "Announcements",
       icon: Megaphone,
       key: "announcements",
