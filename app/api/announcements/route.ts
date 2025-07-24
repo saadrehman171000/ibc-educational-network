@@ -7,13 +7,17 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const page = parseInt(searchParams.get('page') || '1')
     const limit = parseInt(searchParams.get('limit') || '10')
-    const important = searchParams.get('important')
+    const featured = searchParams.get('featured')
+    const category = searchParams.get('category')
 
     const skip = (page - 1) * limit
 
     const where: any = {}
-    if (important === 'true') {
-      where.isImportant = true
+    if (featured === 'true') {
+      where.isFeatured = true
+    }
+    if (category && category !== 'All') {
+      where.category = category
     }
 
     const [announcements, totalCount] = await Promise.all([
@@ -21,7 +25,7 @@ export async function GET(request: NextRequest) {
         where,
         skip,
         take: limit,
-        orderBy: { date: 'desc' },
+        orderBy: { createdAt: 'desc' },
       }),
       prisma.announcement.count({ where }),
     ])
@@ -53,11 +57,21 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     
+    // Map the incoming data to match the schema
+    const announcementData = {
+      title: body.title,
+      summary: body.summary,
+      content: body.content,
+      category: body.category,
+      author: body.author || 'IBC Editorial Team',
+      isFeatured: body.isFeatured || false,
+    }
+    
     const announcement = await prisma.announcement.create({
-      data: body,
+      data: announcementData,
     })
 
-    return NextResponse.json(announcement, { status: 201 })
+    return NextResponse.json({ announcement }, { status: 201 })
   } catch (error) {
     console.error('Error creating announcement:', error)
     return NextResponse.json(

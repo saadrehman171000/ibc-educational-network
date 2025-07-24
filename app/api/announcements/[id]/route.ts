@@ -4,11 +4,13 @@ import { prisma } from '@/lib/prisma'
 // GET /api/announcements/[id] - Get a single announcement
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
+    
     const announcement = await prisma.announcement.findUnique({
-      where: { id: params.id },
+      where: { id },
     })
 
     if (!announcement) {
@@ -18,7 +20,7 @@ export async function GET(
       )
     }
 
-    return NextResponse.json(announcement)
+    return NextResponse.json({ announcement })
   } catch (error) {
     console.error('Error fetching announcement:', error)
     return NextResponse.json(
@@ -31,26 +33,33 @@ export async function GET(
 // PUT /api/announcements/[id] - Update an announcement
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const body = await request.json()
     const {
       title,
-      description,
-      isImportant,
+      summary,
+      content,
+      category,
+      author,
+      isFeatured,
     } = body
 
     const announcement = await prisma.announcement.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         ...(title && { title }),
-        ...(description && { description }),
-        ...(isImportant !== undefined && { isImportant }),
+        ...(summary && { summary }),
+        ...(content && { content }),
+        ...(category && { category }),
+        ...(author && { author }),
+        ...(isFeatured !== undefined && { isFeatured }),
       },
     })
 
-    return NextResponse.json(announcement)
+    return NextResponse.json({ announcement })
   } catch (error) {
     console.error('Error updating announcement:', error)
     if (error.code === 'P2025') {
@@ -69,11 +78,13 @@ export async function PUT(
 // DELETE /api/announcements/[id] - Delete an announcement
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
+    
     await prisma.announcement.delete({
-      where: { id: params.id },
+      where: { id },
     })
 
     return NextResponse.json({ message: 'Announcement deleted successfully' })

@@ -42,8 +42,11 @@ export default function AddAnnouncementPage() {
         },
         body: JSON.stringify({
           title: formData.title,
-          description: formData.content, // API expects 'description' field
-          isImportant: formData.featured,
+          summary: formData.summary,
+          content: formData.content,
+          category: formData.category,
+          author: "IBC Editorial Team", // Default author
+          isFeatured: formData.featured,
         }),
       })
 
