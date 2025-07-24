@@ -56,16 +56,35 @@ export default function ProductDetailPage() {
     }
   }, [productId, router])
 
-  // Convert Google Drive URL to display URL
+  // Convert Google Drive URL to display URL with better handling
   const getImageUrl = (url?: string) => {
-    if (!url) return '/placeholder-logo.png'
-    const driveRegex = /https:\/\/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)\/view/
-    const match = url.match(driveRegex)
+    console.log('Product detail getImageUrl called with:', url) // Debug log
     
-    if (match) {
-      return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w800`
+    if (!url || url.trim() === '') {
+      console.log('No URL provided, returning placeholder')
+      return '/placeholder-logo.png'
     }
     
+    // Handle different Google Drive URL formats
+    const driveRegexes = [
+      /https:\/\/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)(?:\/view)?/,
+      /https:\/\/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/,
+      /https:\/\/docs\.google\.com\/.*\/d\/([a-zA-Z0-9_-]+)/
+    ]
+    
+    for (const regex of driveRegexes) {
+      const match = url.match(regex)
+      if (match) {
+        const fileId = match[1]
+        // Use thumbnail URL which is more reliable for display
+        const processedUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w800`
+        console.log('Processed Google Drive URL:', processedUrl)
+        return processedUrl
+      }
+    }
+    
+    // If it's already a direct URL or other format, return as is
+    console.log('Returning original URL:', url)
     return url
   }
 
