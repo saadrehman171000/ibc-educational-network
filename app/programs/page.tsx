@@ -44,7 +44,7 @@ export default function ProgramsPage() {
   const [pagination, setPagination] = useState<Pagination | null>(null)
   const [loading, setLoading] = useState(true)
   const [selectedCategory, setSelectedCategory] = useState("")
-  const [selectedStatus, setSelectedStatus] = useState("upcoming")
+  const [selectedStatus, setSelectedStatus] = useState("")
 
   // Fetch events
   const fetchEvents = async (page = 1) => {
@@ -59,6 +59,9 @@ export default function ProgramsPage() {
 
       const response = await fetch(`/api/events?${params}`)
       const data = await response.json()
+
+      console.log('API Response:', data) // Debug log
+      console.log('Events received:', data.events) // Debug log
 
       setEvents(data.events || [])
       setPagination(data.pagination)
@@ -223,7 +226,7 @@ export default function ProgramsPage() {
             <button
               onClick={() => {
                 setSelectedCategory("")
-                setSelectedStatus("upcoming")
+                setSelectedStatus("")
               }}
               className="px-4 py-2 text-blue-600 hover:text-blue-700 border border-blue-300 rounded-lg hover:bg-blue-50"
             >
