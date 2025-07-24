@@ -185,14 +185,16 @@ export default function EventDetailPage() {
         <div className="container-max py-8">
           <div className="grid lg:grid-cols-2 gap-8 items-start">
             {/* Event Image */}
-            <div className="relative rounded-lg overflow-hidden bg-gray-100">
+            <div className="relative rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
               <Image
                 src={getImageUrl(event.image)}
                 alt={event.title}
-                width={600}
-                height={400}
+                width={800}
+                height={600}
                 className="w-full h-auto object-contain"
                 onError={handleImageError}
+                quality={95}
+                priority={true}
               />
               {event.featured && (
                 <span className="absolute top-4 right-4 bg-orange-500 text-white text-sm px-3 py-1 rounded-full">

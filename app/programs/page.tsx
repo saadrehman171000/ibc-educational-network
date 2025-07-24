@@ -281,12 +281,13 @@ export default function ProgramsPage() {
                                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {events.map((event) => (
                   <div key={event.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
-                    <div className="aspect-video relative">
+                    <div className="aspect-video relative bg-gray-100 flex items-center justify-center">
                       <Image
                         src={getImageUrl(event.image)}
                         alt={event.title}
-                        fill
-                        className="object-cover"
+                        width={400}
+                        height={225}
+                        className="w-full h-full object-contain"
                         onError={handleImageError}
                         priority={false}
                         placeholder="blur"

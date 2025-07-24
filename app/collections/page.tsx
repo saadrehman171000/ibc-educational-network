@@ -330,12 +330,13 @@ export default function CollectionsPage() {
               >
                 {viewMode === 'grid' ? (
                   <>
-                    <div className="aspect-[3/4] relative">
+                    <div className="aspect-[3/4] relative bg-gray-100 flex items-center justify-center">
                       <Image
                         src={getImageUrl(product.imageUrl)}
                         alt={product.title}
-                        fill
-                        className="object-cover"
+                        width={300}
+                        height={400}
+                        className="w-full h-full object-contain"
                         onError={handleImageError}
                       />
                       {product.isNewCollection && (
@@ -380,12 +381,13 @@ export default function CollectionsPage() {
                   </>
                 ) : (
                   <>
-                    <div className="w-32 h-40 relative flex-shrink-0">
+                    <div className="w-32 h-40 relative flex-shrink-0 bg-gray-100 flex items-center justify-center rounded">
                       <Image
                         src={getImageUrl(product.imageUrl)}
                         alt={product.title}
-                        fill
-                        className="object-cover rounded"
+                        width={128}
+                        height={160}
+                        className="w-full h-full object-contain"
                         onError={handleImageError}
                       />
                       {product.isNewCollection && (
