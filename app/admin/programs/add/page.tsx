@@ -111,28 +111,28 @@ export default function AddEventPage() {
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Event Information</h2>
               <div className="space-y-4">
-                <div>
+          <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Event Title *</label>
-                  <input
-                    type="text"
-                    name="title"
-                    required
-                    value={formData.title}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            <input
+              type="text"
+              name="title"
+              required
+              value={formData.title}
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="Enter event title"
-                  />
-                </div>
+            />
+          </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Description *</label>
-                  <textarea
-                    name="description"
-                    required
-                    rows={4}
-                    value={formData.description}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Description *</label>
+            <textarea
+              name="description"
+              required
+              rows={4}
+              value={formData.description}
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="Enter event description"
                   />
                 </div>
@@ -147,10 +147,10 @@ export default function AddEventPage() {
                       value={formData.date}
                       onChange={handleInputChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                  </div>
+            />
+          </div>
 
-                  <div>
+          <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Time *</label>
                     <input
                       type="time"
@@ -179,30 +179,30 @@ export default function AddEventPage() {
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Category *</label>
-                    <select
+            <select
                       name="category"
-                      required
+              required
                       value={formData.category}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    >
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
                       <option value="">Select Category</option>
                       {categories.map((category) => (
                         <option key={category} value={category}>
                           {category}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                </option>
+              ))}
+            </select>
+          </div>
 
-                  <div>
+          <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Status *</label>
                     <select
                       name="status"
                       required
                       value={formData.status}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
                       {statusOptions.map((status) => (
                         <option key={status} value={status}>
@@ -211,9 +211,9 @@ export default function AddEventPage() {
                       ))}
                     </select>
                   </div>
-                </div>
+          </div>
 
-                <div>
+          <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Event Image URL (Google Drive) *
                   </label>
@@ -222,14 +222,14 @@ export default function AddEventPage() {
                     name="image"
                     required
                     value={formData.image}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="https://drive.google.com/file/d/.../view"
-                  />
+            />
                   <p className="text-sm text-gray-500 mt-1">
                     Share your image from Google Drive and paste the sharing URL here
                   </p>
-                </div>
+          </div>
 
                 <div className="flex items-center space-x-2">
                   <input
@@ -237,7 +237,7 @@ export default function AddEventPage() {
                     name="featured"
                     id="featured"
                     checked={formData.featured}
-                    onChange={handleInputChange}
+              onChange={handleInputChange}
                     className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                   />
                   <label htmlFor="featured" className="text-sm font-medium text-gray-700">
@@ -279,25 +279,25 @@ export default function AddEventPage() {
             {/* Actions */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <div className="space-y-4">
-                <button
-                  type="submit"
+            <button
+              type="submit"
                   disabled={loading}
                   className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
-                >
+            >
                   <Save className="w-4 h-4" />
                   <span>{loading ? 'Creating...' : 'Create Event'}</span>
-                </button>
-                <Link
-                  href="/admin/programs"
+            </button>
+            <Link
+              href="/admin/programs"
                   className="w-full bg-gray-100 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-200 transition-colors text-center block"
-                >
-                  Cancel
-                </Link>
+            >
+              Cancel
+            </Link>
               </div>
             </div>
           </div>
-        </div>
-      </form>
+          </div>
+        </form>
     </div>
   )
 }

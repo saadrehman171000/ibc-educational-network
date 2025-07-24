@@ -1,4 +1,3 @@
-import React from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { BookOpen, Users, Award, Target, ArrowRight, Star, CheckCircle } from "lucide-react"
@@ -11,7 +10,7 @@ export default function HomePage() {
       description: "Content perfectly aligned with national and international curricula for seamless integration.",
     },
     {
-      icon: Target,
+      icon: Target, 
       title: "Progressive Academic Structure",
       description: "Systematic progression from Beginner to Class 8 with carefully designed learning pathways.",
     },
@@ -24,6 +23,51 @@ export default function HomePage() {
       icon: Award,
       title: "Designed for Real Outcomes",
       description: "Evidence-based content design focused on measurable learning outcomes and student success.",
+    },
+  ]
+
+  const collections = [
+    {
+      id: 1,
+      title: "English Language Arts",
+      grade: "Class 1-3",
+      image: "/placeholder.svg?height=300&width=200",
+      description: "Comprehensive English learning with interactive exercises and engaging stories.",
+    },
+    {
+      id: 2,
+      title: "Mathematics Fundamentals",
+      grade: "Class 4-6",
+      image: "/placeholder.svg?height=300&width=200",
+      description: "Build strong mathematical foundations with visual learning and practical applications.",
+    },
+    {
+      id: 3,
+      title: "Science Explorer",
+      grade: "Class 5-8",
+      image: "/placeholder.svg?height=300&width=200",
+      description: "Discover the wonders of science through hands-on experiments and real-world examples.",
+    },
+    {
+      id: 4,
+      title: "Social Studies Journey",
+      grade: "Class 3-5",
+      image: "/placeholder.svg?height=300&width=200",
+      description: "Explore cultures, geography, and history with interactive maps and engaging content.",
+    },
+    {
+      id: 5,
+      title: "Creative Writing Workshop",
+      grade: "Step 2-3",
+      image: "/placeholder.svg?height=300&width=200",
+      description: "Develop writing skills through structured exercises and creative prompts.",
+    },
+    {
+      id: 6,
+      title: "Early Learning Basics",
+      grade: "Beginner",
+      image: "/placeholder.svg?height=300&width=200",
+      description: "Foundation skills for young learners with colorful illustrations and activities.",
     },
   ]
 
@@ -90,7 +134,7 @@ export default function HomePage() {
               <div className="relative z-10">
                 <div className="bg-white rounded-2xl shadow-2xl p-8 transform rotate-3 hover:rotate-0 transition-transform duration-500">
                   <Image
-                    src="/placeholder.svg?height=600&width=500&text=Students+learning+with+IBC+books"
+                    src="/hero.png"
                     alt="Students learning with IBC Educational books"
                     width={500}
                     height={600}
@@ -111,7 +155,7 @@ export default function HomePage() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="relative">
               <Image
-                src="/placeholder.svg?height=400&width=500"
+                src="/hero-2.png"
                 alt="IBC Educational Network"
                 width={500}
                 height={400}
@@ -184,227 +228,52 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Testimonials Section */}
+      {/* Featured Collections Section */}
       <section className="section-padding bg-white">
         <div className="container-max">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">What Educators Say</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Featured Collections</h2>
             <p className="text-xl text-gray-700 max-w-3xl mx-auto">
-              Hear from teachers and students who have experienced the difference our educational materials make.
+              Discover our most popular educational series, carefully crafted to support learning at every stage.
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-gradient-to-br from-blue-50 to-white p-8 rounded-2xl shadow-lg border border-blue-100">
-              <div className="flex items-center mb-4">
-                <div className="flex text-yellow-400">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 fill-current" />
-                  ))}
+            {collections.map((book) => (
+              <div key={book.id} className="bg-white rounded-xl card-shadow overflow-hidden group">
+                <div className="relative overflow-hidden">
+                  <Image
+                    src={book.image || "/placeholder.svg"}
+                    alt={book.title}
+                    width={300}
+                    height={400}
+                    className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute top-4 left-4">
+                    <span className="bg-teal-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                      {book.grade}
+                    </span>
+                  </div>
                 </div>
-              </div>
-              <p className="text-gray-700 mb-6 leading-relaxed italic">
-                "IBC books have transformed how my students engage with mathematics. The visual approach and step-by-step explanations make complex concepts accessible to all learners."
-              </p>
-              <div className="flex items-center">
-                <div className="w-12 h-12 bg-blue-200 rounded-full flex items-center justify-center mr-4">
-                  <span className="text-blue-800 font-bold">SA</span>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-900">Sarah Ahmed</h4>
-                  <p className="text-gray-600 text-sm">Mathematics Teacher, Karachi Grammar School</p>
-                </div>
-              </div>
-            </div>
 
-            <div className="bg-gradient-to-br from-teal-50 to-white p-8 rounded-2xl shadow-lg border border-teal-100">
-              <div className="flex items-center mb-4">
-                <div className="flex text-yellow-400">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 fill-current" />
-                  ))}
-                </div>
-              </div>
-              <p className="text-gray-700 mb-6 leading-relaxed italic">
-                "The English literature series has significantly improved my students' reading comprehension and critical thinking skills. Highly recommended!"
-              </p>
-              <div className="flex items-center">
-                <div className="w-12 h-12 bg-teal-200 rounded-full flex items-center justify-center mr-4">
-                  <span className="text-teal-800 font-bold">MK</span>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-900">Maria Khan</h4>
-                  <p className="text-gray-600 text-sm">English Teacher, Lahore American School</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-gradient-to-br from-orange-50 to-white p-8 rounded-2xl shadow-lg border border-orange-100">
-              <div className="flex items-center mb-4">
-                <div className="flex text-yellow-400">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 fill-current" />
-                  ))}
-                </div>
-              </div>
-              <p className="text-gray-700 mb-6 leading-relaxed italic">
-                "As a parent, I've seen remarkable improvement in my daughter's learning enthusiasm since we started using IBC books at home."
-              </p>
-              <div className="flex items-center">
-                <div className="w-12 h-12 bg-orange-200 rounded-full flex items-center justify-center mr-4">
-                  <span className="text-orange-800 font-bold">AH</span>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-900">Ali Hassan</h4>
-                  <p className="text-gray-600 text-sm">Parent, Islamabad</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Enhanced Statistics Section */}
-      <section className="section-padding bg-gradient-to-r from-blue-900 via-blue-800 to-teal-800 text-white relative overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute top-0 left-0 w-full h-full bg-[url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fillRule=\"evenodd\"%3E%3Cg fill=\"%23ffffff\" fillOpacity=\"0.05\"%3E%3Ccircle cx=\"30\" cy=\"30\" r=\"2\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
-        </div>
-        
-        <div className="container-max relative z-10">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">Our Impact in Numbers</h2>
-            <p className="text-xl text-blue-100 max-w-3xl mx-auto">
-              Measurable results that demonstrate our commitment to educational excellence
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="text-center group">
-              <div className="bg-white bg-opacity-10 rounded-2xl p-8 backdrop-blur-sm border border-white border-opacity-20 group-hover:bg-opacity-20 transition-all duration-300">
-                <div className="text-4xl md:text-5xl font-bold mb-2 text-white">500+</div>
-                <div className="text-blue-100 font-medium">Educational Books</div>
-                <div className="text-blue-200 text-sm mt-1">Published & Distributed</div>
-              </div>
-            </div>
-            
-            <div className="text-center group">
-              <div className="bg-white bg-opacity-10 rounded-2xl p-8 backdrop-blur-sm border border-white border-opacity-20 group-hover:bg-opacity-20 transition-all duration-300">
-                <div className="text-4xl md:text-5xl font-bold mb-2 text-white">1000+</div>
-                <div className="text-blue-100 font-medium">Partner Schools</div>
-                <div className="text-blue-200 text-sm mt-1">Across Multiple Countries</div>
-              </div>
-            </div>
-            
-            <div className="text-center group">
-              <div className="bg-white bg-opacity-10 rounded-2xl p-8 backdrop-blur-sm border border-white border-opacity-20 group-hover:bg-opacity-20 transition-all duration-300">
-                <div className="text-4xl md:text-5xl font-bold mb-2 text-white">50K+</div>
-                <div className="text-blue-100 font-medium">Active Students</div>
-                <div className="text-blue-200 text-sm mt-1">Learning Daily</div>
-              </div>
-            </div>
-            
-            <div className="text-center group">
-              <div className="bg-white bg-opacity-10 rounded-2xl p-8 backdrop-blur-sm border border-white border-opacity-20 group-hover:bg-opacity-20 transition-all duration-300">
-                <div className="text-4xl md:text-5xl font-bold mb-2 text-white">95%</div>
-                <div className="text-blue-100 font-medium">Success Rate</div>
-                <div className="text-blue-200 text-sm mt-1">Student Achievement</div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-16 text-center">
-            <div className="inline-flex items-center bg-white bg-opacity-10 rounded-full px-6 py-3 backdrop-blur-sm border border-white border-opacity-20">
-              <Award className="w-5 h-5 mr-2 text-yellow-400" />
-              <span className="text-white font-medium">Award-Winning Educational Content Since 2010</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Latest News & Updates */}
-      <section className="section-padding bg-gray-50">
-        <div className="container-max">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Latest News & Updates</h2>
-            <p className="text-xl text-gray-700 max-w-3xl mx-auto">
-              Stay informed about our newest releases, educational insights, and upcoming events
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <article className="bg-white rounded-2xl shadow-lg overflow-hidden group hover:shadow-xl transition-all duration-300">
-              <div className="h-48 bg-gradient-to-br from-blue-400 to-blue-600 relative overflow-hidden">
-                <div className="absolute inset-0 bg-black bg-opacity-20"></div>
-                <div className="absolute bottom-4 left-4">
-                  <span className="bg-white text-blue-600 px-3 py-1 rounded-full text-sm font-medium">New Release</span>
-                </div>
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                  Advanced Mathematics Series for Class 8 Now Available
-                </h3>
-                <p className="text-gray-600 mb-4 leading-relaxed">
-                  Our latest mathematics curriculum features enhanced problem-solving techniques and real-world applications.
-                </p>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-500">January 15, 2025</span>
-                  <Link href="/announcements" className="text-blue-600 font-medium hover:text-blue-700 transition-colors">
-                    Read More →
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">{book.title}</h3>
+                  <p className="text-gray-700 mb-4 leading-relaxed">{book.description}</p>
+                  <Link
+                    href={`/collections/${book.id}`}
+                    className="inline-flex items-center text-blue-900 font-semibold hover:text-blue-700 transition-colors"
+                  >
+                    Read More
+                    <ArrowRight className="ml-2 w-4 h-4" />
                   </Link>
                 </div>
               </div>
-            </article>
-
-            <article className="bg-white rounded-2xl shadow-lg overflow-hidden group hover:shadow-xl transition-all duration-300">
-              <div className="h-48 bg-gradient-to-br from-teal-400 to-teal-600 relative overflow-hidden">
-                <div className="absolute inset-0 bg-black bg-opacity-20"></div>
-                <div className="absolute bottom-4 left-4">
-                  <span className="bg-white text-teal-600 px-3 py-1 rounded-full text-sm font-medium">Event</span>
-                </div>
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-teal-600 transition-colors">
-                  Educational Expo 2025 - Meet Us in Karachi
-                </h3>
-                <p className="text-gray-600 mb-4 leading-relaxed">
-                  Join us at Pakistan's largest educational exhibition from March 15-17, 2025 at Expo Center Karachi.
-                </p>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-500">January 10, 2025</span>
-                  <Link href="/announcements" className="text-teal-600 font-medium hover:text-teal-700 transition-colors">
-                    Read More →
-                  </Link>
-                </div>
-              </div>
-            </article>
-
-            <article className="bg-white rounded-2xl shadow-lg overflow-hidden group hover:shadow-xl transition-all duration-300">
-              <div className="h-48 bg-gradient-to-br from-orange-400 to-orange-600 relative overflow-hidden">
-                <div className="absolute inset-0 bg-black bg-opacity-20"></div>
-                <div className="absolute bottom-4 left-4">
-                  <span className="bg-white text-orange-600 px-3 py-1 rounded-full text-sm font-medium">Training</span>
-                </div>
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-orange-600 transition-colors">
-                  Teacher Training Workshop Series Begins
-                </h3>
-                <p className="text-gray-600 mb-4 leading-relaxed">
-                  Professional development workshops for educators. Limited seats available with early bird pricing.
-                </p>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-500">January 8, 2025</span>
-                  <Link href="/announcements" className="text-orange-600 font-medium hover:text-orange-700 transition-colors">
-                    Read More →
-                  </Link>
-                </div>
-              </div>
-            </article>
+            ))}
           </div>
 
           <div className="text-center mt-12">
-            <Link href="/announcements" className="btn-primary">
-              View All Announcements
+            <Link href="/collections" className="btn-primary">
+              View All Collections
             </Link>
           </div>
         </div>
