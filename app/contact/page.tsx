@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState } from "react"
-import { MapPin, Phone, Mail, Clock, Send } from "lucide-react"
+import { MapPin, Phone, Mail, Clock, Send, MessageSquare, Building } from "lucide-react"
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -35,27 +35,37 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-50">
       {/* Header */}
-      <section className="bg-blue-900 text-white section-padding">
+      <section className="bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 text-white py-20">
         <div className="container-max text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">Contact Us</h1>
-          <p className="text-xl text-blue-100 max-w-3xl mx-auto">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white">Contact Us</h1>
+          <p className="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto leading-relaxed">
             Get in touch with our team for inquiries about our educational materials, partnerships, or support.
           </p>
         </div>
       </section>
 
       {/* Contact Information */}
-      <section className="section-padding bg-white">
+      <section className="py-16 bg-white">
         <div className="container-max">
+          <div className="text-center mb-12">
+            <div className="flex items-center justify-center gap-3 mb-6">
+              <div className="w-1 h-8 bg-gradient-to-b from-blue-600 to-indigo-600 rounded-full"></div>
+              <h2 className="text-3xl font-semibold text-slate-900">Get In Touch</h2>
+            </div>
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+              We're here to help and answer any questions you might have.
+            </p>
+          </div>
+
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <MapPin className="w-8 h-8 text-blue-900" />
+            <div className="bg-slate-50 p-8 rounded-2xl border border-slate-200 text-center hover:shadow-md transition-shadow duration-300">
+              <div className="w-16 h-16 bg-blue-50 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <MapPin className="w-8 h-8 text-blue-600" />
               </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Address</h3>
-              <p className="text-gray-700 leading-relaxed">
+              <h3 className="text-lg font-semibold text-slate-900 mb-3">Address</h3>
+              <p className="text-slate-600 leading-relaxed">
                 Office No. 7, Shan Plaza
                 <br />
                 Gawali Lane #2, New Urdu Bazar
@@ -64,105 +74,118 @@ export default function ContactPage() {
               </p>
             </div>
 
-            <div className="text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Phone className="w-8 h-8 text-blue-900" />
+            <div className="bg-slate-50 p-8 rounded-2xl border border-slate-200 text-center hover:shadow-md transition-shadow duration-300">
+              <div className="w-16 h-16 bg-green-50 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <Phone className="w-8 h-8 text-green-600" />
               </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Phone</h3>
-              <p className="text-gray-700">
+              <h3 className="text-lg font-semibold text-slate-900 mb-3">Phone</h3>
+              <p className="text-slate-600">
                 +92 313 3849727
                 <br />
                 +92 314 2353805
               </p>
             </div>
 
-            <div className="text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Mail className="w-8 h-8 text-blue-900" />
+            <div className="bg-slate-50 p-8 rounded-2xl border border-slate-200 text-center hover:shadow-md transition-shadow duration-300">
+              <div className="w-16 h-16 bg-purple-50 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <Mail className="w-8 h-8 text-purple-600" />
               </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Email</h3>
-              <p className="text-gray-700">
+              <h3 className="text-lg font-semibold text-slate-900 mb-3">Email</h3>
+              <p className="text-slate-600">
                 info@ibceducational.com
                 <br />
                 support@ibceducational.com
               </p>
             </div>
 
-            <div className="text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <Clock className="w-8 h-8 text-blue-900" />
+            <div className="bg-slate-50 p-8 rounded-2xl border border-slate-200 text-center hover:shadow-md transition-shadow duration-300">
+              <div className="w-16 h-16 bg-orange-50 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <Clock className="w-8 h-8 text-orange-600" />
               </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Business Hours</h3>
-              <p className="text-gray-700">
+              <h3 className="text-lg font-semibold text-slate-900 mb-3">Business Hours</h3>
+              <p className="text-slate-600">
                 Mon - Fri: 9:00 AM - 6:00 PM
                 <br />
                 Sat: 9:00 AM - 2:00 PM
               </p>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* Contact Form & Map */}
-      <section className="section-padding bg-gray-50">
-        <div className="container-max">
+          {/* Contact Form */}
           <div className="grid lg:grid-cols-2 gap-12">
-            {/* Contact Form */}
-            <div className="bg-white rounded-xl p-8 shadow-lg">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Send us a Message</h2>
+            <div>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-1 h-8 bg-gradient-to-b from-slate-400 to-slate-600 rounded-full"></div>
+                <h2 className="text-2xl font-semibold text-slate-900">Send Us a Message</h2>
+              </div>
+              <p className="text-slate-600 mb-8 leading-relaxed">
+                Fill out the form below and we'll get back to you as soon as possible. We typically respond within 24 hours.
+              </p>
 
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-4">
+                <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
+                    <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-2">
+                      Full Name *
+                    </label>
                     <input
                       type="text"
+                      id="name"
                       name="name"
-                      required
                       value={formData.name}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="Your full name"
+                      required
+                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                      placeholder="Enter your full name"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Email Address *</label>
+                    <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-2">
+                      Email Address *
+                    </label>
                     <input
                       type="email"
+                      id="email"
                       name="email"
-                      required
                       value={formData.email}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="your.email@example.com"
+                      required
+                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                      placeholder="Enter your email address"
                     />
                   </div>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-4">
+                <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                    <label htmlFor="phone" className="block text-sm font-medium text-slate-700 mb-2">
+                      Phone Number
+                    </label>
                     <input
                       type="tel"
+                      id="phone"
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="+92 XXX XXXXXXX"
+                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                      placeholder="Enter your phone number"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Subject *</label>
+                    <label htmlFor="subject" className="block text-sm font-medium text-slate-700 mb-2">
+                      Subject *
+                    </label>
                     <select
+                      id="subject"
                       name="subject"
-                      required
                       value={formData.subject}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      required
+                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                     >
                       <option value="">Select a subject</option>
                       <option value="general">General Inquiry</option>
-                      <option value="books">Book Information</option>
+                      <option value="products">Product Information</option>
                       <option value="partnership">Partnership</option>
                       <option value="support">Technical Support</option>
                       <option value="feedback">Feedback</option>
@@ -171,72 +194,73 @@ export default function ContactPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Message *</label>
+                  <label htmlFor="message" className="block text-sm font-medium text-slate-700 mb-2">
+                    Message *
+                  </label>
                   <textarea
+                    id="message"
                     name="message"
-                    required
-                    rows={6}
                     value={formData.message}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-                    placeholder="Please describe your inquiry in detail..."
+                    required
+                    rows={6}
+                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors resize-none"
+                    placeholder="Tell us how we can help you..."
                   ></textarea>
                 </div>
 
-                <button type="submit" className="btn-primary w-full flex items-center justify-center">
-                  <Send className="w-5 h-5 mr-2" />
+                <button
+                  type="submit"
+                  className="w-full bg-blue-600 text-white py-4 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+                >
+                  <Send className="w-5 h-5" />
                   Send Message
                 </button>
               </form>
             </div>
 
-            {/* Map */}
-            <div className="bg-white rounded-xl p-8 shadow-lg">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Find Us</h2>
-
-              <div className="bg-gray-200 rounded-lg h-64 mb-6 flex items-center justify-center">
-                <div className="text-center text-gray-600">
-                  <MapPin className="w-12 h-12 mx-auto mb-2" />
-                  <p>Interactive Map</p>
-                  <p className="text-sm">Office No. 7, Shan Plaza, Gawali Lane #2</p>
-                  <p className="text-sm">New Urdu Bazar, Karachi, Pakistan</p>
+            <div>
+              <div className="bg-slate-50 p-8 rounded-2xl border border-slate-200">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-1 h-8 bg-gradient-to-b from-blue-600 to-indigo-600 rounded-full"></div>
+                  <h3 className="text-xl font-semibold text-slate-900">Why Choose IBC?</h3>
                 </div>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex items-start space-x-3">
-                  <MapPin className="w-5 h-5 text-blue-900 mt-1 flex-shrink-0" />
-                  <div>
-                    <h3 className="font-semibold text-gray-900">Head Office</h3>
-                    <p className="text-gray-700">
-                      Office No. 7, Shan Plaza, Gawali Lane #2,
-                      <br />
-                      New Urdu Bazar, Karachi, Pakistan
-                    </p>
+                
+                <div className="space-y-6">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Building className="w-6 h-6 text-blue-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-slate-900 mb-2">Expert Team</h4>
+                      <p className="text-slate-600 text-sm leading-relaxed">
+                        Our team consists of experienced educators and subject matter experts with decades of combined experience.
+                      </p>
+                    </div>
                   </div>
-                </div>
 
-                <div className="flex items-start space-x-3">
-                  <Phone className="w-5 h-5 text-blue-900 mt-1 flex-shrink-0" />
-                  <div>
-                    <h3 className="font-semibold text-gray-900">Phone Numbers</h3>
-                    <p className="text-gray-700">
-                      +92 313 3849727
-                      <br />
-                      +92 314 2353805
-                    </p>
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <MessageSquare className="w-6 h-6 text-green-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-slate-900 mb-2">Quick Response</h4>
+                      <p className="text-slate-600 text-sm leading-relaxed">
+                        We pride ourselves on responding to all inquiries within 24 hours during business days.
+                      </p>
+                    </div>
                   </div>
-                </div>
 
-                <div className="flex items-start space-x-3">
-                  <Mail className="w-5 h-5 text-blue-900 mt-1 flex-shrink-0" />
-                  <div>
-                    <h3 className="font-semibold text-gray-900">Email Addresses</h3>
-                    <p className="text-gray-700">
-                      info@ibceducational.com
-                      <br />
-                      support@ibceducational.com
-                    </p>
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Clock className="w-6 h-6 text-purple-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-slate-900 mb-2">Always Available</h4>
+                      <p className="text-slate-600 text-sm leading-relaxed">
+                        Our support team is available during business hours to assist you with any questions or concerns.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -245,64 +269,24 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* FAQ Section */}
-      <section className="section-padding bg-white">
+      {/* Map Section */}
+      <section className="py-16 bg-slate-50">
         <div className="container-max">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
-            <p className="text-xl text-gray-700">Quick answers to common questions about our services and products</p>
+            <div className="flex items-center justify-center gap-3 mb-6">
+              <div className="w-1 h-8 bg-gradient-to-b from-slate-400 to-slate-600 rounded-full"></div>
+              <h2 className="text-3xl font-semibold text-slate-900">Visit Our Office</h2>
+            </div>
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+              Located in the heart of Karachi, our office is easily accessible and welcomes visitors during business hours.
+            </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="space-y-6">
-              <div className="bg-gray-50 rounded-lg p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-2">How can I order books in bulk?</h3>
-                <p className="text-gray-700">
-                  For bulk orders, please contact our sales team directly at +92 313 3849727 or email us at
-                  info@ibceducational.com with your requirements.
-                </p>
-              </div>
-
-              <div className="bg-gray-50 rounded-lg p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-2">Do you offer teacher training?</h3>
-                <p className="text-gray-700">
-                  Yes, we provide comprehensive teacher training programs and workshops. Contact us to learn about
-                  upcoming sessions and customized training options.
-                </p>
-              </div>
-
-              <div className="bg-gray-50 rounded-lg p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-2">What is your return policy?</h3>
-                <p className="text-gray-700">
-                  We offer a 30-day return policy for unused books in original condition. Please refer to our return
-                  policy page for detailed terms and conditions.
-                </p>
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              <div className="bg-gray-50 rounded-lg p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-2">Do you ship internationally?</h3>
-                <p className="text-gray-700">
-                  Currently, we ship within Pakistan and select international locations. Contact us for specific
-                  shipping information to your location.
-                </p>
-              </div>
-
-              <div className="bg-gray-50 rounded-lg p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-2">How can I become a distributor?</h3>
-                <p className="text-gray-700">
-                  We welcome partnership inquiries from educational distributors. Please email us your business details
-                  and we'll get back to you with partnership information.
-                </p>
-              </div>
-
-              <div className="bg-gray-50 rounded-lg p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-2">Are digital versions available?</h3>
-                <p className="text-gray-700">
-                  Yes, many of our titles are available in digital format. Please check individual book pages or contact
-                  us for digital licensing options.
-                </p>
+          <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+            <div className="aspect-video bg-slate-200 rounded-xl flex items-center justify-center">
+              <div className="text-center">
+                <MapPin className="w-16 h-16 text-slate-400 mx-auto mb-4" />
+                <p className="text-slate-600">Interactive map will be embedded here</p>
               </div>
             </div>
           </div>

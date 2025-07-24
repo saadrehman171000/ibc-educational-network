@@ -79,7 +79,7 @@ export default function AnnouncementsPage() {
       {/* Header */}
       <section className="bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 text-white py-20">
         <div className="container-max text-center">
-          <h1 className="text-4xl md:text-5xl font-light mb-6 text-white">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white">
             Latest News & Updates
           </h1>
           <p className="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto leading-relaxed">

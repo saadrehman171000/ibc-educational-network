@@ -1,5 +1,5 @@
 import Image from "next/image"
-import { Target, Eye, Heart, Users, Award, Globe } from "lucide-react"
+import { Target, Eye, Heart, Users, Award, Globe, Calendar, BookOpen, Star } from "lucide-react"
 
 export default function AboutPage() {
   const values = [
@@ -59,252 +59,177 @@ export default function AboutPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-50">
       {/* Header */}
-      <section className="bg-blue-900 text-white section-padding">
+      <section className="bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 text-white py-20">
         <div className="container-max text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">About IBC Educational Network</h1>
-          <p className="text-xl text-blue-100 max-w-3xl mx-auto">
-            Transforming education through innovative content and unwavering commitment to academic excellence since
-            2010.
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white">About IBC Educational Network</h1>
+          <p className="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto leading-relaxed">
+            Transforming education through innovative content and unwavering commitment to academic excellence since 2010.
           </p>
         </div>
       </section>
 
       {/* Our Story */}
-      <section className="section-padding bg-white">
+      <section className="py-16 bg-white">
         <div className="container-max">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Our Story</h2>
-              <p className="text-lg text-gray-700 leading-relaxed">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-1 h-8 bg-gradient-to-b from-blue-600 to-indigo-600 rounded-full"></div>
+                <h2 className="text-3xl font-semibold text-slate-900">Our Story</h2>
+              </div>
+              <p className="text-lg text-slate-600 leading-relaxed">
                 IBC Educational Network began with a simple yet powerful vision: to create educational materials that
                 truly engage students and support teachers in delivering exceptional learning experiences. Founded in
                 Karachi, Pakistan, we have grown from a small publishing house to a trusted name in educational content
                 across the region.
               </p>
-              <p className="text-lg text-gray-700 leading-relaxed">
+              <p className="text-lg text-slate-600 leading-relaxed">
                 Our journey has been marked by continuous innovation, deep collaboration with educators, and an
                 unwavering commitment to quality. Today, we serve thousands of schools and tens of thousands of
                 students, but our core mission remains unchanged: to make learning engaging, effective, and accessible
                 for all.
               </p>
-              <div className="flex items-center space-x-8 pt-4">
+              <div className="flex items-center space-x-8 pt-6">
                 <div className="text-center">
                   <div className="text-3xl font-bold text-blue-900">14+</div>
-                  <div className="text-gray-600">Years of Excellence</div>
+                  <div className="text-slate-600 text-sm">Years of Excellence</div>
                 </div>
                 <div className="text-center">
                   <div className="text-3xl font-bold text-blue-900">500+</div>
-                  <div className="text-gray-600">Publications</div>
+                  <div className="text-slate-600 text-sm">Publications</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-900">1000+</div>
-                  <div className="text-gray-600">Partner Schools</div>
+                  <div className="text-3xl font-bold text-blue-900">50K+</div>
+                  <div className="text-slate-600 text-sm">Students Served</div>
                 </div>
               </div>
             </div>
-
             <div className="relative">
               <Image
-                src="/about.png"
-                alt="IBC Educational Network Office"
-                width={600}
-                height={500}
-                className="rounded-xl shadow-lg"
+                src="/placeholder.svg?height=400&width=500&text=Our+Story"
+                alt="IBC Educational Network Story"
+                width={500}
+                height={400}
+                className="rounded-2xl shadow-lg"
               />
             </div>
           </div>
         </div>
       </section>
 
-      {/* Mission & Vision */}
-      <section className="section-padding bg-gray-50">
-        <div className="container-max">
-          <div className="grid lg:grid-cols-2 gap-12">
-            <div className="bg-white rounded-xl p-8 card-shadow">
-              <div className="flex items-center space-x-4 mb-6">
-                <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <Target className="w-8 h-8 text-blue-900" />
-                </div>
-                <h2 className="text-2xl font-bold text-gray-900">Our Mission</h2>
-              </div>
-              <p className="text-lg text-gray-700 leading-relaxed">
-                To create innovative, engaging, and academically rigorous educational content that empowers students to
-                achieve their full potential while supporting educators in delivering exceptional learning experiences.
-                We are committed to making quality education accessible and effective for learners at every stage of
-                their academic journey.
-              </p>
-            </div>
-
-            <div className="bg-white rounded-xl p-8 card-shadow">
-              <div className="flex items-center space-x-4 mb-6">
-                <div className="w-16 h-16 bg-teal-100 rounded-lg flex items-center justify-center">
-                  <Eye className="w-8 h-8 text-teal-600" />
-                </div>
-                <h2 className="text-2xl font-bold text-gray-900">Our Vision</h2>
-              </div>
-              <p className="text-lg text-gray-700 leading-relaxed">
-                To be the leading educational publisher in the region, recognized for our commitment to academic
-                excellence, innovation in learning design, and positive impact on student outcomes. We envision a future
-                where every student has access to world-class educational materials that inspire curiosity, critical
-                thinking, and lifelong learning.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Our Values */}
-      <section className="section-padding bg-white">
+      <section className="py-16 bg-slate-50">
         <div className="container-max">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our Core Values</h2>
-            <p className="text-xl text-gray-700 max-w-3xl mx-auto">
-              The principles that guide everything we do and shape our commitment to educational excellence.
+          <div className="text-center mb-12">
+            <div className="flex items-center justify-center gap-3 mb-6">
+              <div className="w-1 h-8 bg-gradient-to-b from-slate-400 to-slate-600 rounded-full"></div>
+              <h2 className="text-3xl font-semibold text-slate-900">Our Values</h2>
+            </div>
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+              The principles that guide our work and shape our commitment to educational excellence.
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {values.map((value, index) => (
-              <div key={index} className="text-center group">
-                <div className="w-20 h-20 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-6 group-hover:bg-blue-900 transition-colors duration-300">
-                  <value.icon className="w-10 h-10 text-blue-900 group-hover:text-white transition-colors duration-300" />
+              <div key={index} className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow duration-300">
+                <div className="w-16 h-16 bg-blue-50 rounded-xl flex items-center justify-center mb-6">
+                  <value.icon className="w-8 h-8 text-blue-600" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-4">{value.title}</h3>
-                <p className="text-gray-700 leading-relaxed">{value.description}</p>
+                <h3 className="text-xl font-semibold text-slate-900 mb-4">{value.title}</h3>
+                <p className="text-slate-600 leading-relaxed">{value.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Timeline */}
-      <section className="section-padding bg-gray-50">
+      {/* Our Journey */}
+      <section className="py-16 bg-white">
         <div className="container-max">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our Journey</h2>
-            <p className="text-xl text-gray-700 max-w-3xl mx-auto">
-              Key milestones that have shaped IBC Educational Network into the trusted publisher we are today.
+          <div className="text-center mb-12">
+            <div className="flex items-center justify-center gap-3 mb-6">
+              <div className="w-1 h-8 bg-gradient-to-b from-blue-600 to-indigo-600 rounded-full"></div>
+              <h2 className="text-3xl font-semibold text-slate-900">Our Journey</h2>
+            </div>
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+              Key milestones that mark our growth and commitment to educational innovation.
             </p>
           </div>
 
-          <div className="relative">
-            <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-blue-200"></div>
-
-            <div className="space-y-12">
-              {milestones.map((milestone, index) => (
-                <div key={index} className={`flex items-center ${index % 2 === 0 ? "flex-row" : "flex-row-reverse"}`}>
-                  <div className={`w-1/2 ${index % 2 === 0 ? "pr-8 text-right" : "pl-8 text-left"}`}>
-                    <div className="bg-white rounded-xl p-6 card-shadow">
-                      <div className="text-2xl font-bold text-blue-900 mb-2">{milestone.year}</div>
-                      <h3 className="text-xl font-bold text-gray-900 mb-2">{milestone.title}</h3>
-                      <p className="text-gray-700 leading-relaxed">{milestone.description}</p>
-                    </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {milestones.map((milestone, index) => (
+              <div key={index} className="bg-slate-50 p-6 rounded-xl border border-slate-200 hover:shadow-md transition-shadow duration-300">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                    {milestone.year}
                   </div>
-
-                  <div className="relative z-10">
-                    <div className="w-4 h-4 bg-blue-900 rounded-full border-4 border-white shadow-lg"></div>
-                  </div>
-
-                  <div className="w-1/2"></div>
+                  <h3 className="text-lg font-semibold text-slate-900">{milestone.title}</h3>
                 </div>
-              ))}
-            </div>
+                <p className="text-slate-600 leading-relaxed">{milestone.description}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Team Section */}
-      <section className="section-padding bg-white">
+      <section className="py-16 bg-slate-50">
         <div className="container-max">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our Expert Team</h2>
-            <p className="text-xl text-gray-700 max-w-3xl mx-auto">
-              Dedicated professionals with decades of combined experience in education, publishing, and content
-              development.
+          <div className="text-center mb-12">
+            <div className="flex items-center justify-center gap-3 mb-6">
+              <div className="w-1 h-8 bg-gradient-to-b from-slate-400 to-slate-600 rounded-full"></div>
+              <h2 className="text-3xl font-semibold text-slate-900">Our Team</h2>
+            </div>
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+              Meet the dedicated professionals behind our educational content and innovation.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="w-32 h-32 bg-gray-200 rounded-full mx-auto mb-6 overflow-hidden">
-                <Image
-                  src="/placeholder.svg?height=128&width=128"
-                  alt="Educational Director"
-                  width={128}
-                  height={128}
-                  className="w-full h-full object-cover"
-                />
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 text-center hover:shadow-md transition-shadow duration-300">
+              <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Users className="w-10 h-10 text-blue-600" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Educational Directors</h3>
-              <p className="text-gray-600 mb-4">Ph.D. in Education</p>
-              <p className="text-gray-700 leading-relaxed">
-                Leading curriculum development and ensuring academic rigor across all our publications.
-              </p>
+              <h3 className="text-xl font-semibold text-slate-900 mb-2">Content Team</h3>
+              <p className="text-slate-600">Expert educators and subject matter specialists who create our curriculum-aligned content.</p>
             </div>
 
-            <div className="text-center">
-              <div className="w-32 h-32 bg-gray-200 rounded-full mx-auto mb-6 overflow-hidden">
-                <Image
-                  src="/placeholder.svg?height=128&width=128"
-                  alt="Content Development Team"
-                  width={128}
-                  height={128}
-                  className="w-full h-full object-cover"
-                />
+            <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 text-center hover:shadow-md transition-shadow duration-300">
+              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Award className="w-10 h-10 text-green-600" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Content Specialists</h3>
-              <p className="text-gray-600 mb-4">Subject Matter Experts</p>
-              <p className="text-gray-700 leading-relaxed">
-                Creating engaging, accurate, and pedagogically sound content across all subject areas.
-              </p>
+              <h3 className="text-xl font-semibold text-slate-900 mb-2">Quality Assurance</h3>
+              <p className="text-slate-600">Rigorous review processes ensure accuracy, relevance, and educational effectiveness.</p>
             </div>
 
-            <div className="text-center">
-              <div className="w-32 h-32 bg-gray-200 rounded-full mx-auto mb-6 overflow-hidden">
-                <Image
-                  src="/placeholder.svg?height=128&width=128"
-                  alt="Design Team"
-                  width={128}
-                  height={128}
-                  className="w-full h-full object-cover"
-                />
+            <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 text-center hover:shadow-md transition-shadow duration-300">
+              <div className="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Globe className="w-10 h-10 text-purple-600" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Design & Technology</h3>
-              <p className="text-gray-600 mb-4">Creative Professionals</p>
-              <p className="text-gray-700 leading-relaxed">
-                Bringing content to life through innovative design and cutting-edge educational technology.
-              </p>
+              <h3 className="text-xl font-semibold text-slate-900 mb-2">Global Reach</h3>
+              <p className="text-slate-600">International partnerships and distribution networks serving schools worldwide.</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Awards & Recognition */}
-      <section className="section-padding bg-blue-900 text-white">
+      {/* CTA Section */}
+      <section className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white py-20">
         <div className="container-max text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">Awards & Recognition</h2>
-          <p className="text-xl text-blue-100 mb-12 max-w-3xl mx-auto">
-            Our commitment to excellence has been recognized by educational institutions and industry organizations.
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">Join Our Mission</h2>
+          <p className="text-lg text-slate-300 mb-10 max-w-2xl mx-auto leading-relaxed">
+            Partner with us to transform education and inspire the next generation of learners.
           </p>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-white bg-opacity-10 rounded-xl p-6">
-              <Award className="w-12 h-12 mx-auto mb-4" />
-              <h3 className="text-xl font-bold mb-2 text-white">National Education Innovation Award</h3>
-              <p className="text-blue-100">2022 - Outstanding contribution to educational innovation</p>
-            </div>
-            <div className="bg-white bg-opacity-10 rounded-xl p-6">
-              <Award className="w-12 h-12 mx-auto mb-4" />
-              <h3 className="text-xl font-bold mb-2 text-white">Best Educational Publisher</h3>
-              <p className="text-blue-100">2021 - Regional recognition for quality content</p>
-            </div>
-            <div className="bg-white bg-opacity-10 rounded-xl p-6">
-              <Award className="w-12 h-12 mx-auto mb-4" />
-              <h3 className="text-xl font-bold mb-2 text-white">Excellence in Design</h3>
-              <p className="text-blue-100">2020 - Outstanding visual design in educational materials</p>
-            </div>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button className="bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+              Contact Us
+            </button>
+            <button className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-slate-900 transition-colors">
+              Learn More
+            </button>
           </div>
         </div>
       </section>
