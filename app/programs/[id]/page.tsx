@@ -85,8 +85,8 @@ export default function EventDetailPage() {
       const match = url.match(regex)
       if (match) {
         const fileId = match[1]
-        // Use higher resolution thumbnail for detail pages to prevent pixelation
-        const processedUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w1200`
+        // Use direct download URL which is more reliable than thumbnails
+        const processedUrl = `https://drive.google.com/uc?export=view&id=${fileId}`
         console.log('Processed Google Drive URL:', processedUrl)
         return processedUrl
       }
@@ -111,26 +111,27 @@ export default function EventDetailPage() {
       return
     }
     
-    // Try alternative Google Drive URL format first
+    // Try different Google Drive URL formats
     if (originalSrc.includes('drive.google.com')) {
-      const driveRegex = /\/file\/d\/([a-zA-Z0-9_-]+)/
+      const driveRegex = /[?&]id=([a-zA-Z0-9_-]+)/
       const match = originalSrc.match(driveRegex)
       
       if (match) {
         const fileId = match[1]
-        // Try thumbnail format
-        if (!originalSrc.includes('thumbnail')) {
-          const thumbnailUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w1200`
-          console.log('Trying thumbnail URL:', thumbnailUrl)
-          target.src = thumbnailUrl
-          return
-        }
-        // Try alternative format
-        if (!originalSrc.includes('uc?export=download')) {
-          const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`
-          console.log('Trying download URL:', downloadUrl)
-          target.src = downloadUrl
-          return
+        // Try different URL formats in order of preference
+        const urlFormats = [
+          `https://drive.google.com/uc?export=view&id=${fileId}`,
+          `https://drive.google.com/thumbnail?id=${fileId}&sz=w800`,
+          `https://drive.google.com/uc?export=download&id=${fileId}`,
+          `https://drive.google.com/file/d/${fileId}/view`
+        ]
+        
+        for (const format of urlFormats) {
+          if (!originalSrc.includes(format.split('?')[0])) {
+            console.log('Trying alternative URL format:', format)
+            target.src = format
+            return
+          }
         }
       }
     }
