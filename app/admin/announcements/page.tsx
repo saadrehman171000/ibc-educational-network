@@ -105,14 +105,14 @@ export default function AdminAnnouncementsPage() {
       {/* Filters */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Search */}
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search announcements..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+      {/* Search */}
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Search announcements..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
@@ -168,10 +168,10 @@ export default function AdminAnnouncementsPage() {
             </Link>
           </div>
         ) : (
-          <div className="overflow-x-auto">
+        <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
-                <tr>
+              <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Announcement
                   </th>
@@ -184,11 +184,11 @@ export default function AdminAnnouncementsPage() {
                   <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Actions
                   </th>
-                </tr>
-              </thead>
+              </tr>
+            </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {announcements.map((announcement) => (
-                  <tr key={announcement.id} className="hover:bg-gray-50">
+              {announcements.map((announcement) => (
+                <tr key={announcement.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4">
                       <div className="flex items-start space-x-3">
                         <div className="flex-shrink-0">
@@ -206,8 +206,8 @@ export default function AdminAnnouncementsPage() {
                             {announcement.description}
                           </div>
                         </div>
-                      </div>
-                    </td>
+                    </div>
+                  </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {announcement.isImportant ? (
                         <span className="px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full font-medium">
@@ -216,33 +216,33 @@ export default function AdminAnnouncementsPage() {
                       ) : (
                         <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full font-medium">
                           Normal
-                        </span>
+                    </span>
                       )}
-                    </td>
+                  </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {formatDate(announcement.date)}
-                    </td>
+                  </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <div className="flex items-center justify-end space-x-2">
                         <button className="text-blue-600 hover:text-blue-700 p-1">
-                          <Eye className="w-4 h-4" />
-                        </button>
+                        <Eye className="w-4 h-4" />
+                      </button>
                         <button className="text-green-600 hover:text-green-700 p-1">
-                          <Edit className="w-4 h-4" />
-                        </button>
+                        <Edit className="w-4 h-4" />
+                      </button>
                         <button 
                           onClick={() => handleDelete(announcement.id)}
                           className="text-red-600 hover:text-red-700 p-1"
                         >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
         )}
       </div>
 

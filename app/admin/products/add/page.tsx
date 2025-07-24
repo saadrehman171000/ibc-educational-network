@@ -102,7 +102,7 @@ export default function AddProductPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          ...formData,
+        ...formData,
           price,
           discount,
         }),
@@ -321,11 +321,11 @@ export default function AddProductPage() {
                   <p className="text-sm text-gray-500 mt-1">
                     Share your image from Google Drive and paste the sharing URL here
                   </p>
-                </div>
+            </div>
 
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="flex items-center space-x-2">
-                    <input
+                  <input
                       type="checkbox"
                       name="isNewCollection"
                       id="isNewCollection"
@@ -336,7 +336,7 @@ export default function AddProductPage() {
                     <label htmlFor="isNewCollection" className="text-sm font-medium text-gray-700">
                       Mark as New Collection
                     </label>
-                  </div>
+                </div>
 
                   <div className="flex items-center space-x-2">
                     <input
@@ -364,23 +364,23 @@ export default function AddProductPage() {
               <div className="space-y-4">
                 {formData.imageUrl ? (
                   <div className="border border-gray-200 rounded-lg p-4">
-                    <Image
+                      <Image
                       src={getImagePreviewUrl(formData.imageUrl)}
                       alt="Product preview"
-                      width={200}
-                      height={250}
+                        width={200}
+                        height={250}
                       className="w-full h-auto rounded-lg"
                       onError={(e) => {
                         e.currentTarget.src = '/placeholder-logo.png'
                       }}
                     />
-                  </div>
-                ) : (
+                    </div>
+                  ) : (
                   <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
                     <Eye className="w-12 h-12 text-gray-400 mx-auto mb-2" />
                     <p className="text-gray-500">Image preview will appear here</p>
-                  </div>
-                )}
+                    </div>
+                  )}
               </div>
             </div>
 

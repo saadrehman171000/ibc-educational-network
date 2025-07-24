@@ -203,8 +203,8 @@ export default function ProgramsPage() {
               <h3 className="text-xl font-semibold text-gray-900 mb-2">Teacher Training</h3>
               <p className="text-gray-600">
                 Professional development programs for educators to improve teaching skills and classroom management
-              </p>
-            </div>
+                    </p>
+                  </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Star className="w-8 h-8 text-orange-600" />
@@ -225,7 +225,7 @@ export default function ProgramsPage() {
             <div className="flex items-center space-x-2">
               <span className="font-medium text-gray-700">Filter by:</span>
             </div>
-            
+
             {/* Status Filter */}
             <select
               value={selectedStatus}
@@ -298,7 +298,7 @@ export default function ProgramsPage() {
                           Featured
                         </span>
                       )}
-                    </div>
+              </div>
                     
                     <div className="p-6">
                       {/* Event Meta */}
@@ -307,7 +307,7 @@ export default function ProgramsPage() {
                           {event.status.charAt(0).toUpperCase() + event.status.slice(1)}
                         </span>
                         <span className="text-xs text-gray-500">{event.category}</span>
-                      </div>
+            </div>
 
                       <h3 className="text-xl font-semibold text-gray-900 mb-2">{event.title}</h3>
                       <p className="text-gray-600 mb-4 line-clamp-2">{event.description}</p>
@@ -317,16 +317,16 @@ export default function ProgramsPage() {
                         <div className="flex items-center text-sm text-gray-500">
                           <Calendar className="w-4 h-4 mr-2" />
                           <span>{formatDate(event.date)}</span>
-                        </div>
+              </div>
                         <div className="flex items-center text-sm text-gray-500">
                           <Clock className="w-4 h-4 mr-2" />
                           <span>{event.time}</span>
-                        </div>
+            </div>
                         <div className="flex items-center text-sm text-gray-500">
                           <MapPin className="w-4 h-4 mr-2" />
                           <span>{event.location}</span>
-                        </div>
-                      </div>
+          </div>
+        </div>
 
                       {/* Tags */}
                       {event.tags && event.tags.length > 0 && (
@@ -339,7 +339,7 @@ export default function ProgramsPage() {
                           {event.tags.length > 3 && (
                             <span className="text-gray-500 text-xs">+{event.tags.length - 3} more</span>
                           )}
-                        </div>
+          </div>
                       )}
 
                       {/* Action Button */}
@@ -353,7 +353,7 @@ export default function ProgramsPage() {
                     </div>
                   </div>
                 ))}
-              </div>
+                </div>
 
               {/* Pagination */}
               {pagination && pagination.totalPages > 1 && (
@@ -414,7 +414,7 @@ export default function ProgramsPage() {
           >
             <span>Contact Us</span>
             <ChevronRight className="w-4 h-4" />
-          </Link>
+            </Link>
         </div>
       </section>
     </div>

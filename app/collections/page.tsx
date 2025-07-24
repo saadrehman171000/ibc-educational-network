@@ -179,7 +179,7 @@ export default function CollectionsPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="container-max">
-        {/* Header */}
+      {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Our Collections</h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -187,7 +187,7 @@ export default function CollectionsPage() {
           </p>
         </div>
 
-        {/* Filters */}
+      {/* Filters */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
             {/* Search */}
@@ -202,7 +202,7 @@ export default function CollectionsPage() {
                   className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
-            </div>
+              </div>
 
             {/* Category Filter */}
             <div>
@@ -331,7 +331,7 @@ export default function CollectionsPage() {
                 {viewMode === 'grid' ? (
                   <>
                     <div className="aspect-[3/4] relative bg-gray-100 flex items-center justify-center">
-                      <Image
+                    <Image
                         src={getImageUrl(product.imageUrl)}
                         alt={product.title}
                         width={300}
@@ -349,7 +349,7 @@ export default function CollectionsPage() {
                           Featured
                         </span>
                       )}
-                    </div>
+                  </div>
                     <div className="p-4">
                       <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">{product.title}</h3>
                       <p className="text-sm text-gray-600 mb-2">{product.category} • {product.subject}</p>
@@ -360,13 +360,13 @@ export default function CollectionsPage() {
                             <div className="flex items-center space-x-2">
                               <span className="text-lg font-bold text-blue-900">
                                 Rs. {(product.price - (product.price * product.discount / 100)).toFixed(0)}
-                              </span>
+                    </span>
                               <span className="text-sm text-gray-500 line-through">Rs. {product.price}</span>
                             </div>
                           ) : (
                             <span className="text-lg font-bold text-blue-900">Rs. {product.price}</span>
                           )}
-                        </div>
+                  </div>
                         <button 
                           onClick={(e) => {
                             e.preventDefault()
@@ -376,8 +376,8 @@ export default function CollectionsPage() {
                         >
                           Add to Cart
                         </button>
-                      </div>
-                    </div>
+                  </div>
+                </div>
                   </>
                 ) : (
                   <>
@@ -408,11 +408,11 @@ export default function CollectionsPage() {
                                 Rs. {(product.price - (product.price * product.discount / 100)).toFixed(0)}
                               </span>
                               <span className="text-sm text-gray-500 line-through">Rs. {product.price}</span>
-                            </div>
+                  </div>
                           ) : (
                             <span className="text-lg font-bold text-blue-900">Rs. {product.price}</span>
                           )}
-                        </div>
+                  </div>
                         <button 
                           onClick={(e) => {
                             e.preventDefault()
@@ -420,10 +420,10 @@ export default function CollectionsPage() {
                           }}
                           className="btn-primary text-sm px-4 py-2"
                         >
-                          Add to Cart
-                        </button>
-                      </div>
-                    </div>
+                      Add to Cart
+                    </button>
+                  </div>
+                </div>
                   </>
                 )}
               </Link>
@@ -473,9 +473,9 @@ export default function CollectionsPage() {
               <span>Next</span>
               <ChevronRight className="w-4 h-4" />
             </button>
-          </div>
-        )}
-      </div>
+            </div>
+          )}
+        </div>
     </div>
   )
 }

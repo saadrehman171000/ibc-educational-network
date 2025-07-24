@@ -106,43 +106,76 @@ export default function AcademicGradePage() {
 
   // Convert Google Drive URL to display URL with better handling
   const getImageUrl = (url?: string) => {
-    if (!url) return '/placeholder-logo.png'
+    console.log('Academic grades getImageUrl called with:', url) // Debug log
     
-    // Handle Google Drive URLs
-    const driveRegex = /https:\/\/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)(?:\/view)?/
-    const match = url.match(driveRegex)
-    
-    if (match) {
-      const fileId = match[1]
-      // Use direct download URL which is more reliable
-      return `https://drive.google.com/uc?export=view&id=${fileId}`
+    if (!url || url.trim() === '') {
+      console.log('No URL provided, returning placeholder')
+      return '/placeholder-logo.png'
     }
     
+    // Handle different Google Drive URL formats
+    const driveRegexes = [
+      /https:\/\/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)(?:\/view)?/,
+      /https:\/\/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/,
+      /https:\/\/docs\.google\.com\/.*\/d\/([a-zA-Z0-9_-]+)/
+    ]
+    
+    for (const regex of driveRegexes) {
+      const match = url.match(regex)
+      if (match) {
+        const fileId = match[1]
+        // Use direct download URL which is more reliable
+        const processedUrl = `https://drive.google.com/uc?export=view&id=${fileId}`
+        console.log('Processed Google Drive URL:', processedUrl)
+        return processedUrl
+      }
+    }
+    
+    // If it's already a direct URL or other format, return as is
+    console.log('Returning original URL:', url)
     return url
   }
 
-  // Handle image load errors with retry
+  // Handle image load errors with multiple retry strategies
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     const target = e.currentTarget
     const originalSrc = target.src
     
+    console.log('Image load error for:', originalSrc) // Debug log
+    
     // If it's already trying the fallback, don't retry
     if (originalSrc.includes('placeholder-logo.png')) {
+      console.log('Already using placeholder, not retrying')
       return
     }
     
-    // Try alternative Google Drive URL format first
+    // Try different Google Drive URL formats
     if (originalSrc.includes('drive.google.com')) {
-      const driveRegex = /\/file\/d\/([a-zA-Z0-9_-]+)/
+      const driveRegex = /[?&]id=([a-zA-Z0-9_-]+)/
       const match = originalSrc.match(driveRegex)
       
-      if (match && !originalSrc.includes('thumbnail')) {
-        target.src = `https://drive.google.com/thumbnail?id=${match[1]}&sz=w400`
-        return
+      if (match) {
+        const fileId = match[1]
+        // Try different URL formats in order of preference
+        const urlFormats = [
+          `https://drive.google.com/uc?export=view&id=${fileId}`,
+          `https://drive.google.com/thumbnail?id=${fileId}&sz=w800`,
+          `https://drive.google.com/uc?export=download&id=${fileId}`,
+          `https://drive.google.com/file/d/${fileId}/view`
+        ]
+        
+        for (const format of urlFormats) {
+          if (!originalSrc.includes(format.split('?')[0])) {
+            console.log('Trying alternative URL format:', format)
+            target.src = format
+            return
+          }
+        }
       }
     }
     
     // Final fallback to placeholder
+    console.log('Using final fallback to placeholder')
     target.src = '/placeholder-logo.png'
   }
 
