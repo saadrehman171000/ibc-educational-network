@@ -1,3 +1,4 @@
+import React from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { BookOpen, Users, Award, Target, ArrowRight, Star, CheckCircle } from "lucide-react"
