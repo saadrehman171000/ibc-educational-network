@@ -1,8 +1,73 @@
+"use client"
+
+import React, { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { BookOpen, Users, Award, Target, ArrowRight, Star, CheckCircle } from "lucide-react"
+import { BookOpen, Users, Award, Target, ArrowRight, Star, CheckCircle, Globe, Clock, TrendingUp, Shield, Zap } from "lucide-react"
+
+interface Product {
+  id: string
+  title: string
+  description: string
+  price: number
+  discount?: number
+  imageUrl?: string
+  category: string
+  subject?: string
+  series: string
+  type?: string
+  isNewCollection: boolean
+  isFeatured: boolean
+  rating?: number
+  reviews?: number
+}
+
+interface Event {
+  id: string
+  title: string
+  description: string
+  date: string
+  time: string
+  location: string
+  category: string
+  status: string
+  featured: boolean
+}
 
 export default function HomePage() {
+  const [newCollections, setNewCollections] = useState<Product[]>([])
+  const [programs, setPrograms] = useState<Event[]>([])
+  const [loading, setLoading] = useState(true)
+
+  // Fetch new collections from API
+  const fetchNewCollections = async () => {
+    try {
+      const response = await fetch('/api/products?newCollection=true&limit=3')
+      const data = await response.json()
+      setNewCollections(data.products || [])
+    } catch (error) {
+      console.error('Error fetching new collections:', error)
+    }
+  }
+
+  // Fetch programs/events from API
+  const fetchPrograms = async () => {
+    try {
+      const response = await fetch('/api/events?featured=true&limit=3')
+      const data = await response.json()
+      setPrograms(data.events || [])
+    } catch (error) {
+      console.error('Error fetching programs:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchNewCollections()
+    fetchPrograms()
+  }, [])
+
   const features = [
     {
       icon: BookOpen,
@@ -10,7 +75,7 @@ export default function HomePage() {
       description: "Content perfectly aligned with national and international curricula for seamless integration.",
     },
     {
-      icon: Target, 
+      icon: Target,
       title: "Progressive Academic Structure",
       description: "Systematic progression from Beginner to Class 8 with carefully designed learning pathways.",
     },
@@ -26,50 +91,100 @@ export default function HomePage() {
     },
   ]
 
-  const collections = [
+  const achievements = [
     {
-      id: 1,
-      title: "English Language Arts",
-      grade: "Class 1-3",
-      image: "/placeholder.svg?height=300&width=200",
-      description: "Comprehensive English learning with interactive exercises and engaging stories.",
+      number: "500+",
+      label: "Educational Books",
+      description: "Published & Distributed",
+      icon: BookOpen,
+      color: "text-blue-600",
+      bgColor: "bg-blue-50",
     },
     {
-      id: 2,
-      title: "Mathematics Fundamentals",
-      grade: "Class 4-6",
-      image: "/placeholder.svg?height=300&width=200",
-      description: "Build strong mathematical foundations with visual learning and practical applications.",
+      number: "1000+",
+      label: "Partner Schools",
+      description: "Across Multiple Countries",
+      icon: Globe,
+      color: "text-green-600",
+      bgColor: "bg-green-50",
     },
     {
-      id: 3,
-      title: "Science Explorer",
-      grade: "Class 5-8",
-      image: "/placeholder.svg?height=300&width=200",
-      description: "Discover the wonders of science through hands-on experiments and real-world examples.",
+      number: "50K+",
+      label: "Active Students",
+      description: "Learning Daily",
+      icon: Users,
+      color: "text-purple-600",
+      bgColor: "bg-purple-50",
     },
     {
-      id: 4,
-      title: "Social Studies Journey",
-      grade: "Class 3-5",
-      image: "/placeholder.svg?height=300&width=200",
-      description: "Explore cultures, geography, and history with interactive maps and engaging content.",
-    },
-    {
-      id: 5,
-      title: "Creative Writing Workshop",
-      grade: "Step 2-3",
-      image: "/placeholder.svg?height=300&width=200",
-      description: "Develop writing skills through structured exercises and creative prompts.",
-    },
-    {
-      id: 6,
-      title: "Early Learning Basics",
-      grade: "Beginner",
-      image: "/placeholder.svg?height=300&width=200",
-      description: "Foundation skills for young learners with colorful illustrations and activities.",
+      number: "95%",
+      label: "Success Rate",
+      description: "Student Achievement",
+      icon: TrendingUp,
+      color: "text-orange-600",
+      bgColor: "bg-orange-50",
     },
   ]
+
+  const testimonials = [
+    {
+      name: "Sarah Ahmed",
+      role: "Mathematics Teacher",
+      school: "Karachi Grammar School",
+      content: "IBC books have transformed how my students engage with mathematics. The visual approach and step-by-step explanations make complex concepts accessible to all learners.",
+      rating: 5,
+      avatar: "SA",
+      color: "bg-blue-100 text-blue-800",
+    },
+    {
+      name: "Maria Khan",
+      role: "English Teacher",
+      school: "Lahore American School",
+      content: "The English literature series has significantly improved my students' reading comprehension and critical thinking skills. Highly recommended!",
+      rating: 5,
+      avatar: "MK",
+      color: "bg-teal-100 text-teal-800",
+    },
+    {
+      name: "Ali Hassan",
+      role: "Parent",
+      school: "Islamabad",
+      content: "As a parent, I've seen remarkable improvement in my daughter's learning enthusiasm since we started using IBC books at home.",
+      rating: 5,
+      avatar: "AH",
+      color: "bg-orange-100 text-orange-800",
+    },
+  ]
+
+  const getCategoryColor = (category: string) => {
+    const colors: { [key: string]: string } = {
+      'New Release': 'bg-emerald-100 text-emerald-700 border-emerald-200',
+      'Featured': 'bg-blue-100 text-blue-700 border-blue-200',
+      'Popular': 'bg-purple-100 text-purple-700 border-purple-200',
+      'Workshop': 'bg-orange-100 text-orange-700 border-orange-200',
+      'Seminar': 'bg-indigo-100 text-indigo-700 border-indigo-200',
+      'Training': 'bg-pink-100 text-pink-700 border-pink-200',
+    }
+    return colors[category] || 'bg-slate-100 text-slate-700 border-slate-200'
+  }
+
+  const getStatusColor = (status: string) => {
+    const colors: { [key: string]: string } = {
+      'upcoming': 'bg-green-100 text-green-700 border-green-200',
+      'ongoing': 'bg-blue-100 text-blue-700 border-blue-200',
+      'completed': 'bg-slate-100 text-slate-700 border-slate-200',
+      'cancelled': 'bg-red-100 text-red-700 border-red-200',
+    }
+    return colors[status] || 'bg-slate-100 text-slate-700 border-slate-200'
+  }
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })
+  }
 
   return (
     <div className="min-h-screen">
@@ -228,53 +343,157 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Featured Collections Section */}
+      {/* Latest Collections Section */}
       <section className="section-padding bg-white">
         <div className="container-max">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Featured Collections</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Latest Collections</h2>
             <p className="text-xl text-gray-700 max-w-3xl mx-auto">
-              Discover our most popular educational series, carefully crafted to support learning at every stage.
+              Discover our newest educational series designed to meet the evolving needs of modern learners.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {collections.map((book) => (
-              <div key={book.id} className="bg-white rounded-xl card-shadow overflow-hidden group">
-                <div className="relative overflow-hidden">
-                  <Image
-                    src={book.image || "/placeholder.svg"}
-                    alt={book.title}
-                    width={300}
-                    height={400}
-                    className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute top-4 left-4">
-                    <span className="bg-teal-600 text-white px-3 py-1 rounded-full text-sm font-medium">
-                      {book.grade}
-                    </span>
+          {loading ? (
+            <div className="flex justify-center items-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            </div>
+          ) : newCollections.length > 0 ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {newCollections.map((collection) => (
+                <div key={collection.id} className="bg-white rounded-2xl shadow-lg overflow-hidden group hover:shadow-xl transition-all duration-300 border border-gray-100">
+                  <div className="relative overflow-hidden">
+                    <Image
+                      src={collection.imageUrl || "/placeholder.svg?height=300&width=200&text=Collection"}
+                      alt={collection.title}
+                      width={300}
+                      height={200}
+                      className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <div className="absolute top-4 left-4">
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getCategoryColor(collection.category)}`}>
+                        {collection.isNewCollection ? 'New Collection' : collection.category}
+                      </span>
+                    </div>
+                    <div className="absolute top-4 right-4">
+                      <span className="bg-white text-gray-600 px-2 py-1 rounded text-xs font-medium">
+                        {collection.category}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">{collection.title}</h3>
+                    <p className="text-gray-700 mb-4 leading-relaxed">{collection.description}</p>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        {collection.rating && (
+                          <div className="flex items-center">
+                            <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                            <span className="text-sm text-gray-600 ml-1">{collection.rating}</span>
+                          </div>
+                        )}
+                        {collection.reviews && (
+                          <span className="text-sm text-gray-500">({collection.reviews} reviews)</span>
+                        )}
+                      </div>
+                      <Link
+                        href={`/collections/${collection.id}`}
+                        className="inline-flex items-center text-blue-900 font-semibold hover:text-blue-700 transition-colors"
+                      >
+                        Explore Collection
+                        <ArrowRight className="ml-2 w-4 h-4" />
+                      </Link>
+                    </div>
                   </div>
                 </div>
-
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">{book.title}</h3>
-                  <p className="text-gray-700 mb-4 leading-relaxed">{book.description}</p>
-                  <Link
-                    href={`/collections/${book.id}`}
-                    className="inline-flex items-center text-blue-900 font-semibold hover:text-blue-700 transition-colors"
-                  >
-                    Read More
-                    <ArrowRight className="ml-2 w-4 h-4" />
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-gray-500 text-lg">No new collections available at the moment.</p>
+            </div>
+          )}
 
           <div className="text-center mt-12">
             <Link href="/collections" className="btn-primary">
               View All Collections
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Achievements Section */}
+      <section className="section-padding bg-gradient-to-r from-blue-900 via-blue-800 to-teal-800 text-white relative overflow-hidden">
+        <div className="absolute inset-0">
+          <div className="absolute top-0 left-0 w-full h-full bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fillRule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23ffffff%22%20fillOpacity%3D%220.05%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%222%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
+        </div>
+        
+        <div className="container-max relative z-10">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">Our Impact in Numbers</h2>
+            <p className="text-xl text-blue-100 max-w-3xl mx-auto">
+              Measurable results that demonstrate our commitment to educational excellence
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {achievements.map((achievement, index) => (
+              <div key={index} className="text-center group">
+                <div className="bg-white bg-opacity-10 rounded-2xl p-8 backdrop-blur-sm border border-white border-opacity-20 group-hover:bg-opacity-20 transition-all duration-300">
+                  <div className={`w-16 h-16 ${achievement.bgColor} rounded-xl flex items-center justify-center mx-auto mb-4`}>
+                    <achievement.icon className={`w-8 h-8 ${achievement.color}`} />
+                  </div>
+                  <div className="text-4xl md:text-5xl font-bold mb-2 text-white">{achievement.number}</div>
+                  <div className="text-blue-100 font-medium">{achievement.label}</div>
+                  <div className="text-blue-200 text-sm mt-1">{achievement.description}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-16 text-center">
+            <div className="inline-flex items-center bg-white bg-opacity-10 rounded-full px-6 py-3 backdrop-blur-sm border border-white border-opacity-20">
+              <Award className="w-5 h-5 mr-2 text-yellow-400" />
+              <span className="text-white font-medium">Award-Winning Educational Content Since 2010</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="section-padding bg-white">
+        <div className="container-max">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">What Educators Say</h2>
+            <p className="text-xl text-gray-700 max-w-3xl mx-auto">
+              Hear from teachers and parents who have experienced the difference our educational materials make.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {testimonials.map((testimonial, index) => (
+              <div key={index} className="bg-gradient-to-br from-slate-50 to-white p-8 rounded-2xl shadow-lg border border-slate-100">
+                <div className="flex items-center mb-4">
+                  <div className="flex text-yellow-400">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Star key={i} className="w-5 h-5 fill-current" />
+                    ))}
+                  </div>
+                </div>
+                <p className="text-gray-700 mb-6 leading-relaxed italic">
+                  "{testimonial.content}"
+                </p>
+                <div className="flex items-center">
+                  <div className={`w-12 h-12 ${testimonial.color} rounded-full flex items-center justify-center mr-4`}>
+                    <span className="font-bold">{testimonial.avatar}</span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900">{testimonial.name}</h4>
+                    <p className="text-gray-600 text-sm">{testimonial.role}, {testimonial.school}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -289,60 +508,55 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-8">
-            <div className="bg-white p-8 rounded-xl card-shadow">
-              <div className="w-16 h-16 bg-orange-100 rounded-lg flex items-center justify-center mb-6">
-                <Star className="w-8 h-8 text-orange-500" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Early Years Program</h3>
-              <p className="text-gray-700 mb-4">Beginner to Step 3</p>
-              <p className="text-gray-700 leading-relaxed mb-6">
-                Foundation skills development with interactive activities, colorful illustrations, and age-appropriate
-                content designed to spark curiosity and love for learning.
-              </p>
-              <Link
-                href="/programs#early-years"
-                className="text-blue-900 font-semibold hover:text-blue-700 transition-colors"
-              >
-                Learn More →
-              </Link>
+          {loading ? (
+            <div className="flex justify-center items-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
             </div>
+          ) : programs.length > 0 ? (
+            <div className="grid lg:grid-cols-3 gap-8">
+              {programs.map((program) => (
+                <div key={program.id} className="bg-white p-8 rounded-xl card-shadow">
+                  <div className="flex items-center justify-between mb-4">
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getCategoryColor(program.category)}`}>
+                      {program.category}
+                    </span>
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(program.status)}`}>
+                      {program.status}
+                    </span>
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-4">{program.title}</h3>
+                  <p className="text-gray-700 mb-4 leading-relaxed">{program.description}</p>
+                  
+                  <div className="space-y-2 mb-6">
+                    <div className="flex items-center text-gray-600 text-sm">
+                      <Clock className="w-4 h-4 mr-2" />
+                      {formatDate(program.date)} at {program.time}
+                    </div>
+                    <div className="flex items-center text-gray-600 text-sm">
+                      <Globe className="w-4 h-4 mr-2" />
+                      {program.location}
+                    </div>
+                  </div>
+                  
+                  <Link
+                    href={`/programs/${program.id}`}
+                    className="text-blue-900 font-semibold hover:text-blue-700 transition-colors"
+                  >
+                    Learn More →
+                  </Link>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-gray-500 text-lg">No programs available at the moment.</p>
+            </div>
+          )}
 
-            <div className="bg-white p-8 rounded-xl card-shadow">
-              <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
-                <BookOpen className="w-8 h-8 text-blue-900" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Primary Program</h3>
-              <p className="text-gray-700 mb-4">Class 1 to Class 5</p>
-              <p className="text-gray-700 leading-relaxed mb-6">
-                Comprehensive curriculum coverage with engaging content, practical exercises, and assessment tools to
-                build strong academic foundations across all subjects.
-              </p>
-              <Link
-                href="/programs#primary"
-                className="text-blue-900 font-semibold hover:text-blue-700 transition-colors"
-              >
-                Learn More →
-              </Link>
-            </div>
-
-            <div className="bg-white p-8 rounded-xl card-shadow">
-              <div className="w-16 h-16 bg-teal-100 rounded-lg flex items-center justify-center mb-6">
-                <Award className="w-8 h-8 text-teal-600" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Middle School Program</h3>
-              <p className="text-gray-700 mb-4">Class 6 to Class 8</p>
-              <p className="text-gray-700 leading-relaxed mb-6">
-                Advanced learning materials with critical thinking exercises, research projects, and exam preparation to
-                prepare students for higher academic challenges.
-              </p>
-              <Link
-                href="/programs#middle-school"
-                className="text-blue-900 font-semibold hover:text-blue-700 transition-colors"
-              >
-                Learn More →
-              </Link>
-            </div>
+          <div className="text-center mt-12">
+            <Link href="/programs" className="btn-primary">
+              View All Programs
+            </Link>
           </div>
         </div>
       </section>

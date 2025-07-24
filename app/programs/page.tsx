@@ -234,12 +234,12 @@ export default function ProgramsPage() {
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {events.map((event) => (
                   <div key={event.id} className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-shadow duration-300">
-                    <div className="relative h-48 bg-gradient-to-br from-blue-400 to-blue-600">
+                    <div className="relative h-64 bg-gradient-to-br from-blue-400 to-blue-600">
                       <Image
                         src={getImageUrl(event.image)}
                         alt={event.title}
                         fill
-                        className="object-cover"
+                        className="object-contain"
                         onError={handleImageError}
                       />
                       <div className="absolute inset-0 bg-black bg-opacity-20"></div>
