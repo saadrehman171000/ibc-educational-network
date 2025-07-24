@@ -45,6 +45,8 @@ export default function EventDetailPage() {
         const response = await fetch(`/api/events/${eventId}`)
         if (response.ok) {
           const eventData = await response.json()
+          console.log('Event data received:', eventData) // Debug log
+          console.log('Event image URL:', eventData.image) // Debug log
           setEvent(eventData)
         } else {
           console.error('Event not found')
@@ -100,8 +102,12 @@ export default function EventDetailPage() {
     const target = e.currentTarget
     const originalSrc = target.src
     
+    console.log('Image load error for:', originalSrc) // Debug log
+    console.log('Event image from state:', event?.image) // Debug log
+    
     // If it's already trying the fallback, don't retry
     if (originalSrc.includes('placeholder-logo.png')) {
+      console.log('Already using placeholder, not retrying')
       return
     }
     
@@ -119,10 +125,18 @@ export default function EventDetailPage() {
           target.src = thumbnailUrl
           return
         }
+        // Try alternative format
+        if (!originalSrc.includes('uc?export=download')) {
+          const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`
+          console.log('Trying download URL:', downloadUrl)
+          target.src = downloadUrl
+          return
+        }
       }
     }
     
     // Final fallback to placeholder
+    console.log('Using final fallback to placeholder')
     target.src = '/placeholder-logo.png'
   }
 
@@ -199,6 +213,7 @@ export default function EventDetailPage() {
                 height={600}
                 className="w-full h-auto object-contain"
                 onError={handleImageError}
+                onLoad={() => console.log('Image loaded successfully:', getImageUrl(event.image))}
                 quality={95}
                 priority={true}
               />
