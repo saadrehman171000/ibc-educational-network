@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from "react"
 import { useParams, useRouter } from "next/navigation"
-import { ArrowLeft, ShoppingCart, Star, Info, Package } from "lucide-react"
+import { ArrowLeft, ShoppingCart, Star, Info, Package, Check, MapPin, Truck, Shield } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
+import { useCart } from "@/contexts/cart-context"
 
 interface Product {
   id: string
@@ -28,10 +29,12 @@ export default function ProductDetailPage() {
   const params = useParams()
   const router = useRouter()
   const productId = params.id as string
+  const { addToCart } = useCart()
 
   const [product, setProduct] = useState<Product | null>(null)
   const [loading, setLoading] = useState(true)
   const [imageError, setImageError] = useState(false)
+  const [addedToCart, setAddedToCart] = useState(false)
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -95,6 +98,21 @@ export default function ProductDetailPage() {
       : product.price
   }
 
+  const handleAddToCart = () => {
+    if (!product) return
+    
+    addToCart({
+      id: product.id,
+      title: product.title,
+      grade: product.category,
+      price: getDiscountedPrice(),
+      image: getImageUrl(product.imageUrl)
+    })
+    
+    setAddedToCart(true)
+    setTimeout(() => setAddedToCart(false), 2000)
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -119,7 +137,7 @@ export default function ProductDetailPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white shadow-sm">
+      <div className="bg-white shadow-sm border-b border-gray-200">
         <div className="container-max py-4">
           <div className="flex items-center space-x-4">
             <button
@@ -129,66 +147,77 @@ export default function ProductDetailPage() {
               <ArrowLeft className="w-5 h-5" />
             </button>
             <nav className="flex items-center space-x-2 text-sm text-gray-500">
-              <Link href="/collections" className="hover:text-blue-600">Collections</Link>
+              <Link href="/collections" className="hover:text-blue-600 transition-colors">Collections</Link>
               <span>/</span>
-              <span className="text-gray-900">{product.title}</span>
+              <span className="text-gray-900 font-medium">{product.title}</span>
             </nav>
           </div>
         </div>
       </div>
 
       {/* Product Details */}
-      <div className="container-max py-8">
-        <div className="grid lg:grid-cols-2 gap-12">
+      <div className="container-max py-12">
+        <div className="grid lg:grid-cols-2 gap-16">
           {/* Product Image */}
-          <div className="space-y-4">
-            <div className="relative bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+          <div className="space-y-6">
+            <div className="relative bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden group">
               <Image
                 src={getImageUrl(product.imageUrl)}
                 alt={product.title}
-                width={500}
-                height={600}
-                className="w-full h-auto object-contain"
+                width={600}
+                height={800}
+                className="w-full h-auto object-contain group-hover:scale-105 transition-transform duration-500"
                 onError={() => setImageError(true)}
               />
-              {product.isNewCollection && (
-                <span className="absolute top-4 right-4 bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-                  New Collection
-                </span>
-              )}
-              {product.isFeatured && (
-                <span className="absolute top-4 left-4 bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-                  Featured
-                </span>
-              )}
+              <div className="absolute top-4 left-4 flex flex-col space-y-2">
+                {product.isNewCollection && (
+                  <span className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg flex items-center space-x-2">
+                    <span className="w-2 h-2 bg-white rounded-full animate-pulse"></span>
+                    <span>New Collection</span>
+                  </span>
+                )}
+                {product.isFeatured && (
+                  <span className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg">
+                    Featured
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 
           {/* Product Information */}
-          <div className="space-y-6">
+          <div className="space-y-8">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">{product.title}</h1>
+              <h1 className="text-4xl font-bold text-gray-900 mb-4 leading-tight">{product.title}</h1>
               
               {/* Product Meta */}
-              <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-4">
-                <span className="bg-gray-100 px-3 py-1 rounded-full">{product.category}</span>
+              <div className="flex flex-wrap items-center gap-3 mb-6">
+                <span className="bg-gray-100 text-gray-700 px-4 py-2 rounded-full text-sm font-medium border border-gray-200">
+                  {product.category}
+                </span>
                 {product.subject && (
-                  <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">{product.subject}</span>
+                  <span className="bg-blue-50 text-blue-700 px-4 py-2 rounded-full text-sm font-medium border border-blue-200">
+                    {product.subject}
+                  </span>
                 )}
-                <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full">{product.series}</span>
+                <span className="bg-green-50 text-green-700 px-4 py-2 rounded-full text-sm font-medium border border-green-200">
+                  {product.series}
+                </span>
                 {product.type && (
-                  <span className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full">{product.type}</span>
+                  <span className="bg-purple-50 text-purple-700 px-4 py-2 rounded-full text-sm font-medium border border-purple-200">
+                    {product.type}
+                  </span>
                 )}
               </div>
 
               {/* Rating */}
               {product.rating && (
-                <div className="flex items-center space-x-2 mb-4">
+                <div className="flex items-center space-x-3 mb-6">
                   <div className="flex items-center">
                     {[...Array(5)].map((_, i) => (
                       <Star
                         key={i}
-                        className={`w-4 h-4 ${
+                        className={`w-5 h-5 ${
                           i < Math.floor(product.rating!)
                             ? 'text-yellow-400 fill-current'
                             : 'text-gray-300'
@@ -196,7 +225,7 @@ export default function ProductDetailPage() {
                       />
                     ))}
                   </div>
-                  <span className="text-sm text-gray-600">
+                  <span className="text-gray-600 font-medium">
                     {product.rating} ({product.reviews || 0} reviews)
                   </span>
                 </div>
@@ -204,93 +233,152 @@ export default function ProductDetailPage() {
             </div>
 
             {/* Price */}
-            <div className="space-y-2">
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-100">
               {product.discount && product.discount > 0 ? (
-                <div className="flex items-center space-x-3">
-                  <span className="text-3xl font-bold text-green-600">
-                    Rs. {getDiscountedPrice().toFixed(0)}
-                  </span>
-                  <span className="text-xl text-gray-500 line-through">
-                    Rs. {product.price}
-                  </span>
-                  <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-sm font-medium">
-                    {product.discount}% OFF
-                  </span>
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-4">
+                    <span className="text-4xl font-bold text-green-600">
+                      Rs. {getDiscountedPrice().toFixed(0)}
+                    </span>
+                    <span className="text-2xl text-gray-500 line-through">
+                      Rs. {product.price}
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold border border-green-200">
+                      {product.discount}% OFF
+                    </span>
+                    <span className="text-sm text-gray-600">
+                      Save Rs. {(product.price - getDiscountedPrice()).toFixed(0)}
+                    </span>
+                  </div>
                 </div>
               ) : (
-                <span className="text-3xl font-bold text-blue-900">Rs. {product.price}</span>
+                <span className="text-4xl font-bold text-blue-900">Rs. {product.price}</span>
               )}
             </div>
 
             {/* Description */}
-            <div className="space-y-3">
-              <h3 className="text-lg font-semibold text-gray-900 flex items-center space-x-2">
-                <Info className="w-5 h-5" />
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
+              <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center space-x-3">
+                <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <Info className="w-4 h-4 text-blue-600" />
+                </div>
                 <span>Description</span>
               </h3>
-              <p className="text-gray-700 leading-relaxed">{product.description}</p>
+              <p className="text-gray-700 leading-relaxed text-lg">{product.description}</p>
             </div>
 
             {/* Product Features */}
-            <div className="space-y-3">
-              <h3 className="text-lg font-semibold text-gray-900 flex items-center space-x-2">
-                <Package className="w-5 h-5" />
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
+              <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center space-x-3">
+                <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
+                  <Package className="w-4 h-4 text-indigo-600" />
+                </div>
                 <span>Product Details</span>
               </h3>
-              <div className="bg-gray-50 rounded-lg p-4 space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Category:</span>
-                  <span className="font-medium">{product.category}</span>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-gray-50 rounded-xl p-4">
+                  <span className="text-sm text-gray-600 font-medium">Category</span>
+                  <p className="text-gray-900 font-semibold mt-1">{product.category}</p>
                 </div>
                 {product.subject && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Subject:</span>
-                    <span className="font-medium">{product.subject}</span>
+                  <div className="bg-gray-50 rounded-xl p-4">
+                    <span className="text-sm text-gray-600 font-medium">Subject</span>
+                    <p className="text-gray-900 font-semibold mt-1">{product.subject}</p>
                   </div>
                 )}
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Series:</span>
-                  <span className="font-medium">{product.series}</span>
+                <div className="bg-gray-50 rounded-xl p-4">
+                  <span className="text-sm text-gray-600 font-medium">Series</span>
+                  <p className="text-gray-900 font-semibold mt-1">{product.series}</p>
                 </div>
                 {product.type && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Type:</span>
-                    <span className="font-medium">{product.type}</span>
+                  <div className="bg-gray-50 rounded-xl p-4">
+                    <span className="text-sm text-gray-600 font-medium">Type</span>
+                    <p className="text-gray-900 font-semibold mt-1">{product.type}</p>
                   </div>
                 )}
               </div>
             </div>
 
             {/* Actions */}
-            <div className="space-y-4">
-              <button className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2 text-lg font-medium">
-                <ShoppingCart className="w-5 h-5" />
-                <span>Add to Cart</span>
+            <div className="space-y-6">
+              <button 
+                onClick={handleAddToCart}
+                disabled={addedToCart}
+                className={`w-full py-4 px-8 rounded-2xl font-bold text-lg transition-all duration-300 flex items-center justify-center space-x-3 shadow-lg ${
+                  addedToCart
+                    ? 'bg-gradient-to-r from-green-500 to-green-600 text-white cursor-not-allowed'
+                    : 'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 hover:shadow-xl transform hover:-translate-y-1'
+                }`}
+              >
+                {addedToCart ? (
+                  <>
+                    <Check className="w-6 h-6" />
+                    <span>Added to Cart!</span>
+                  </>
+                ) : (
+                  <>
+                    <ShoppingCart className="w-6 h-6" />
+                    <span>Add to Cart</span>
+                  </>
+                )}
               </button>
               
               <div className="grid grid-cols-2 gap-4">
                 <Link
                   href="/collections"
-                  className="text-center bg-gray-100 text-gray-700 py-3 px-6 rounded-lg hover:bg-gray-200 transition-colors font-medium"
+                  className="text-center bg-white text-gray-700 py-4 px-6 rounded-2xl border-2 border-gray-300 hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 font-semibold hover:shadow-lg transform hover:-translate-y-1"
                 >
                   Browse More
                 </Link>
                 <Link
                   href={`/academic-grades/${product.category.toLowerCase().replace(' ', '-')}`}
-                  className="text-center bg-green-100 text-green-700 py-3 px-6 rounded-lg hover:bg-green-200 transition-colors font-medium"
+                  className="text-center bg-gradient-to-r from-indigo-600 to-indigo-700 text-white py-4 px-6 rounded-2xl border-2 border-indigo-600 hover:from-indigo-700 hover:to-indigo-800 hover:border-indigo-700 transition-all duration-300 font-semibold hover:shadow-lg transform hover:-translate-y-1"
                 >
                   View {product.category}
                 </Link>
+              </div>
+            </div>
+
+            {/* Trust Indicators */}
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-200">
+              <div className="flex items-center space-x-4 mb-4">
+                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                  <Shield className="w-5 h-5 text-green-600" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900">Secure & Trusted</h4>
+                  <p className="text-sm text-gray-600">30-day money-back guarantee</p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-4">
+                <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                  <Truck className="w-5 h-5 text-blue-600" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900">Fast Delivery</h4>
+                  <p className="text-sm text-gray-600">Free shipping on orders over Rs. 2,000</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         {/* Related Products Section */}
-        <div className="mt-16">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8">More from {product.series}</h2>
-          <div className="text-center py-8">
-            <p className="text-gray-500">Related products will be shown here</p>
+        <div className="mt-20">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">More from {product.series}</h2>
+            <p className="text-gray-600 text-lg">Discover related educational materials</p>
+          </div>
+          <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200">
+            <div className="text-center py-12">
+              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Package className="w-8 h-8 text-gray-400" />
+              </div>
+              <p className="text-gray-500 text-lg">Related products will be shown here</p>
+              <p className="text-gray-400 text-sm mt-2">Coming soon</p>
+            </div>
           </div>
         </div>
       </div>
