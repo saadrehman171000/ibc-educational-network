@@ -364,23 +364,6 @@ export default function ProductDetailPage() {
             </div>
           </div>
         </div>
-
-        {/* Related Products Section */}
-        <div className="mt-20">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">More from {product.series}</h2>
-            <p className="text-gray-600 text-lg">Discover related educational materials</p>
-          </div>
-          <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200">
-            <div className="text-center py-12">
-              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Package className="w-8 h-8 text-gray-400" />
-              </div>
-              <p className="text-gray-500 text-lg">Related products will be shown here</p>
-              <p className="text-gray-400 text-sm mt-2">Coming soon</p>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   )
