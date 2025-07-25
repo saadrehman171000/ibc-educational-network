@@ -32,12 +32,18 @@ export default function Header() {
 
   const isAdmin = user && isAdminEmail(user.emailAddresses[0]?.emailAddress)
 
+  // Function to close mobile menu
+  const closeMobileMenu = () => {
+    setIsMenuOpen(false)
+    setIsGradesOpen(false)
+  }
+
   return (
     <header className="sticky top-0 z-50 bg-white shadow-lg border-b border-gray-200">
       <div className="container-max">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-3">
+          <Link href="/" className="flex items-center space-x-3 flex-shrink-0">
             <Image
               src="/images/ibc-logo.png"
               alt="IBC Educational Network"
@@ -48,11 +54,11 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-8">
-            <Link href="/" className="text-gray-700 hover:text-blue-900 font-medium transition-colors">
+          <nav className="hidden lg:flex items-center space-x-6 flex-1 justify-center">
+            <Link href="/" className="text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap">
               Home
             </Link>
-            <Link href="/collections" className="text-gray-700 hover:text-blue-900 font-medium transition-colors">
+            <Link href="/collections" className="text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap">
               Collections
             </Link>
 
@@ -60,7 +66,7 @@ export default function Header() {
             <div className="relative">
               <button
                 onClick={() => setIsGradesOpen(!isGradesOpen)}
-                className="flex items-center space-x-1 text-gray-700 hover:text-blue-900 font-medium transition-colors"
+                className="flex items-center space-x-1 text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap"
               >
                 <span>Academic Grades</span>
                 <ChevronDown className="w-4 h-4" />
@@ -82,25 +88,25 @@ export default function Header() {
               )}
             </div>
 
-            <Link href="/programs" className="text-gray-700 hover:text-blue-900 font-medium transition-colors">
+            <Link href="/programs" className="text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap">
               Programs
             </Link>
-            <Link href="/new-collection" className="text-gray-700 hover:text-blue-900 font-medium transition-colors">
+            <Link href="/new-collection" className="text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap">
               New Collection
             </Link>
-            <Link href="/announcements" className="text-gray-700 hover:text-blue-900 font-medium transition-colors">
+            <Link href="/announcements" className="text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap">
               Announcements
             </Link>
-            <Link href="/about" className="text-gray-700 hover:text-blue-900 font-medium transition-colors">
+            <Link href="/about" className="text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap">
               About Us
             </Link>
-            <Link href="/contact" className="text-gray-700 hover:text-blue-900 font-medium transition-colors">
+            <Link href="/contact" className="text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap">
               Contact
             </Link>
           </nav>
 
           {/* Right Icons */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 flex-shrink-0">
             <Link href="/cart" className="relative p-2 text-gray-700 hover:text-blue-900 transition-colors">
               <ShoppingCart className="w-6 h-6" />
               {getTotalItems() > 0 && (
@@ -157,10 +163,18 @@ export default function Header() {
         {isMenuOpen && (
           <div className="lg:hidden fixed inset-0 top-20 bg-white z-40 overflow-y-auto">
             <nav className="p-4 space-y-4">
-              <Link href="/" className="block py-2 text-gray-700 hover:text-blue-900 font-medium">
+              <Link 
+                href="/" 
+                className="block py-2 text-gray-700 hover:text-blue-900 font-medium"
+                onClick={closeMobileMenu}
+              >
                 Home
               </Link>
-              <Link href="/collections" className="block py-2 text-gray-700 hover:text-blue-900 font-medium">
+              <Link 
+                href="/collections" 
+                className="block py-2 text-gray-700 hover:text-blue-900 font-medium"
+                onClick={closeMobileMenu}
+              >
                 Collections
               </Link>
 
@@ -179,7 +193,7 @@ export default function Header() {
                         key={grade}
                         href={`/academic-grades/${grade.toLowerCase().replace(" ", "-")}`}
                         className="block py-1 text-gray-600 hover:text-blue-900"
-                        onClick={() => setIsMenuOpen(false)}
+                        onClick={closeMobileMenu}
                       >
                         {grade}
                       </Link>
@@ -188,19 +202,39 @@ export default function Header() {
                 )}
               </div>
 
-              <Link href="/programs" className="block py-2 text-gray-700 hover:text-blue-900 font-medium">
+              <Link 
+                href="/programs" 
+                className="block py-2 text-gray-700 hover:text-blue-900 font-medium"
+                onClick={closeMobileMenu}
+              >
                 Programs
               </Link>
-              <Link href="/new-collection" className="block py-2 text-gray-700 hover:text-blue-900 font-medium">
+              <Link 
+                href="/new-collection" 
+                className="block py-2 text-gray-700 hover:text-blue-900 font-medium"
+                onClick={closeMobileMenu}
+              >
                 New Collection
               </Link>
-              <Link href="/announcements" className="block py-2 text-gray-700 hover:text-blue-900 font-medium">
+              <Link 
+                href="/announcements" 
+                className="block py-2 text-gray-700 hover:text-blue-900 font-medium"
+                onClick={closeMobileMenu}
+              >
                 Announcements
               </Link>
-              <Link href="/about" className="block py-2 text-gray-700 hover:text-blue-900 font-medium">
+              <Link 
+                href="/about" 
+                className="block py-2 text-gray-700 hover:text-blue-900 font-medium"
+                onClick={closeMobileMenu}
+              >
                 About Us
               </Link>
-              <Link href="/contact" className="block py-2 text-gray-700 hover:text-blue-900 font-medium">
+              <Link 
+                href="/contact" 
+                className="block py-2 text-gray-700 hover:text-blue-900 font-medium"
+                onClick={closeMobileMenu}
+              >
                 Contact
               </Link>
 
@@ -212,7 +246,7 @@ export default function Header() {
                       <Link 
                         href="/admin" 
                         className="block py-2 text-blue-900 font-medium"
-                        onClick={() => setIsMenuOpen(false)}
+                        onClick={closeMobileMenu}
                       >
                         Admin Panel
                       </Link>
@@ -221,7 +255,7 @@ export default function Header() {
                     <Link 
                       href="/sign-in" 
                       className="block py-2 text-gray-700 hover:text-blue-900 font-medium"
-                      onClick={() => setIsMenuOpen(false)}
+                      onClick={closeMobileMenu}
                     >
                       Admin Login
                     </Link>
