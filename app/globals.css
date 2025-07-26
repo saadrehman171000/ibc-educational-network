@@ -96,6 +96,15 @@
   .container-max {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
+
+  /* Add to Cart button animations */
+  .add-to-cart-success {
+    @apply bg-green-500 text-white shadow-lg transform scale-105 animate-bounce;
+  }
+
+  .add-to-cart-default {
+    @apply bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg hover:transform hover:scale-105;
+  }
 }
 
 @layer utilities {
