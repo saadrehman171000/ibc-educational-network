@@ -3,7 +3,7 @@ console.log('==========================================');
 console.log('');
 console.log('Please add the following variables to your .env file:');
 console.log('');
-console.log('RESEND_API_KEY=re_ebJUN9Dx_MuoFb1ubQG2HsUKcte8vezkd');
+console.log('RESEND_API_KEY=your_resend_api_key_here');
 console.log('NEXT_PUBLIC_APP_URL=http://localhost:3000');
 console.log('');
 console.log('Your .env file should now contain:');

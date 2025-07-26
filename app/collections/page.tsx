@@ -374,7 +374,13 @@ export default function CollectionsPage() {
                     </Link>
                     <div className="px-4 pb-4">
                       <button 
-                        onClick={() => addToCart(product)}
+                        onClick={() => addToCart({
+                          id: product.id,
+                          title: product.title,
+                          grade: product.category,
+                          price: product.discount && product.discount > 0 ? (product.price - (product.price * product.discount / 100)) : product.price,
+                          image: product.imageUrl || '',
+                        })}
                         className="w-full btn-primary text-sm px-4 py-2"
                       >
                         Add to Cart
@@ -421,7 +427,13 @@ export default function CollectionsPage() {
                     </Link>
                     <div className="flex items-center">
                       <button 
-                        onClick={() => addToCart(product)}
+                        onClick={() => addToCart({
+                          id: product.id,
+                          title: product.title,
+                          grade: product.category,
+                          price: product.discount && product.discount > 0 ? (product.price - (product.price * product.discount / 100)) : product.price,
+                          image: product.imageUrl || '',
+                        })}
                         className="btn-primary text-sm px-4 py-2"
                       >
                         Add to Cart
