@@ -8,6 +8,23 @@ import { useCart } from "@/contexts/cart-context"
 export default function CartPage() {
   const { items, updateQuantity, removeFromCart, getTotalPrice, clearCart } = useCart()
 
+  // Convert Google Drive URL to display URL
+  const getImageUrl = (url?: string) => {
+    if (!url) return '/placeholder-logo.png'
+    const driveRegex = /https:\/\/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)\/view/
+    const match = url.match(driveRegex)
+    
+    if (match) {
+      return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w400`
+    }
+    
+    return url
+  }
+
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    e.currentTarget.src = '/placeholder-logo.png'
+  }
+
   if (items.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -37,11 +54,12 @@ export default function CartPage() {
                   <div className="flex flex-col sm:flex-row gap-4">
                     <div className="flex-shrink-0">
                       <Image
-                        src={item.image || "/placeholder.svg"}
+                        src={getImageUrl(item.image)}
                         alt={item.title}
                         width={120}
                         height={160}
-                        className="rounded-lg object-cover"
+                        className="rounded-lg object-contain"
+                        onError={handleImageError}
                       />
                     </div>
 

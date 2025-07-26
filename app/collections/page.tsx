@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Search, Filter, Grid, List, ChevronLeft, ChevronRight } from "lucide-react"
+import { Search, Filter, Grid, List, ChevronLeft, ChevronRight, Check } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useCart } from "@/contexts/cart-context"
@@ -32,11 +32,12 @@ interface Pagination {
 }
 
 export default function CollectionsPage() {
-  const { addToCart } = useCart()
+  const { addToCart, items } = useCart()
   const [products, setProducts] = useState<Product[]>([])
   const [pagination, setPagination] = useState<Pagination | null>(null)
   const [loading, setLoading] = useState(true)
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+  const [addedToCart, setAddedToCart] = useState<{ [key: string]: boolean }>({})
   
   // Filters
   const [filters, setFilters] = useState({
@@ -176,6 +177,24 @@ export default function CollectionsPage() {
   const getUniqueValues = (field: keyof Product) => {
     const values = products.map(product => product[field]).filter(Boolean)
     return [...new Set(values)] as string[]
+  }
+
+  const handleAddToCart = (product: Product) => {
+    addToCart({
+      id: product.id,
+      title: product.title,
+      grade: product.category,
+      price: product.discount && product.discount > 0 ? (product.price - (product.price * product.discount / 100)) : product.price,
+      image: product.imageUrl || '',
+    })
+    
+    // Show green tick feedback
+    setAddedToCart(prev => ({ ...prev, [product.id]: true }))
+    
+    // Reset after 2 seconds
+    setTimeout(() => {
+      setAddedToCart(prev => ({ ...prev, [product.id]: false }))
+    }, 2000)
   }
 
   return (
@@ -374,16 +393,14 @@ export default function CollectionsPage() {
                     </Link>
                     <div className="px-4 pb-4">
                       <button 
-                        onClick={() => addToCart({
-                          id: product.id,
-                          title: product.title,
-                          grade: product.category,
-                          price: product.discount && product.discount > 0 ? (product.price - (product.price * product.discount / 100)) : product.price,
-                          image: product.imageUrl || '',
-                        })}
+                        onClick={() => handleAddToCart(product)}
                         className="w-full btn-primary text-sm px-4 py-2"
                       >
-                        Add to Cart
+                        {addedToCart[product.id] ? (
+                          <Check className="w-4 h-4 mr-2 text-green-500" />
+                        ) : (
+                          'Add to Cart'
+                        )}
                       </button>
                     </div>
                   </>
@@ -427,16 +444,14 @@ export default function CollectionsPage() {
                     </Link>
                     <div className="flex items-center">
                       <button 
-                        onClick={() => addToCart({
-                          id: product.id,
-                          title: product.title,
-                          grade: product.category,
-                          price: product.discount && product.discount > 0 ? (product.price - (product.price * product.discount / 100)) : product.price,
-                          image: product.imageUrl || '',
-                        })}
+                        onClick={() => handleAddToCart(product)}
                         className="btn-primary text-sm px-4 py-2"
                       >
-                        Add to Cart
+                        {addedToCart[product.id] ? (
+                          <Check className="w-4 h-4 mr-2 text-green-500" />
+                        ) : (
+                          'Add to Cart'
+                        )}
                       </button>
                     </div>
                   </>

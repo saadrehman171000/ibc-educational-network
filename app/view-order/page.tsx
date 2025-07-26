@@ -233,15 +233,6 @@ export default function ViewOrderPage() {
                           <div className="space-y-2 text-sm">
                             <p><strong>Total Items:</strong> {order.items.length}</p>
                             <p><strong>Total Amount:</strong> Rs. {order.total}</p>
-                            <p><strong>Payment Status:</strong> 
-                              <span className={`ml-1 px-2 py-1 rounded text-xs ${
-                                order.paymentStatus === 'paid' 
-                                  ? 'bg-green-100 text-green-800' 
-                                  : 'bg-yellow-100 text-yellow-800'
-                              }`}>
-                                {order.paymentStatus}
-                              </span>
-                            </p>
                             {order.trackingNumber && (
                               <p><strong>Tracking Number:</strong> {order.trackingNumber}</p>
                             )}
