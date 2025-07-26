@@ -45,14 +45,22 @@ model Order {
   id          String   @id @default(uuid())
   items       Json     // Store cart items as JSON [{title, price, quantity, status}]
   total       Float
-  status      String
+  status      String   // pending, approved, out_for_delivery, delivered, cancelled
   createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
   shippingName     String
   shippingEmail    String
   shippingPhone    String
   shippingAddress  String
   shippingCity     String
+  shippingArea     String?
   shippingPostalCode String
+  orderNumber      String   @unique // Auto-generated order number
+  adminNotes       String?  // Notes from admin
+  deliveryDate     DateTime? // When order was delivered
+  trackingNumber   String?  // Delivery tracking number
+  paymentMethod    String   @default("cash_on_delivery")
+  paymentStatus    String   @default("pending") // pending, paid, failed
 }
 
 model Event {

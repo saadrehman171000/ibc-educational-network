@@ -103,6 +103,9 @@ export default function Header() {
             <Link href="/contact" className="text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap">
               Contact
             </Link>
+            <Link href="/view-order" className="text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap border border-gray-300 rounded-lg px-3 py-1 hover:border-blue-500">
+              View Orders
+            </Link>
           </nav>
 
           {/* Right Icons */}
@@ -236,6 +239,13 @@ export default function Header() {
                 onClick={closeMobileMenu}
               >
                 Contact
+              </Link>
+              <Link 
+                href="/view-order" 
+                className="block py-2 text-gray-700 hover:text-blue-900 font-medium border border-gray-300 rounded-lg px-3 mx-2 hover:border-blue-500"
+                onClick={closeMobileMenu}
+              >
+                View Orders
               </Link>
 
               {/* Mobile Admin Section */}

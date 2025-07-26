@@ -4,6 +4,7 @@ import type React from "react"
 
 import { useState } from "react"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 import { useCart } from "@/contexts/cart-context"
 import { CreditCard, Truck, Shield, MapPin } from "lucide-react"
 
@@ -69,6 +70,7 @@ const cityAreaData = {
 }
 
 export default function CheckoutPage() {
+  const router = useRouter()
   const { items, getTotalPrice, clearCart } = useCart()
   const [formData, setFormData] = useState({
     firstName: "",
@@ -109,11 +111,65 @@ export default function CheckoutPage() {
     }
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle order submission
-    alert("Order placed successfully! You will receive a confirmation email shortly.")
-    clearCart()
+    setIsSubmitting(true)
+
+    try {
+      const orderData = {
+        items,
+        total: total.toString(),
+        shippingName: `${formData.firstName} ${formData.lastName}`,
+        shippingEmail: formData.email,
+        shippingPhone: formData.phone,
+        shippingAddress: formData.address,
+        shippingCity: formData.city,
+        shippingArea: formData.area,
+        shippingPostalCode: formData.postalCode,
+        paymentMethod: formData.paymentMethod
+      }
+
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderData),
+      })
+
+      const result = await response.json()
+
+      if (result.success) {
+        clearCart()
+        // Reset form
+        setFormData({
+          firstName: "",
+          lastName: "",
+          email: "",
+          phone: "",
+          address: "",
+          city: "",
+          area: "",
+          postalCode: "",
+          paymentMethod: "cod",
+        })
+        setSelectedCity("")
+        setSelectedArea("")
+        setAvailableAreas([])
+        
+        // Redirect to view order page with email
+        router.push(`/view-order?email=${encodeURIComponent(formData.email)}`)
+      } else {
+        alert('Failed to place order. Please try again.')
+      }
+    } catch (error) {
+      console.error('Error placing order:', error)
+      alert('Failed to place order. Please try again.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const subtotal = getTotalPrice()
@@ -292,8 +348,19 @@ export default function CheckoutPage() {
                   </div>
                 </div>
 
-                <button type="submit" className="btn-primary w-full">
-                  Place Order
+                <button 
+                  type="submit" 
+                  disabled={isSubmitting}
+                  className="btn-primary w-full flex items-center justify-center space-x-2"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                      <span>Processing Order...</span>
+                    </>
+                  ) : (
+                    <span>Place Order</span>
+                  )}
                 </button>
               </form>
             </div>

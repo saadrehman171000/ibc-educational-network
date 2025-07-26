@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { Search, Filter, Grid, List, ChevronLeft, ChevronRight } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
+import { useCart } from "@/contexts/cart-context"
 
 interface Product {
   id: string
@@ -31,6 +32,7 @@ interface Pagination {
 }
 
 export default function CollectionsPage() {
+  const { addToCart } = useCart()
   const [products, setProducts] = useState<Product[]>([])
   const [pagination, setPagination] = useState<Pagination | null>(null)
   const [loading, setLoading] = useState(true)
@@ -320,113 +322,114 @@ export default function CollectionsPage() {
             : "space-y-4 mb-8"
           }>
             {products.map((product) => (
-              <Link
+              <div
                 key={product.id}
-                href={`/collections/${product.id}`}
                 className={viewMode === 'grid' 
-                  ? "bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow block"
-                  : "bg-white rounded-lg shadow-sm border border-gray-200 p-4 flex gap-4 hover:shadow-md transition-shadow block"
+                  ? "bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow"
+                  : "bg-white rounded-lg shadow-sm border border-gray-200 p-4 flex gap-4 hover:shadow-md transition-shadow"
                 }
               >
                 {viewMode === 'grid' ? (
                   <>
-                    <div className="aspect-[3/4] relative bg-gray-100 flex items-center justify-center">
-                    <Image
-                        src={getImageUrl(product.imageUrl)}
-                        alt={product.title}
-                        width={300}
-                        height={400}
-                        className="w-full h-full object-contain"
-                        onError={handleImageError}
-                      />
-                      {product.isNewCollection && (
-                        <span className="absolute top-2 right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded">
-                          New
-                        </span>
-                      )}
-                      {product.isFeatured && (
-                        <span className="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-1 rounded">
-                          Featured
-                        </span>
-                      )}
-                  </div>
-                    <div className="p-4">
-                      <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">{product.title}</h3>
-                      <p className="text-sm text-gray-600 mb-2">{product.category} • {product.subject}</p>
-                      <p className="text-sm text-gray-500 mb-3 line-clamp-2">{product.description}</p>
-                      <div className="flex items-center justify-between">
-                        <div>
-                          {product.discount && product.discount > 0 ? (
-                            <div className="flex items-center space-x-2">
-                              <span className="text-lg font-bold text-blue-900">
-                                Rs. {(product.price - (product.price * product.discount / 100)).toFixed(0)}
-                    </span>
-                              <span className="text-sm text-gray-500 line-through">Rs. {product.price}</span>
-                            </div>
-                          ) : (
-                            <span className="text-lg font-bold text-blue-900">Rs. {product.price}</span>
-                          )}
-                  </div>
-                        <button 
-                          onClick={(e) => {
-                            e.preventDefault()
-                            // Add to cart functionality
-                          }}
-                          className="btn-primary text-sm px-4 py-2"
-                        >
-                          Add to Cart
-                        </button>
-                  </div>
-                </div>
+                    <Link href={`/collections/${product.id}`} className="block">
+                      <div className="aspect-[3/4] relative bg-gray-100 flex items-center justify-center">
+                        <Image
+                          src={getImageUrl(product.imageUrl)}
+                          alt={product.title}
+                          width={300}
+                          height={400}
+                          className="w-full h-full object-contain"
+                          onError={handleImageError}
+                        />
+                        {product.isNewCollection && (
+                          <span className="absolute top-2 right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded">
+                            New
+                          </span>
+                        )}
+                        {product.isFeatured && (
+                          <span className="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-1 rounded">
+                            Featured
+                          </span>
+                        )}
+                      </div>
+                      <div className="p-4">
+                        <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">{product.title}</h3>
+                        <p className="text-sm text-gray-600 mb-2">{product.category} • {product.subject}</p>
+                        <p className="text-sm text-gray-500 mb-3 line-clamp-2">{product.description}</p>
+                        <div className="flex items-center justify-between">
+                          <div>
+                            {product.discount && product.discount > 0 ? (
+                              <div className="flex items-center space-x-2">
+                                <span className="text-lg font-bold text-blue-900">
+                                  Rs. {(product.price - (product.price * product.discount / 100)).toFixed(0)}
+                                </span>
+                                <span className="text-sm text-gray-500 line-through">Rs. {product.price}</span>
+                              </div>
+                            ) : (
+                              <span className="text-lg font-bold text-blue-900">Rs. {product.price}</span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                    <div className="px-4 pb-4">
+                      <button 
+                        onClick={() => addToCart(product)}
+                        className="w-full btn-primary text-sm px-4 py-2"
+                      >
+                        Add to Cart
+                      </button>
+                    </div>
                   </>
                 ) : (
                   <>
-                    <div className="w-32 h-40 relative flex-shrink-0 bg-gray-100 flex items-center justify-center rounded">
-                      <Image
-                        src={getImageUrl(product.imageUrl)}
-                        alt={product.title}
-                        width={128}
-                        height={160}
-                        className="w-full h-full object-contain"
-                        onError={handleImageError}
-                      />
-                      {product.isNewCollection && (
-                        <span className="absolute top-1 right-1 bg-orange-500 text-white text-xs px-1 py-0.5 rounded">
-                          New
-                        </span>
-                      )}
+                    <Link href={`/collections/${product.id}`} className="flex-1">
+                      <div className="w-32 h-40 relative flex-shrink-0 bg-gray-100 flex items-center justify-center rounded">
+                        <Image
+                          src={getImageUrl(product.imageUrl)}
+                          alt={product.title}
+                          width={128}
+                          height={160}
+                          className="w-full h-full object-contain"
+                          onError={handleImageError}
+                        />
+                        {product.isNewCollection && (
+                          <span className="absolute top-1 right-1 bg-orange-500 text-white text-xs px-1 py-0.5 rounded">
+                            New
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-gray-900 mb-2">{product.title}</h3>
+                        <p className="text-sm text-gray-600 mb-2">{product.category} • {product.subject} • {product.series}</p>
+                        <p className="text-sm text-gray-500 mb-3">{product.description}</p>
+                        <div className="flex items-center justify-between">
+                          <div>
+                            {product.discount && product.discount > 0 ? (
+                              <div className="flex items-center space-x-2">
+                                <span className="text-lg font-bold text-blue-900">
+                                  Rs. {(product.price - (product.price * product.discount / 100)).toFixed(0)}
+                                </span>
+                                <span className="text-sm text-gray-500 line-through">Rs. {product.price}</span>
+                              </div>
+                            ) : (
+                              <span className="text-lg font-bold text-blue-900">Rs. {product.price}</span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                    <div className="flex items-center">
+                      <button 
+                        onClick={() => addToCart(product)}
+                        className="btn-primary text-sm px-4 py-2"
+                      >
+                        Add to Cart
+                      </button>
                     </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900 mb-2">{product.title}</h3>
-                      <p className="text-sm text-gray-600 mb-2">{product.category} • {product.subject} • {product.series}</p>
-                      <p className="text-sm text-gray-500 mb-3">{product.description}</p>
-                      <div className="flex items-center justify-between">
-                        <div>
-                          {product.discount && product.discount > 0 ? (
-                            <div className="flex items-center space-x-2">
-                              <span className="text-lg font-bold text-blue-900">
-                                Rs. {(product.price - (product.price * product.discount / 100)).toFixed(0)}
-                              </span>
-                              <span className="text-sm text-gray-500 line-through">Rs. {product.price}</span>
-                  </div>
-                          ) : (
-                            <span className="text-lg font-bold text-blue-900">Rs. {product.price}</span>
-                          )}
-                  </div>
-                        <button 
-                          onClick={(e) => {
-                            e.preventDefault()
-                            // Add to cart functionality
-                          }}
-                          className="btn-primary text-sm px-4 py-2"
-                        >
-                      Add to Cart
-                    </button>
-                  </div>
-                </div>
                   </>
                 )}
-              </Link>
+              </div>
             ))}
           </div>
         )}
