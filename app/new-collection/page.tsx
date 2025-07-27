@@ -107,7 +107,7 @@ export default function NewCollectionPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="container-max">
-        {/* Header */}
+      {/* Header */}
         <div className="text-center mb-12">
           <div className="flex items-center justify-center space-x-3 mb-4">
             <Sparkles className="w-10 h-10 text-orange-500" />
@@ -244,7 +244,7 @@ export default function NewCollectionPage() {
                 {viewMode === 'grid' ? (
                   <>
                     <div className="aspect-[3/4] relative">
-                      <Image
+                  <Image
                         src={getImageUrl(product.imageUrl)}
                         alt={product.title}
                         fill
@@ -256,7 +256,7 @@ export default function NewCollectionPage() {
                       <span className="absolute top-2 right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded flex items-center space-x-1">
                         <Sparkles className="w-3 h-3" />
                         <span>New</span>
-                      </span>
+                    </span>
                       {product.isFeatured && (
                         <span className="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-1 rounded">
                           Featured
@@ -275,11 +275,11 @@ export default function NewCollectionPage() {
                                 Rs. {(product.price - (product.price * product.discount / 100)).toFixed(0)}
                               </span>
                               <span className="text-sm text-gray-500 line-through">Rs. {product.price}</span>
-                            </div>
+                  </div>
                           ) : (
                             <span className="text-lg font-bold text-blue-900">Rs. {product.price}</span>
                           )}
-                        </div>
+                  </div>
                         <button 
                           onClick={(e) => {
                             e.preventDefault()
@@ -287,8 +287,8 @@ export default function NewCollectionPage() {
                           }}
                           className="btn-primary text-sm px-4 py-2"
                         >
-                          Add to Cart
-                        </button>
+                      Add to Cart
+                    </button>
                       </div>
                     </div>
                   </>
@@ -335,8 +335,8 @@ export default function NewCollectionPage() {
                         >
                           Add to Cart
                         </button>
-                      </div>
-                    </div>
+                  </div>
+                </div>
                   </>
                 )}
               </Link>
