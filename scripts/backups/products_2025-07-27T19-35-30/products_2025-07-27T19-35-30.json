@@ -1,0 +1,25 @@
+{
+  "table": "products",
+  "timestamp": "2025-07-27T19:35:31.914Z",
+  "recordCount": 1,
+  "data": [
+    {
+      "id": "26414470-a64d-4f55-8523-f59ebec2c0ba",
+      "title": "English",
+      "description": "New book",
+      "price": 500,
+      "discount": null,
+      "imageUrl": "https://drive.google.com/file/d/10A-04MaSxsXAHq5cNCrGnEook1LpQlga/view?usp=drive_link",
+      "category": "Step 3",
+      "subject": "English",
+      "series": "Early Learner",
+      "type": "Reader",
+      "isNewCollection": true,
+      "isFeatured": false,
+      "rating": null,
+      "reviews": null,
+      "createdAt": "2025-07-26T06:53:48.593Z",
+      "updatedAt": "2025-07-26T06:53:48.593Z"
+    }
+  ]
+}
