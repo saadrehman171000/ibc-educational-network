@@ -14,6 +14,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <title>IBC Educational Network - Quality Educational Materials & Books</title>
+        <meta name="description" content="IBC Educational Network provides high-quality educational materials from Beginner to Class 8. Trusted by thousands of schools worldwide for curriculum-aligned learning resources." />
         <meta name="msapplication-TileColor" content="#003e94" />
         <meta name="theme-color" content="#003e94" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />

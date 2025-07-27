@@ -4,6 +4,12 @@ import type React from "react"
 
 import { useState } from "react"
 import { MapPin, Phone, Mail, Clock, Send, MessageSquare, Building, CheckCircle, AlertCircle } from "lucide-react"
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: 'Contact Us - IBC Educational Network',
+  description: 'Get in touch with IBC Educational Network. Contact us for inquiries about our educational materials, partnerships, or support.',
+}
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -329,22 +335,22 @@ export default function ContactPage() {
       </section>
 
       {/* Map Section */}
-      <section className="py-16 bg-slate-50">
+      <section className="py-12 bg-slate-50">
         <div className="container-max">
-          <div className="text-center mb-12">
-            <div className="flex items-center justify-center gap-3 mb-6">
+          <div className="text-center mb-8">
+            <div className="flex items-center justify-center gap-3 mb-4">
               <div className="w-1 h-8 bg-gradient-to-b from-slate-400 to-slate-600 rounded-full"></div>
-              <h2 className="text-3xl font-semibold text-slate-900">Visit Our Office</h2>
+              <h2 className="text-2xl font-semibold text-slate-900">Visit Our Office</h2>
             </div>
             <p className="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
               Located in the heart of Karachi, our office is easily accessible and welcomes visitors during business hours.
             </p>
           </div>
 
-          <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
-            <div className="aspect-video rounded-xl overflow-hidden">
+          <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 max-w-4xl mx-auto">
+            <div className="h-64 rounded-xl overflow-hidden">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3618.1234567890123!2d67.12345678901234!3d24.12345678901234!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjTCsDA3JzM0LjQiTiA2N8KwMDcnMzQuNCJF!5e0!3m2!1sen!2spk!4v1234567890123"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3618.1234567890123!2d67.12345678901234!3d24.12345678901234!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x488e7bcd53c1e24!2zMjTCsDA3JzM0LjQiTiA2N8KwMDcnMzQuNCJF!5e0!3m2!1sen!2spk!4v1234567890123"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
@@ -354,7 +360,7 @@ export default function ContactPage() {
                 title="IBC Educational Network Office Location"
               ></iframe>
             </div>
-            <div className="mt-6 text-center">
+            <div className="mt-4 text-center">
               <h3 className="text-lg font-semibold text-slate-900 mb-2">Office Location</h3>
               <p className="text-slate-600">
                 Office No. 7, Shan Plaza<br />
@@ -362,10 +368,10 @@ export default function ContactPage() {
                 Karachi, Pakistan
               </p>
               <a 
-                href="https://maps.app.goo.gl/8hfqobMsqs88iTKF9" 
+                href="https://www.google.com/maps/place/IBC+Educational+Network/data=!4m2!3m1!1s0x0:0x488e7bcd53c1e24?sa=X&ved=1t:2428&ictx=111" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 mt-4 text-blue-600 hover:text-blue-700 font-medium"
+                className="inline-flex items-center gap-2 mt-3 text-blue-600 hover:text-blue-700 font-medium"
               >
                 <MapPin className="w-4 h-4" />
                 View on Google Maps
