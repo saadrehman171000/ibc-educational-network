@@ -6,6 +6,7 @@ export interface OrderEmailData {
   orderNumber: string
   customerName: string
   customerEmail: string
+  customerPhone: string
   items: any[]
   total: number
   shippingAddress: string
@@ -142,6 +143,10 @@ export async function sendOrderNotificationToAdmin(orderData: OrderEmailData) {
                     <div class="info-value">${orderData.customerEmail}</div>
                   </div>
                   <div class="info-item">
+                    <div class="info-label">Phone Number</div>
+                    <div class="info-value">${orderData.customerPhone}</div>
+                  </div>
+                  <div class="info-item">
                     <div class="info-label">Order Date</div>
                     <div class="info-value">${new Date().toLocaleDateString('en-US', { 
                       year: 'numeric', 
@@ -154,6 +159,10 @@ export async function sendOrderNotificationToAdmin(orderData: OrderEmailData) {
                   <div class="info-item">
                     <div class="info-label">Order Status</div>
                     <div class="info-value" style="color: #f59e0b; font-weight: 700;">⏳ Pending</div>
+                  </div>
+                  <div class="info-item">
+                    <div class="info-label">Total Amount</div>
+                    <div class="info-value">Rs. ${orderData.total.toFixed(0)}</div>
                   </div>
                 </div>
               </div>
@@ -254,7 +263,7 @@ export async function sendOrderApprovedEmail(orderData: OrderEmailData) {
     await resend.emails.send({
       from: 'IBC Educational Network <orders@ibcedu.com>',
       to: [orderData.customerEmail],
-      subject: `✅ Order #${orderData.orderNumber} Approved - IBC Educational Network`,
+      subject: `Order #${orderData.orderNumber} Approved - IBC Educational Network`,
       html: `
         <!DOCTYPE html>
         <html lang="en">
@@ -264,40 +273,41 @@ export async function sendOrderApprovedEmail(orderData: OrderEmailData) {
           <title>Order Approved</title>
           <style>
             body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f9fafb; }
-            .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; }
-            .header { background: linear-gradient(135deg, #059669 0%, #047857 100%); padding: 30px; text-align: center; }
-            .logo { width: 120px; height: auto; margin-bottom: 20px; }
-            .header-title { color: #ffffff; font-size: 24px; font-weight: 700; margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-            .header-subtitle { color: #d1fae5; font-size: 16px; margin: 10px 0 0 0; }
-            .content { padding: 40px 30px; }
-            .success-box { background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border-left: 4px solid #059669; padding: 25px; border-radius: 8px; margin-bottom: 30px; text-align: center; }
-            .success-icon { font-size: 48px; margin-bottom: 15px; }
-            .success-title { color: #065f46; font-size: 20px; font-weight: 700; margin: 0 0 10px 0; }
-            .success-text { color: #047857; font-size: 16px; margin: 0; line-height: 1.5; }
-            .section { margin-bottom: 30px; }
-            .section-title { color: #1f2937; font-size: 20px; font-weight: 700; margin: 0 0 20px 0; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px; }
-            .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
-            .info-item { background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e5e7eb; }
-            .info-label { color: #6b7280; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px; }
-            .info-value { color: #1f2937; font-size: 16px; font-weight: 600; }
-            .status-badge { display: inline-block; background: linear-gradient(135deg, #059669 0%, #047857 100%); color: #ffffff; padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 14px; }
-            .items-table { width: 100%; border-collapse: collapse; margin-top: 15px; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-            .items-table th { background: #f8fafc; padding: 15px 12px; text-align: left; font-weight: 700; color: #374151; border-bottom: 2px solid #e5e7eb; }
-            .items-table td { padding: 12px; border-bottom: 1px solid #e5e7eb; }
-            .next-steps { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); padding: 25px; border-radius: 8px; margin: 20px 0; }
-            .next-steps h3 { color: #0c4a6e; margin: 0 0 15px 0; font-size: 18px; }
-            .next-steps ul { margin: 0; padding-left: 20px; }
-            .next-steps li { color: #0c4a6e; margin-bottom: 8px; line-height: 1.5; }
-            .support-box { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding: 25px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #f59e0b; }
-            .support-title { color: #92400e; font-size: 18px; font-weight: 700; margin: 0 0 15px 0; }
-            .support-text { color: #92400e; margin: 0 0 10px 0; }
-            .support-contact { color: #92400e; font-weight: 600; }
-            .footer { background: #f8fafc; padding: 30px; text-align: center; border-top: 1px solid #e5e7eb; }
-            .footer-text { color: #6b7280; font-size: 14px; margin: 0; }
+            .container { max-width: 650px; margin: 0 auto; background-color: #ffffff; }
+            .header { background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%); padding: 40px; text-align: center; }
+            .logo { width: 180px; height: auto; margin-bottom: 25px; }
+            .header-title { color: #ffffff; font-size: 28px; font-weight: 700; margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+            .header-subtitle { color: #dbeafe; font-size: 18px; margin: 15px 0 0 0; }
+            .content { padding: 50px 40px; }
+            .status-box { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border-left: 5px solid #3b82f6; padding: 30px; border-radius: 10px; margin-bottom: 40px; text-align: center; }
+            .status-icon { font-size: 56px; margin-bottom: 20px; }
+            .status-title { color: #1e40af; font-size: 24px; font-weight: 700; margin: 0 0 15px 0; }
+            .status-text { color: #1e3a8a; font-size: 18px; margin: 0; line-height: 1.6; }
+            .section { margin-bottom: 40px; }
+            .section-title { color: #1f2937; font-size: 22px; font-weight: 700; margin: 0 0 25px 0; border-bottom: 3px solid #e5e7eb; padding-bottom: 15px; }
+            .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 25px; }
+            .info-item { background: #f8fafc; padding: 20px; border-radius: 10px; border: 1px solid #e5e7eb; }
+            .info-label { color: #6b7280; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 8px; }
+            .info-value { color: #1f2937; font-size: 18px; font-weight: 600; }
+            .status-badge { display: inline-block; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; padding: 10px 20px; border-radius: 25px; font-weight: 600; font-size: 16px; }
+            .items-table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+            .items-table th { background: #f8fafc; padding: 18px 15px; text-align: left; font-weight: 700; color: #374151; border-bottom: 3px solid #e5e7eb; }
+            .items-table td { padding: 15px; border-bottom: 1px solid #e5e7eb; }
+            .next-steps { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); padding: 30px; border-radius: 10px; margin: 25px 0; }
+            .next-steps h3 { color: #0c4a6e; margin: 0 0 20px 0; font-size: 20px; }
+            .next-steps ul { margin: 0; padding-left: 25px; }
+            .next-steps li { color: #0c4a6e; margin-bottom: 12px; line-height: 1.6; font-size: 16px; }
+            .support-box { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding: 30px; border-radius: 10px; margin: 25px 0; border-left: 5px solid #f59e0b; }
+            .support-title { color: #92400e; font-size: 20px; font-weight: 700; margin: 0 0 20px 0; }
+            .support-text { color: #92400e; margin: 0 0 15px 0; font-size: 16px; }
+            .support-contact { color: #92400e; font-weight: 600; font-size: 16px; }
+            .footer { background: #f8fafc; padding: 40px; text-align: center; border-top: 1px solid #e5e7eb; }
+            .footer-text { color: #6b7280; font-size: 16px; margin: 0; }
             @media (max-width: 600px) {
               .info-grid { grid-template-columns: 1fr; }
-              .content { padding: 20px; }
-              .header { padding: 20px; }
+              .content { padding: 30px 20px; }
+              .header { padding: 30px 20px; }
+              .logo { width: 140px; }
             }
           </style>
         </head>
@@ -306,25 +316,25 @@ export async function sendOrderApprovedEmail(orderData: OrderEmailData) {
             <!-- Header -->
             <div class="header">
               <img src="https://ibcedu.com/images/ibc-logo.png" alt="IBC Educational Network" class="logo">
-              <h1 class="header-title">Order Approved! 🎉</h1>
+              <h1 class="header-title">Order Approved</h1>
               <p class="header-subtitle">Your order has been approved and is being processed</p>
             </div>
 
             <!-- Content -->
             <div class="content">
-              <!-- Success Box -->
-              <div class="success-box">
-                <div class="success-icon">✅</div>
-                <h2 class="success-title">Great News!</h2>
-                <p class="success-text">
+              <!-- Status Box -->
+              <div class="status-box">
+                <div class="status-icon">✓</div>
+                <h2 class="status-title">Order Approved Successfully</h2>
+                <p class="status-text">
                   Your order <strong>#${orderData.orderNumber}</strong> has been approved and is now being processed. 
-                  We're preparing your educational materials with care!
+                  We're preparing your educational materials with the highest quality standards.
                 </p>
               </div>
 
               <!-- Order Summary -->
               <div class="section">
-                <h2 class="section-title">📋 Order Summary</h2>
+                <h2 class="section-title">Order Summary</h2>
                 <div class="info-grid">
                   <div class="info-item">
                     <div class="info-label">Order Number</div>
@@ -333,7 +343,7 @@ export async function sendOrderApprovedEmail(orderData: OrderEmailData) {
                   <div class="info-item">
                     <div class="info-label">Order Status</div>
                     <div class="info-value">
-                      <span class="status-badge">✅ Approved</span>
+                      <span class="status-badge">Approved</span>
                     </div>
                   </div>
                   <div class="info-item">
@@ -349,7 +359,7 @@ export async function sendOrderApprovedEmail(orderData: OrderEmailData) {
 
               <!-- Order Items -->
               <div class="section">
-                <h2 class="section-title">📚 Your Order Items</h2>
+                <h2 class="section-title">Order Items</h2>
                 <table class="items-table">
                   <thead>
                     <tr>
@@ -366,7 +376,7 @@ export async function sendOrderApprovedEmail(orderData: OrderEmailData) {
 
               <!-- What's Next -->
               <div class="next-steps">
-                <h3>🔄 What's Next?</h3>
+                <h3>Next Steps</h3>
                 <ul>
                   <li><strong>Processing:</strong> We're carefully preparing your educational materials</li>
                   <li><strong>Quality Check:</strong> Each item is being reviewed for quality assurance</li>
@@ -378,7 +388,7 @@ export async function sendOrderApprovedEmail(orderData: OrderEmailData) {
 
               <!-- Delivery Information -->
               <div class="section">
-                <h2 class="section-title">📍 Delivery Information</h2>
+                <h2 class="section-title">Delivery Information</h2>
                 <div class="info-item" style="grid-column: 1 / -1;">
                   <div class="info-label">Delivery Address</div>
                   <div class="info-value">
@@ -390,11 +400,11 @@ export async function sendOrderApprovedEmail(orderData: OrderEmailData) {
 
               <!-- Support Box -->
               <div class="support-box">
-                <h3 class="support-title">📞 Need Help?</h3>
+                <h3 class="support-title">Need Assistance?</h3>
                 <p class="support-text">If you have any questions about your order, please contact us:</p>
-                <p class="support-contact">📧 Email: support@ibcedu.com</p>
-                <p class="support-contact">📱 Phone: +92 XXX XXX XXXX</p>
-                <p class="support-text" style="margin-top: 15px; font-size: 14px;">
+                <p class="support-contact">Email: support@ibcedu.com</p>
+                <p class="support-contact">Phone: +92 XXX XXX XXXX</p>
+                <p class="support-text" style="margin-top: 20px; font-size: 14px;">
                   Our support team is available Monday to Friday, 9:00 AM - 6:00 PM (PKT)
                 </p>
               </div>
@@ -861,6 +871,152 @@ export async function sendOrderDeliveredEmail(orderData: OrderEmailData) {
     return { success: true }
   } catch (error) {
     console.error('Error sending order delivered email:', error)
+    return { success: false, error }
+  }
+}
+
+// Email for contact form submissions
+export async function sendContactFormEmail(contactData: {
+  name: string
+  email: string
+  phone?: string
+  subject: string
+  message: string
+}) {
+  try {
+    await resend.emails.send({
+      from: 'IBC Educational Network <noreply@ibcedu.com>',
+      to: ['contact@ibcedu.com'],
+      subject: `New Contact Form Submission - ${contactData.subject}`,
+      html: `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>New Contact Form Submission</title>
+          <style>
+            body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f9fafb; }
+            .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; }
+            .header { background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%); padding: 30px; text-align: center; }
+            .logo { width: 120px; height: auto; margin-bottom: 20px; }
+            .header-title { color: #ffffff; font-size: 24px; font-weight: 700; margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+            .header-subtitle { color: #dbeafe; font-size: 16px; margin: 10px 0 0 0; }
+            .content { padding: 40px 30px; }
+            .alert-box { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border-left: 4px solid #3b82f6; padding: 20px; border-radius: 8px; margin-bottom: 30px; }
+            .alert-title { color: #1e40af; font-size: 18px; font-weight: 700; margin: 0 0 10px 0; }
+            .alert-text { color: #1e3a8a; font-size: 16px; margin: 0; line-height: 1.5; }
+            .section { margin-bottom: 30px; }
+            .section-title { color: #1f2937; font-size: 20px; font-weight: 700; margin: 0 0 20px 0; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px; }
+            .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+            .info-item { background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e5e7eb; }
+            .info-label { color: #6b7280; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px; }
+            .info-value { color: #1f2937; font-size: 16px; font-weight: 600; }
+            .message-box { background: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid #e5e7eb; margin-top: 20px; }
+            .message-label { color: #6b7280; font-size: 14px; font-weight: 600; text-transform: uppercase; margin-bottom: 10px; }
+            .message-content { color: #1f2937; font-size: 16px; line-height: 1.6; white-space: pre-wrap; }
+            .footer { background: #f8fafc; padding: 30px; text-align: center; border-top: 1px solid #e5e7eb; }
+            .footer-text { color: #6b7280; font-size: 14px; margin: 0; }
+            @media (max-width: 600px) {
+              .info-grid { grid-template-columns: 1fr; }
+              .content { padding: 20px; }
+              .header { padding: 20px; }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <!-- Header -->
+            <div class="header">
+              <img src="https://ibcedu.com/images/ibc-logo.png" alt="IBC Educational Network" class="logo">
+              <h1 class="header-title">New Contact Form Submission</h1>
+              <p class="header-subtitle">Someone has contacted you through your website</p>
+            </div>
+
+            <!-- Content -->
+            <div class="content">
+              <!-- Alert Box -->
+              <div class="alert-box">
+                <h2 class="alert-title">📧 New Contact Form Message</h2>
+                <p class="alert-text">
+                  A visitor has submitted a contact form on your IBC Educational Network website. 
+                  Please review the details below and respond accordingly.
+                </p>
+              </div>
+
+              <!-- Contact Information -->
+              <div class="section">
+                <h2 class="section-title">👤 Contact Information</h2>
+                <div class="info-grid">
+                  <div class="info-item">
+                    <div class="info-label">Name</div>
+                    <div class="info-value">${contactData.name}</div>
+                  </div>
+                  <div class="info-item">
+                    <div class="info-label">Email</div>
+                    <div class="info-value">${contactData.email}</div>
+                  </div>
+                  <div class="info-item">
+                    <div class="info-label">Phone</div>
+                    <div class="info-value">${contactData.phone || 'Not provided'}</div>
+                  </div>
+                  <div class="info-item">
+                    <div class="info-label">Subject</div>
+                    <div class="info-value">${contactData.subject}</div>
+                  </div>
+                  <div class="info-item">
+                    <div class="info-label">Date & Time</div>
+                    <div class="info-value">${new Date().toLocaleDateString('en-US', { 
+                      year: 'numeric', 
+                      month: 'long', 
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Message Content -->
+              <div class="section">
+                <h2 class="section-title">💬 Message</h2>
+                <div class="message-box">
+                  <div class="message-label">Message Content</div>
+                  <div class="message-content">${contactData.message}</div>
+                </div>
+              </div>
+
+              <!-- Quick Actions -->
+              <div class="section">
+                <h2 class="section-title">⚡ Quick Actions</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                  <a href="mailto:${contactData.email}?subject=Re: ${contactData.subject}" style="display: block; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: #ffffff; padding: 15px; text-decoration: none; border-radius: 8px; text-align: center; font-weight: 600;">
+                    📧 Reply via Email
+                  </a>
+                  ${contactData.phone ? `<a href="tel:${contactData.phone}" style="display: block; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; padding: 15px; text-decoration: none; border-radius: 8px; text-align: center; font-weight: 600;">
+                    📞 Call Customer
+                  </a>` : ''}
+                </div>
+              </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="footer">
+              <p class="footer-text">
+                This is an automated notification from IBC Educational Network.<br>
+                Please respond to the customer within 24 hours for best service.
+              </p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `
+    })
+
+    console.log('Contact form email sent to contact@ibcedu.com')
+    return { success: true }
+  } catch (error) {
+    console.error('Error sending contact form email:', error)
     return { success: false, error }
   }
 }

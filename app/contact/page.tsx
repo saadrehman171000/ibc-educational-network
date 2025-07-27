@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState } from "react"
-import { MapPin, Phone, Mail, Clock, Send, MessageSquare, Building } from "lucide-react"
+import { MapPin, Phone, Mail, Clock, Send, MessageSquare, Building, CheckCircle, AlertCircle } from "lucide-react"
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -13,6 +13,9 @@ export default function ContactPage() {
     subject: "",
     message: "",
   })
+  const [loading, setLoading] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const [submitMessage, setSubmitMessage] = useState("")
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
@@ -21,17 +24,43 @@ export default function ContactPage() {
     })
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle form submission
-    alert("Thank you for your message! We will get back to you within 24 hours.")
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      subject: "",
-      message: "",
-    })
+    setLoading(true)
+    setSubmitStatus('idle')
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        setSubmitStatus('success')
+        setSubmitMessage(data.message)
+        // Reset form
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          subject: "",
+          message: "",
+        })
+      } else {
+        setSubmitStatus('error')
+        setSubmitMessage(data.error || 'Failed to send message. Please try again.')
+      }
+    } catch (error) {
+      setSubmitStatus('error')
+      setSubmitMessage('Network error. Please check your connection and try again.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -123,6 +152,21 @@ export default function ContactPage() {
               </p>
 
               <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Submit Status Messages */}
+                {submitStatus === 'success' && (
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
+                    <p className="text-green-800 font-medium">{submitMessage}</p>
+                  </div>
+                )}
+                
+                {submitStatus === 'error' && (
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-3">
+                    <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+                    <p className="text-red-800 font-medium">{submitMessage}</p>
+                  </div>
+                )}
+
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-2">
@@ -135,7 +179,8 @@ export default function ContactPage() {
                       value={formData.name}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                      disabled={loading}
+                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors disabled:bg-slate-100 disabled:cursor-not-allowed"
                       placeholder="Enter your full name"
                     />
                   </div>
@@ -150,7 +195,8 @@ export default function ContactPage() {
                       value={formData.email}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                      disabled={loading}
+                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors disabled:bg-slate-100 disabled:cursor-not-allowed"
                       placeholder="Enter your email address"
                     />
                   </div>
@@ -167,7 +213,8 @@ export default function ContactPage() {
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                      disabled={loading}
+                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors disabled:bg-slate-100 disabled:cursor-not-allowed"
                       placeholder="Enter your phone number"
                     />
                   </div>
@@ -181,7 +228,8 @@ export default function ContactPage() {
                       value={formData.subject}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                      disabled={loading}
+                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors disabled:bg-slate-100 disabled:cursor-not-allowed"
                     >
                       <option value="">Select a subject</option>
                       <option value="general">General Inquiry</option>
@@ -203,18 +251,29 @@ export default function ContactPage() {
                     value={formData.message}
                     onChange={handleInputChange}
                     required
+                    disabled={loading}
                     rows={6}
-                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors resize-none"
+                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors resize-none disabled:bg-slate-100 disabled:cursor-not-allowed"
                     placeholder="Tell us how we can help you..."
                   ></textarea>
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full bg-blue-600 text-white py-4 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+                  disabled={loading}
+                  className="w-full bg-blue-600 text-white py-4 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 disabled:bg-slate-400 disabled:cursor-not-allowed"
                 >
-                  <Send className="w-5 h-5" />
-                  Send Message
+                  {loading ? (
+                    <>
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                      Sending Message...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-5 h-5" />
+                      Send Message
+                    </>
+                  )}
                 </button>
               </form>
             </div>
@@ -283,11 +342,34 @@ export default function ContactPage() {
           </div>
 
           <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
-            <div className="aspect-video bg-slate-200 rounded-xl flex items-center justify-center">
-              <div className="text-center">
-                <MapPin className="w-16 h-16 text-slate-400 mx-auto mb-4" />
-                <p className="text-slate-600">Interactive map will be embedded here</p>
-              </div>
+            <div className="aspect-video rounded-xl overflow-hidden">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3618.1234567890123!2d67.12345678901234!3d24.12345678901234!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjTCsDA3JzM0LjQiTiA2N8KwMDcnMzQuNCJF!5e0!3m2!1sen!2spk!4v1234567890123"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="IBC Educational Network Office Location"
+              ></iframe>
+            </div>
+            <div className="mt-6 text-center">
+              <h3 className="text-lg font-semibold text-slate-900 mb-2">Office Location</h3>
+              <p className="text-slate-600">
+                Office No. 7, Shan Plaza<br />
+                Gawali Lane #2, New Urdu Bazar<br />
+                Karachi, Pakistan
+              </p>
+              <a 
+                href="https://maps.app.goo.gl/8hfqobMsqs88iTKF9" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 mt-4 text-blue-600 hover:text-blue-700 font-medium"
+              >
+                <MapPin className="w-4 h-4" />
+                View on Google Maps
+              </a>
             </div>
           </div>
         </div>

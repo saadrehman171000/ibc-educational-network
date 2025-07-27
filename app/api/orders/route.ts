@@ -60,6 +60,7 @@ export async function POST(request: NextRequest) {
       orderNumber,
       customerName: shippingName,
       customerEmail: shippingEmail,
+      customerPhone: shippingPhone,
       items,
       total: parseFloat(total),
       shippingAddress,

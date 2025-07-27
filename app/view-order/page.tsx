@@ -118,14 +118,50 @@ export default function ViewOrderPage() {
 
   const getImageUrl = (url?: string) => {
     if (!url) return '/placeholder-logo.png'
+    
+    // Handle Google Drive URLs
     const driveRegex = /https:\/\/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)\/view/
     const match = url.match(driveRegex)
     
     if (match) {
-      return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w200`
+      return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w400`
+    }
+    
+    // Handle other Google Drive URL formats
+    const openRegex = /https:\/\/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/
+    const openMatch = url.match(openRegex)
+    
+    if (openMatch) {
+      return `https://drive.google.com/thumbnail?id=${openMatch[1]}&sz=w400`
+    }
+    
+    // Handle docs.google.com URLs
+    const docsRegex = /https:\/\/docs\.google\.com\/.*\/d\/([a-zA-Z0-9_-]+)/
+    const docsMatch = url.match(docsRegex)
+    
+    if (docsMatch) {
+      return `https://drive.google.com/thumbnail?id=${docsMatch[1]}&sz=w400`
     }
     
     return url
+  }
+
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    const target = e.target as HTMLImageElement
+    const originalSrc = target.src
+    
+    // Try different fallback strategies
+    if (originalSrc.includes('drive.google.com')) {
+      const idMatch = originalSrc.match(/id=([a-zA-Z0-9_-]+)/)
+      if (idMatch) {
+        // Try direct download URL
+        target.src = `https://drive.google.com/uc?export=view&id=${idMatch[1]}`
+        return
+      }
+    }
+    
+    // Final fallback
+    target.src = '/placeholder-logo.png'
   }
 
   return (
@@ -255,9 +291,7 @@ export default function ViewOrderPage() {
                                   alt={item.title}
                                   fill
                                   className="object-contain"
-                                  onError={(e) => {
-                                    e.currentTarget.src = '/placeholder-logo.png'
-                                  }}
+                                  onError={handleImageError}
                                 />
                               </div>
                               <div className="flex-1">

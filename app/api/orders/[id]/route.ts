@@ -76,6 +76,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       orderNumber: currentOrder.orderNumber,
       customerName: currentOrder.shippingName,
       customerEmail: currentOrder.shippingEmail,
+      customerPhone: currentOrder.shippingPhone,
       items: currentOrder.items as any[],
       total: currentOrder.total,
       shippingAddress: currentOrder.shippingAddress,
