@@ -150,10 +150,50 @@ export async function GET(request: NextRequest) {
       prisma.order.count({ where })
     ])
 
+    // Enhance order items with product details including images
+    const enhancedOrders = await Promise.all(
+      orders.map(async (order) => {
+        const enhancedItems = await Promise.all(
+          (order.items as any[]).map(async (item) => {
+            try {
+              // Try to find the product to get its image
+              const product = await prisma.product.findFirst({
+                where: {
+                  OR: [
+                    { id: item.id },
+                    { title: { contains: item.title, mode: 'insensitive' } }
+                  ]
+                },
+                select: {
+                  id: true,
+                  title: true,
+                  imageUrl: true,
+                  price: true
+                }
+              })
+
+              return {
+                ...item,
+                imageUrl: product?.imageUrl || item.imageUrl || null
+              }
+            } catch (error) {
+              console.error('Error fetching product details:', error)
+              return item
+            }
+          })
+        )
+
+        return {
+          ...order,
+          items: enhancedItems
+        }
+      })
+    )
+
     const totalPages = Math.ceil(total / limit)
 
     return NextResponse.json({
-      orders,
+      orders: enhancedOrders,
       pagination: {
         page,
         limit,

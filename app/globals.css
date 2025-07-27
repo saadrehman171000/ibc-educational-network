@@ -97,6 +97,23 @@
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
 
+  /* Prevent horizontal overflow */
+  body {
+    overflow-x: hidden;
+  }
+
+  /* Ensure header doesn't overflow */
+  header {
+    overflow-x: hidden;
+  }
+
+  /* Responsive navigation adjustments */
+  @media (max-width: 1024px) {
+    .container-max {
+      @apply px-4;
+    }
+  }
+
   /* Add to Cart button animations */
   .add-to-cart-success {
     @apply bg-green-500 text-white shadow-lg transform scale-105 animate-bounce;
