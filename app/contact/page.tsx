@@ -4,12 +4,6 @@ import type React from "react"
 
 import { useState } from "react"
 import { MapPin, Phone, Mail, Clock, Send, MessageSquare, Building, CheckCircle, AlertCircle } from "lucide-react"
-import { Metadata } from "next"
-
-export const metadata: Metadata = {
-  title: 'Contact Us - IBC Educational Network',
-  description: 'Get in touch with IBC Educational Network. Contact us for inquiries about our educational materials, partnerships, or support.',
-}
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
