@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Search, Grid, List, ChevronLeft, ChevronRight, Sparkles } from "lucide-react"
+import { Search, Grid, List, ChevronLeft, ChevronRight, Sparkles, Check } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useCart } from "@/contexts/cart-context"
@@ -36,6 +36,7 @@ export default function NewCollectionPage() {
   const [pagination, setPagination] = useState<Pagination | null>(null)
   const [loading, setLoading] = useState(true)
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+  const [addedToCart, setAddedToCart] = useState<{ [key: string]: boolean }>({})
   const [filters, setFilters] = useState({
     search: '',
     category: '',
@@ -98,6 +99,24 @@ export default function NewCollectionPage() {
     }
     
     return url
+  }
+
+  const handleAddToCart = (product: Product) => {
+    addToCart({
+      id: product.id,
+      title: product.title,
+      grade: product.category,
+      price: product.price,
+      image: product.imageUrl || '',
+    })
+    
+    // Show green tick feedback
+    setAddedToCart(prev => ({ ...prev, [product.id]: true }))
+    
+    // Reset after 3 seconds for better visibility
+    setTimeout(() => {
+      setAddedToCart(prev => ({ ...prev, [product.id]: false }))
+    }, 3000)
   }
 
   // Get unique values for filters
@@ -286,18 +305,23 @@ export default function NewCollectionPage() {
                           onClick={(e) => {
                             e.preventDefault()
                             e.stopPropagation()
-                            addToCart({
-                              id: product.id,
-                              title: product.title,
-                              price: product.price,
-                              imageUrl: product.imageUrl,
-                              quantity: 1
-                            })
+                            handleAddToCart(product)
                           }}
-                          className="btn-primary text-sm px-4 py-2"
+                          className={`text-sm px-4 py-2 rounded-lg font-medium transition-all duration-300 flex items-center justify-center ${
+                            addedToCart[product.id] 
+                              ? 'bg-green-500 text-white shadow-lg transform scale-105' 
+                              : 'btn-primary'
+                          }`}
                         >
-                      Add to Cart
-                    </button>
+                          {addedToCart[product.id] ? (
+                            <>
+                              <Check className="w-5 h-5 mr-2 animate-pulse" />
+                              Added to Cart
+                            </>
+                          ) : (
+                            'Add to Cart'
+                          )}
+                        </button>
                       </div>
                     </div>
                   </>
@@ -339,17 +363,22 @@ export default function NewCollectionPage() {
                           onClick={(e) => {
                             e.preventDefault()
                             e.stopPropagation()
-                            addToCart({
-                              id: product.id,
-                              title: product.title,
-                              price: product.price,
-                              imageUrl: product.imageUrl,
-                              quantity: 1
-                            })
+                            handleAddToCart(product)
                           }}
-                          className="btn-primary text-sm px-4 py-2"
+                          className={`text-sm px-4 py-2 rounded-lg font-medium transition-all duration-300 flex items-center justify-center ${
+                            addedToCart[product.id] 
+                              ? 'bg-green-500 text-white shadow-lg transform scale-105' 
+                              : 'btn-primary'
+                          }`}
                         >
-                          Add to Cart
+                          {addedToCart[product.id] ? (
+                            <>
+                              <Check className="w-5 h-5 mr-2 animate-pulse" />
+                              Added to Cart
+                            </>
+                          ) : (
+                            'Add to Cart'
+                          )}
                         </button>
                   </div>
                 </div>

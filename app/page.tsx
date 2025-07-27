@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { BookOpen, Users, Award, Target, ArrowRight, Star, CheckCircle, Globe, Clock, TrendingUp, Shield, Zap, Sparkles } from "lucide-react"
+import { BookOpen, Users, Award, Target, ArrowRight, Star, CheckCircle, Globe, Clock, TrendingUp, Shield, Zap, Sparkles, Check } from "lucide-react"
 import { useCart } from "@/contexts/cart-context"
 
 interface Product {
@@ -39,6 +39,7 @@ export default function HomePage() {
   const [newCollections, setNewCollections] = useState<Product[]>([])
   const [programs, setPrograms] = useState<Event[]>([])
   const [loading, setLoading] = useState(true)
+  const [addedToCart, setAddedToCart] = useState<{ [key: string]: boolean }>({})
   const { addToCart } = useCart()
 
   // Fetch new collections from API
@@ -81,6 +82,24 @@ export default function HomePage() {
     }
     
     return url
+  }
+
+  const handleAddToCart = (product: Product) => {
+    addToCart({
+      id: product.id,
+      title: product.title,
+      grade: product.category,
+      price: product.price,
+      image: product.imageUrl || '',
+    })
+    
+    // Show green tick feedback
+    setAddedToCart(prev => ({ ...prev, [product.id]: true }))
+    
+    // Reset after 3 seconds for better visibility
+    setTimeout(() => {
+      setAddedToCart(prev => ({ ...prev, [product.id]: false }))
+    }, 3000)
   }
 
   const features = [
@@ -409,17 +428,22 @@ export default function HomePage() {
                         onClick={(e) => {
                           e.preventDefault()
                           e.stopPropagation()
-                          addToCart({
-                            id: product.id,
-                            title: product.title,
-                            price: product.price,
-                            imageUrl: product.imageUrl,
-                            quantity: 1
-                          })
+                          handleAddToCart(product)
                         }}
-                        className="btn-primary text-sm px-4 py-2"
+                        className={`text-sm px-4 py-2 rounded-lg font-medium transition-all duration-300 flex items-center justify-center ${
+                          addedToCart[product.id] 
+                            ? 'bg-green-500 text-white shadow-lg transform scale-105' 
+                            : 'btn-primary'
+                        }`}
                       >
-                        Add to Cart
+                        {addedToCart[product.id] ? (
+                          <>
+                            <Check className="w-5 h-5 mr-2 animate-pulse" />
+                            Added to Cart
+                          </>
+                        ) : (
+                          'Add to Cart'
+                        )}
                       </button>
                     </div>
                   </div>
