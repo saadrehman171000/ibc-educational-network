@@ -117,14 +117,21 @@ export default function ViewOrderPage() {
   }
 
   const getImageUrl = (url?: string) => {
-    if (!url) return '/placeholder-logo.png'
+    console.log('getImageUrl called with:', url) // Debug log
+    
+    if (!url) {
+      console.log('No URL provided, returning placeholder')
+      return '/placeholder-logo.png'
+    }
     
     // Handle Google Drive URLs
     const driveRegex = /https:\/\/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)\/view/
     const match = url.match(driveRegex)
     
     if (match) {
-      return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w400`
+      const imageUrl = `https://drive.google.com/thumbnail?id=${match[1]}&sz=w400`
+      console.log('Generated Google Drive URL:', imageUrl)
+      return imageUrl
     }
     
     // Handle other Google Drive URL formats
@@ -132,7 +139,9 @@ export default function ViewOrderPage() {
     const openMatch = url.match(openRegex)
     
     if (openMatch) {
-      return `https://drive.google.com/thumbnail?id=${openMatch[1]}&sz=w400`
+      const imageUrl = `https://drive.google.com/thumbnail?id=${openMatch[1]}&sz=w400`
+      console.log('Generated Google Drive open URL:', imageUrl)
+      return imageUrl
     }
     
     // Handle docs.google.com URLs
@@ -140,9 +149,12 @@ export default function ViewOrderPage() {
     const docsMatch = url.match(docsRegex)
     
     if (docsMatch) {
-      return `https://drive.google.com/thumbnail?id=${docsMatch[1]}&sz=w400`
+      const imageUrl = `https://drive.google.com/thumbnail?id=${docsMatch[1]}&sz=w400`
+      console.log('Generated Google Docs URL:', imageUrl)
+      return imageUrl
     }
     
+    console.log('Returning original URL:', url)
     return url
   }
 
@@ -285,7 +297,7 @@ export default function ViewOrderPage() {
                         <div className="space-y-3">
                           {order.items.map((item, index) => (
                             <div key={index} className="flex items-center space-x-4 p-3 bg-gray-50 rounded-lg">
-                              <div className="w-16 h-20 relative bg-white rounded overflow-hidden">
+                              <div className="w-16 h-20 relative bg-white rounded overflow-hidden border border-gray-200 flex items-center justify-center">
                                 <Image
                                   src={getImageUrl(item.imageUrl)}
                                   alt={item.title}
@@ -293,6 +305,11 @@ export default function ViewOrderPage() {
                                   className="object-contain"
                                   onError={handleImageError}
                                 />
+                                {!item.imageUrl && (
+                                  <div className="text-gray-400 text-xs text-center">
+                                    No Image
+                                  </div>
+                                )}
                               </div>
                               <div className="flex-1">
                                 <h5 className="font-medium text-gray-900">{item.title}</h5>

@@ -41,20 +41,20 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 bg-white shadow-lg border-b border-gray-200">
       <div className="container-max">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-24">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-3 flex-shrink-0">
+          <Link href="/" className="flex items-center space-x-6 flex-shrink-0">
             <Image
               src="/images/ibc-logo.png"
               alt="IBC Educational Network"
-              width={120}
-              height={80}
-              className="h-14 w-auto"
+              width={160}
+              height={100}
+              className="h-16 w-auto"
             />
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-6 flex-1 justify-center">
+          <nav className="hidden lg:flex items-center space-x-8 flex-1 justify-center">
             <Link href="/" className="text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap">
               Home
             </Link>
