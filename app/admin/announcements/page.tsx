@@ -44,12 +44,26 @@ export default function AdminAnnouncementsPage() {
       })
 
       const response = await fetch(`/api/announcements?${params}`)
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      
       const data = await response.json()
 
+      if (!data || !Array.isArray(data.announcements)) {
+        console.error('Invalid data format received:', data)
+        setAnnouncements([])
+        setPagination(null)
+        return
+      }
+
       setAnnouncements(data.announcements || [])
-      setPagination(data.pagination)
+      setPagination(data.pagination || null)
     } catch (error) {
       console.error('Error fetching announcements:', error)
+      setAnnouncements([])
+      setPagination(null)
     } finally {
       setLoading(false)
     }
@@ -57,7 +71,7 @@ export default function AdminAnnouncementsPage() {
 
   useEffect(() => {
     fetchAnnouncements(1)
-  }, [searchTerm, featuredOnly])
+  }, [searchTerm, featuredOnly]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleDelete = async (announcementId: string) => {
     if (!confirm('Are you sure you want to delete this announcement?')) return
@@ -80,13 +94,22 @@ export default function AdminAnnouncementsPage() {
   }
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    })
+    try {
+      const date = new Date(dateString)
+      if (isNaN(date.getTime())) {
+        return 'Invalid Date'
+      }
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      })
+    } catch (error) {
+      console.error('Error formatting date:', error)
+      return 'Invalid Date'
+    }
   }
 
   return (
@@ -125,13 +148,13 @@ export default function AdminAnnouncementsPage() {
           <div className="flex items-center space-x-2">
             <input
               type="checkbox"
-              id="importantOnly"
-              checked={importantOnly}
-              onChange={(e) => setImportantOnly(e.target.checked)}
+              id="featuredOnly"
+              checked={featuredOnly}
+              onChange={(e) => setFeaturedOnly(e.target.checked)}
               className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
             />
-            <label htmlFor="importantOnly" className="text-sm text-gray-700">
-              Important only
+            <label htmlFor="featuredOnly" className="text-sm text-gray-700">
+              Featured only
             </label>
           </div>
 
@@ -139,7 +162,7 @@ export default function AdminAnnouncementsPage() {
           <button
             onClick={() => {
               setSearchTerm("")
-              setImportantOnly(false)
+              setFeaturedOnly(false)
             }}
             className="px-4 py-2 text-blue-600 hover:text-blue-700 border border-blue-300 rounded-lg hover:bg-blue-50"
           >
@@ -149,9 +172,9 @@ export default function AdminAnnouncementsPage() {
       </div>
 
       {/* Results Count */}
-      {pagination && (
+      {pagination && pagination.totalCount > 0 && (
         <div className="text-sm text-gray-600">
-          Showing {((pagination.page - 1) * pagination.limit) + 1} to{' '}
+          Showing {Math.max(1, ((pagination.page - 1) * pagination.limit) + 1)} to{' '}
           {Math.min(pagination.page * pagination.limit, pagination.totalCount)} of{' '}
           {pagination.totalCount} announcements
         </div>
