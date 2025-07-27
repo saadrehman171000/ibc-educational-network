@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { BookOpen, Users, Award, Target, ArrowRight, Star, CheckCircle, Globe, Clock, TrendingUp, Shield, Zap, Sparkles } from "lucide-react"
+import { useCart } from "@/contexts/cart-context"
 
 interface Product {
   id: string
@@ -38,6 +39,7 @@ export default function HomePage() {
   const [newCollections, setNewCollections] = useState<Product[]>([])
   const [programs, setPrograms] = useState<Event[]>([])
   const [loading, setLoading] = useState(true)
+  const { addToCart } = useCart()
 
   // Fetch new collections from API
   const fetchNewCollections = async () => {
@@ -406,8 +408,14 @@ export default function HomePage() {
                       <button 
                         onClick={(e) => {
                           e.preventDefault()
-                          // Add to cart functionality
-                          console.log('Add to cart:', product.id)
+                          e.stopPropagation()
+                          addToCart({
+                            id: product.id,
+                            title: product.title,
+                            price: product.price,
+                            imageUrl: product.imageUrl,
+                            quantity: 1
+                          })
                         }}
                         className="btn-primary text-sm px-4 py-2"
                       >

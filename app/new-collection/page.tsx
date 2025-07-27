@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { Search, Grid, List, ChevronLeft, ChevronRight, Sparkles } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
+import { useCart } from "@/contexts/cart-context"
 
 interface Product {
   id: string
@@ -41,6 +42,7 @@ export default function NewCollectionPage() {
     subject: '',
     series: '',
   })
+  const { addToCart } = useCart()
 
   // Fetch new collection products
   const fetchProducts = async (page = 1) => {
@@ -283,7 +285,14 @@ export default function NewCollectionPage() {
                         <button 
                           onClick={(e) => {
                             e.preventDefault()
-                            // Add to cart functionality
+                            e.stopPropagation()
+                            addToCart({
+                              id: product.id,
+                              title: product.title,
+                              price: product.price,
+                              imageUrl: product.imageUrl,
+                              quantity: 1
+                            })
                           }}
                           className="btn-primary text-sm px-4 py-2"
                         >
@@ -329,7 +338,14 @@ export default function NewCollectionPage() {
                         <button 
                           onClick={(e) => {
                             e.preventDefault()
-                            // Add to cart functionality
+                            e.stopPropagation()
+                            addToCart({
+                              id: product.id,
+                              title: product.title,
+                              price: product.price,
+                              imageUrl: product.imageUrl,
+                              quantity: 1
+                            })
                           }}
                           className="btn-primary text-sm px-4 py-2"
                         >
