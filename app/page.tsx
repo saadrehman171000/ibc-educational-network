@@ -219,7 +219,7 @@ export default function HomePage() {
           <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-orange-100 rounded-full opacity-10"></div>
         </div>
 
-        <div className="container-max relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-8 text-center lg:text-left">
               <div className="space-y-6">
@@ -287,8 +287,8 @@ export default function HomePage() {
       </section>
 
       {/* About IBC Section */}
-      <section className="section-padding bg-white">
-        <div className="container-max">
+      <div className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="relative">
               <Image
@@ -314,10 +314,15 @@ export default function HomePage() {
                 <div className="flex items-start space-x-3">
                   <CheckCircle className="w-6 h-6 text-teal-600 mt-1 flex-shrink-0" />
                   <div>
-                    <h3 className="font-semibold text-gray-900">Global Standards</h3>
-                    <p className="text-gray-700">
-                      Content aligned with international educational standards and best practices.
-                    </p>
+                    <h3 className="font-semibold text-gray-900">Curriculum Aligned</h3>
+                    <p className="text-gray-700">Content perfectly aligned with national and international curricula.</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="w-6 h-6 text-teal-600 mt-1 flex-shrink-0" />
+                  <div>
+                    <h3 className="font-semibold text-gray-900">Progressive Learning</h3>
+                    <p className="text-gray-700">Systematic progression from Beginner to Class 8 with carefully designed pathways.</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
@@ -338,11 +343,11 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </section>
+      </div>
 
       {/* Why Choose Us Section */}
-      <section className="section-padding bg-gray-50">
-        <div className="container-max">
+      <div className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
+        <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Why Choose IBC Educational Network?</h2>
             <p className="text-xl text-gray-700 max-w-3xl mx-auto">
@@ -363,7 +368,7 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-      </section>
+      </div>
 
       {/* Latest Collections Section */}
       <div className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
