@@ -31,6 +31,9 @@ interface Pagination {
 }
 
 const gradeMapping: Record<string, string> = {
+  'nursery': 'Nursery',
+  'kg1': 'KG1',
+  'kg2': 'KG2',
   'beginner': 'Beginner',
   'step-1': 'Step 1',
   'step-2': 'Step 2', 

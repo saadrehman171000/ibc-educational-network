@@ -18,6 +18,9 @@ export default function Header() {
   const buttonRef = useRef<HTMLButtonElement>(null)
 
   const grades = [
+    "Nursery",
+    "KG1",
+    "KG2",
     "Beginner",
     "Step 1",
     "Step 2",

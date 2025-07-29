@@ -7,6 +7,9 @@ import Image from "next/image"
 import { useRouter } from "next/navigation"
 
 const categories = [
+  'Nursery',
+  'KG1',
+  'KG2',
   'Beginner',
   'Step 1',
   'Step 2', 
@@ -32,16 +35,39 @@ const subjects = [
   'Drawing',
   'Handwriting',
   'Computer',
+  '5 in 1',
+  'Writing Journey',
+  'Art & Craft',
+  'Qaida',
+  'Tajweed',
+  'Hifz',
+  'Arabic',
+  'Environmental Studies',
+  'Life Skills',
+  'Creative Writing',
 ]
 
 const seriesOptions = [
-  'KG',
-  'Early Learner',
+  'KG Series',
   'Primary Series',
-  'Elementary Series',
-  'Advanced Series',
+  'Art in Craft',
+  'All in One',
+  'Glorious',
+  'Junior Artist',
+  'Subhani Qaida',
+  'Smart Start Famous 5',
+  'Starter',
+  'Writing Journey',
+  'Art & Craft',
+  'Drawing',
+  'Early Learning',
   'Foundation Series',
   'Core Series',
+  'Advanced Series',
+  'Islamic Series',
+  'Creative Series',
+  'Activity Series',
+  'Assessment Series',
 ]
 
 const typeOptions = [
@@ -51,6 +77,20 @@ const typeOptions = [
   'Workbook',
   'Activity Book',
   'Guide',
+  'Qaida',
+  'Drawing',
+  'Coloring Book',
+  'Assessment Book',
+  'Practice Book',
+  'Reference Book',
+  'Story Book',
+  'Poetry Book',
+  'Grammar Book',
+  'Vocabulary Book',
+  'Comprehension Book',
+  'Creative Book',
+  'Islamic Book',
+  'Science Lab Book',
 ]
 
 export default function AddProductPage() {
