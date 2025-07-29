@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { Menu, X, ShoppingCart, User, ChevronDown, LogOut, Settings } from "lucide-react"
 import { useCart } from "@/contexts/cart-context"
@@ -14,6 +14,7 @@ export default function Header() {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
   const { getTotalItems } = useCart()
   const { user, isLoaded } = useUser()
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
   const grades = [
     "Beginner",
@@ -38,10 +39,24 @@ export default function Header() {
     setIsGradesOpen(false)
   }
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsGradesOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
   return (
-    <header className="sticky top-0 z-50 bg-white shadow-lg border-b border-gray-200">
+    <header className="sticky top-0 z-50 bg-white shadow-lg border-b border-gray-200 overflow-x-hidden">
       <div className="container-max">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-20 min-w-0">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-4 flex-shrink-0">
             <Image
@@ -54,26 +69,26 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-6 flex-1 justify-center">
-            <Link href="/" className="text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap">
+          <nav className="hidden lg:flex items-center space-x-4 xl:space-x-6 flex-1 justify-center min-w-0">
+            <Link href="/" className="text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap flex-shrink-0">
               Home
             </Link>
-            <Link href="/collections" className="text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap">
+            <Link href="/collections" className="text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap flex-shrink-0">
               Collections
             </Link>
 
             {/* Academic Grades Dropdown */}
-            <div className="relative">
+            <div className="relative flex-shrink-0" ref={dropdownRef}>
               <button
                 onClick={() => setIsGradesOpen(!isGradesOpen)}
                 className="flex items-center space-x-1 text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap"
               >
                 <span>Academic Grades</span>
-                <ChevronDown className="w-4 h-4" />
+                <ChevronDown className={`w-4 h-4 transition-transform ${isGradesOpen ? 'rotate-180' : ''}`} />
               </button>
 
               {isGradesOpen && (
-                <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50">
+                <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-[60] min-w-max">
                   {grades.map((grade) => (
                     <Link
                       key={grade}
@@ -88,41 +103,41 @@ export default function Header() {
               )}
             </div>
 
-            <Link href="/programs" className="text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap">
+            <Link href="/programs" className="text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap flex-shrink-0">
               Programs
             </Link>
-            <Link href="/new-collection" className="text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap">
+            <Link href="/new-collection" className="text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap flex-shrink-0">
               New Collection
             </Link>
-            <Link href="/announcements" className="text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap">
+            <Link href="/announcements" className="text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap flex-shrink-0">
               Announcements
             </Link>
-            <Link href="/about" className="text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap">
+            <Link href="/about" className="text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap flex-shrink-0">
               About Us
             </Link>
-            <Link href="/contact" className="text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap">
+            <Link href="/contact" className="text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap flex-shrink-0">
               Contact
             </Link>
-            <Link href="/view-order" className="text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap border border-gray-300 rounded-lg px-2 py-1 hover:border-blue-500">
+            <Link href="/view-order" className="text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap border border-gray-300 rounded-lg px-2 py-1 hover:border-blue-500 flex-shrink-0">
               View Orders
             </Link>
           </nav>
 
           {/* Medium Screen Navigation (hidden on large screens) */}
-          <nav className="hidden md:flex lg:hidden items-center space-x-4 flex-1 justify-center">
-            <Link href="/" className="text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap">
+          <nav className="hidden md:flex lg:hidden items-center space-x-3 flex-1 justify-center min-w-0">
+            <Link href="/" className="text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap flex-shrink-0">
               Home
             </Link>
-            <Link href="/collections" className="text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap">
+            <Link href="/collections" className="text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap flex-shrink-0">
               Collections
             </Link>
-            <Link href="/programs" className="text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap">
+            <Link href="/programs" className="text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap flex-shrink-0">
               Programs
             </Link>
-            <Link href="/about" className="text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap">
+            <Link href="/about" className="text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap flex-shrink-0">
               About
             </Link>
-            <Link href="/contact" className="text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap">
+            <Link href="/contact" className="text-gray-700 hover:text-blue-900 font-medium transition-colors whitespace-nowrap flex-shrink-0">
               Contact
             </Link>
           </nav>
@@ -206,7 +221,7 @@ export default function Header() {
                   className="flex items-center justify-between w-full py-2 text-gray-700 hover:text-blue-900 font-medium"
                 >
                   <span>Academic Grades</span>
-                  <ChevronDown className="w-4 h-4" />
+                  <ChevronDown className={`w-4 h-4 transition-transform ${isGradesOpen ? 'rotate-180' : ''}`} />
                 </button>
                 {isGradesOpen && (
                   <div className="ml-4 mt-2 space-y-2">

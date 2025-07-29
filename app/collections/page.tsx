@@ -352,7 +352,7 @@ export default function CollectionsPage() {
                   <>
                     <Link href={`/collections/${product.id}`} className="block">
                       <div className="aspect-[3/4] relative bg-gray-100 flex items-center justify-center">
-                        <Image
+                    <Image
                           src={getImageUrl(product.imageUrl)}
                           alt={product.title}
                           width={300}
@@ -370,7 +370,7 @@ export default function CollectionsPage() {
                             Featured
                           </span>
                         )}
-                      </div>
+                  </div>
                       <div className="p-4">
                         <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">{product.title}</h3>
                         <p className="text-sm text-gray-600 mb-2">{product.category} • {product.subject}</p>
@@ -381,15 +381,15 @@ export default function CollectionsPage() {
                               <div className="flex items-center space-x-2">
                                 <span className="text-lg font-bold text-blue-900">
                                   Rs. {(product.price - (product.price * product.discount / 100)).toFixed(0)}
-                                </span>
+                    </span>
                                 <span className="text-sm text-gray-500 line-through">Rs. {product.price}</span>
                               </div>
                             ) : (
                               <span className="text-lg font-bold text-blue-900">Rs. {product.price}</span>
                             )}
-                          </div>
-                        </div>
-                      </div>
+                  </div>
+                  </div>
+                </div>
                     </Link>
                     <div className="px-4 pb-4">
                       <button 
@@ -446,8 +446,8 @@ export default function CollectionsPage() {
                               <span className="text-lg font-bold text-blue-900">Rs. {product.price}</span>
                             )}
                           </div>
-                        </div>
-                      </div>
+                  </div>
+                  </div>
                     </Link>
                     <div className="flex items-center">
                       <button 
@@ -466,8 +466,8 @@ export default function CollectionsPage() {
                         ) : (
                           'Add to Cart'
                         )}
-                      </button>
-                    </div>
+                    </button>
+                  </div>
                   </>
                 )}
               </div>

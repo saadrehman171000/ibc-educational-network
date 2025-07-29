@@ -321,7 +321,7 @@ export default function NewCollectionPage() {
                           ) : (
                             'Add to Cart'
                           )}
-                        </button>
+                    </button>
                       </div>
                     </div>
                   </>
