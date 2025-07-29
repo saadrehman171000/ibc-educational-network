@@ -265,7 +265,7 @@ export default function NewCollectionPage() {
                 {viewMode === 'grid' ? (
                   <>
                     <div className="aspect-[3/4] relative">
-                  <Image
+                      <Image
                         src={getImageUrl(product.imageUrl)}
                         alt={product.title}
                         fill
@@ -277,7 +277,7 @@ export default function NewCollectionPage() {
                       <span className="absolute top-2 right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded flex items-center space-x-1">
                         <Sparkles className="w-3 h-3" />
                         <span>New</span>
-                    </span>
+                      </span>
                       {product.isFeatured && (
                         <span className="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-1 rounded">
                           Featured
@@ -286,7 +286,34 @@ export default function NewCollectionPage() {
                     </div>
                     <div className="p-4">
                       <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">{product.title}</h3>
-                      <p className="text-sm text-gray-600 mb-2">{product.category} • {product.subject}</p>
+                      
+                      {/* Product Details with Beautiful UI */}
+                      <div className="space-y-2 mb-3">
+                        {/* Category and Subject */}
+                        <div className="flex items-center space-x-2">
+                          <span className="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
+                            {product.category}
+                          </span>
+                          {product.subject && (
+                            <span className="inline-flex items-center px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">
+                              {product.subject}
+                            </span>
+                          )}
+                        </div>
+                        
+                        {/* Series and Type */}
+                        <div className="flex items-center space-x-2">
+                          <span className="inline-flex items-center px-2 py-1 bg-purple-100 text-purple-800 text-xs font-medium rounded-full">
+                            {product.series}
+                          </span>
+                          {product.type && (
+                            <span className="inline-flex items-center px-2 py-1 bg-orange-100 text-orange-800 text-xs font-medium rounded-full">
+                              {product.type}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      
                       <p className="text-sm text-gray-500 mb-3 line-clamp-2">{product.description}</p>
                       <div className="flex items-center justify-between">
                         <div>
@@ -296,11 +323,14 @@ export default function NewCollectionPage() {
                                 Rs. {(product.price - (product.price * product.discount / 100)).toFixed(0)}
                               </span>
                               <span className="text-sm text-gray-500 line-through">Rs. {product.price}</span>
-                  </div>
+                              <span className="text-xs bg-red-100 text-red-800 px-1 py-0.5 rounded">
+                                {product.discount}% OFF
+                              </span>
+                            </div>
                           ) : (
                             <span className="text-lg font-bold text-blue-900">Rs. {product.price}</span>
                           )}
-                  </div>
+                        </div>
                         <button 
                           onClick={(e) => {
                             e.preventDefault()
@@ -310,7 +340,7 @@ export default function NewCollectionPage() {
                           className={`text-sm px-4 py-2 rounded-lg font-medium transition-all duration-300 flex items-center justify-center ${
                             addedToCart[product.id] 
                               ? 'bg-green-500 text-white shadow-lg transform scale-105' 
-                              : 'btn-primary'
+                              : 'bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg hover:transform hover:scale-105'
                           }`}
                         >
                           {addedToCart[product.id] ? (
@@ -321,7 +351,7 @@ export default function NewCollectionPage() {
                           ) : (
                             'Add to Cart'
                           )}
-                    </button>
+                        </button>
                       </div>
                     </div>
                   </>
@@ -344,7 +374,34 @@ export default function NewCollectionPage() {
                     </div>
                     <div className="flex-1">
                       <h3 className="font-semibold text-gray-900 mb-2">{product.title}</h3>
-                      <p className="text-sm text-gray-600 mb-2">{product.category} • {product.subject} • {product.series}</p>
+                      
+                      {/* Product Details with Beautiful UI */}
+                      <div className="space-y-2 mb-3">
+                        {/* Category and Subject */}
+                        <div className="flex items-center space-x-2">
+                          <span className="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
+                            {product.category}
+                          </span>
+                          {product.subject && (
+                            <span className="inline-flex items-center px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">
+                              {product.subject}
+                            </span>
+                          )}
+                        </div>
+                        
+                        {/* Series and Type */}
+                        <div className="flex items-center space-x-2">
+                          <span className="inline-flex items-center px-2 py-1 bg-purple-100 text-purple-800 text-xs font-medium rounded-full">
+                            {product.series}
+                          </span>
+                          {product.type && (
+                            <span className="inline-flex items-center px-2 py-1 bg-orange-100 text-orange-800 text-xs font-medium rounded-full">
+                              {product.type}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      
                       <p className="text-sm text-gray-500 mb-3">{product.description}</p>
                       <div className="flex items-center justify-between">
                         <div>
@@ -354,6 +411,9 @@ export default function NewCollectionPage() {
                                 Rs. {(product.price - (product.price * product.discount / 100)).toFixed(0)}
                               </span>
                               <span className="text-sm text-gray-500 line-through">Rs. {product.price}</span>
+                              <span className="text-xs bg-red-100 text-red-800 px-1 py-0.5 rounded">
+                                {product.discount}% OFF
+                              </span>
                             </div>
                           ) : (
                             <span className="text-lg font-bold text-blue-900">Rs. {product.price}</span>
@@ -368,7 +428,7 @@ export default function NewCollectionPage() {
                           className={`text-sm px-4 py-2 rounded-lg font-medium transition-all duration-300 flex items-center justify-center ${
                             addedToCart[product.id] 
                               ? 'bg-green-500 text-white shadow-lg transform scale-105' 
-                              : 'btn-primary'
+                              : 'bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg hover:transform hover:scale-105'
                           }`}
                         >
                           {addedToCart[product.id] ? (
@@ -380,8 +440,8 @@ export default function NewCollectionPage() {
                             'Add to Cart'
                           )}
                         </button>
-                  </div>
-                </div>
+                      </div>
+                    </div>
                   </>
                 )}
               </Link>

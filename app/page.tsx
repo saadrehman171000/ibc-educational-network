@@ -366,8 +366,8 @@ export default function HomePage() {
       </section>
 
       {/* Latest Collections Section */}
-      <section className="section-padding bg-white">
-        <div className="container-max">
+      <div className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Latest Collections</h2>
             <p className="text-xl text-gray-700 max-w-3xl mx-auto">
@@ -380,74 +380,104 @@ export default function HomePage() {
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
             </div>
           ) : newCollections.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-              {newCollections.map((product) => (
-                <Link
+            <div className="flex flex-wrap justify-center gap-6">
+              {newCollections.slice(0, 3).map((product) => (
+                <div
                   key={product.id}
-                  href={`/collections/${product.id}`}
-                  className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow block relative"
+                  className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow flex-shrink-0"
+                  style={{ width: '300px', maxWidth: '100%' }}
                 >
-                  <div className="aspect-[3/4] relative">
-                    <Image
-                      src={getImageUrl(product.imageUrl)}
-                      alt={product.title}
-                      fill
-                      className="object-cover"
-                      onError={(e) => {
-                        e.currentTarget.src = '/placeholder-logo.png'
-                      }}
-                    />
-                    <span className="absolute top-2 right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded flex items-center space-x-1">
-                      <Sparkles className="w-3 h-3" />
-                      <span>New</span>
-                    </span>
-                    {product.isFeatured && (
-                      <span className="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-1 rounded">
-                        Featured
-                      </span>
-                    )}
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">{product.title}</h3>
-                    <p className="text-sm text-gray-600 mb-2">{product.category} • {product.subject}</p>
-                    <p className="text-sm text-gray-500 mb-3 line-clamp-2">{product.description}</p>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        {product.discount && product.discount > 0 ? (
-                          <div className="flex items-center space-x-2">
-                            <span className="text-lg font-bold text-blue-900">
-                              Rs. {(product.price - (product.price * product.discount / 100)).toFixed(0)}
-                            </span>
-                            <span className="text-sm text-gray-500 line-through">Rs. {product.price}</span>
-                          </div>
-                        ) : (
-                          <span className="text-lg font-bold text-blue-900">Rs. {product.price}</span>
-                        )}
-                      </div>
-                      <button 
-                        onClick={(e) => {
-                          e.preventDefault()
-                          e.stopPropagation()
-                          handleAddToCart(product)
+                  <Link href={`/collections/${product.id}`} className="block">
+                    <div className="aspect-[3/4] relative">
+                      <Image
+                        src={getImageUrl(product.imageUrl)}
+                        alt={product.title}
+                        fill
+                        className="object-cover"
+                        onError={(e) => {
+                          e.currentTarget.src = '/placeholder-logo.png'
                         }}
-                        className={`text-sm px-4 py-2 rounded-lg font-medium transition-all duration-300 flex items-center justify-center ${
-                          addedToCart[product.id] 
-                            ? 'bg-green-500 text-white shadow-lg transform scale-105' 
-                            : 'btn-primary'
-                        }`}
-                      >
-                        {addedToCart[product.id] ? (
-                          <>
-                            <Check className="w-5 h-5 mr-2 animate-pulse" />
-                            Added to Cart
-                          </>
-                        ) : (
-                          'Add to Cart'
-                        )}
-                      </button>
+                      />
+                      <span className="absolute top-2 right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded flex items-center space-x-1">
+                        <Sparkles className="w-3 h-3" />
+                        <span>New</span>
+                      </span>
+                      {product.isFeatured && (
+                        <span className="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-1 rounded">
+                          Featured
+                        </span>
+                      )}
                     </div>
+                    <div className="p-4">
+                      <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">{product.title}</h3>
+                      
+                      {/* Product Details with Beautiful UI */}
+                      <div className="space-y-2 mb-3">
+                        {/* Category and Subject */}
+                        <div className="flex items-center space-x-2">
+                          <span className="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
+                            {product.category}
+                          </span>
+                          {product.subject && (
+                            <span className="inline-flex items-center px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">
+                              {product.subject}
+                            </span>
+                          )}
+                        </div>
+                        
+                        {/* Series and Type */}
+                        <div className="flex items-center space-x-2">
+                          <span className="inline-flex items-center px-2 py-1 bg-purple-100 text-purple-800 text-xs font-medium rounded-full">
+                            {product.series}
+                          </span>
+                          {product.type && (
+                            <span className="inline-flex items-center px-2 py-1 bg-orange-100 text-orange-800 text-xs font-medium rounded-full">
+                              {product.type}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      
+                      <p className="text-sm text-gray-500 mb-3 line-clamp-2">{product.description}</p>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          {product.discount && product.discount > 0 ? (
+                            <div className="flex items-center space-x-2">
+                              <span className="text-lg font-bold text-blue-900">
+                                Rs. {(product.price - (product.price * product.discount / 100)).toFixed(0)}
+                              </span>
+                              <span className="text-sm text-gray-500 line-through">Rs. {product.price}</span>
+                              <span className="text-xs bg-red-100 text-red-800 px-1 py-0.5 rounded">
+                                {product.discount}% OFF
+                              </span>
+                            </div>
+                          ) : (
+                            <span className="text-lg font-bold text-blue-900">Rs. {product.price}</span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                  <div className="px-4 pb-4">
+                    <button 
+                      onClick={() => handleAddToCart(product)}
+                      className={`w-full text-sm px-4 py-3 rounded-lg font-medium transition-all duration-300 flex items-center justify-center ${
+                        addedToCart[product.id] 
+                          ? 'bg-green-500 text-white shadow-lg transform scale-105' 
+                          : 'bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg hover:transform hover:scale-105'
+                      }`}
+                    >
+                      {addedToCart[product.id] ? (
+                        <>
+                          <Check className="w-5 h-5 mr-2 animate-pulse" />
+                          Added to Cart
+                        </>
+                      ) : (
+                        'Add to Cart'
+                      )}
+                    </button>
                   </div>
-                </Link>
+                </div>
               ))}
             </div>
           ) : (
@@ -462,7 +492,7 @@ export default function HomePage() {
             </Link>
           </div>
         </div>
-      </section>
+      </div>
 
       {/* Achievements Section */}
       <section className="section-padding bg-gradient-to-r from-blue-900 via-blue-800 to-teal-800 text-white relative overflow-hidden">
@@ -503,8 +533,8 @@ export default function HomePage() {
       </section>
 
       {/* Testimonials Section */}
-      <section className="section-padding bg-white">
-        <div className="container-max">
+      <div className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">What Educators Say</h2>
             <p className="text-xl text-gray-700 max-w-3xl mx-auto">
@@ -538,11 +568,11 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-      </section>
+      </div>
 
       {/* Programs Overview Section */}
-      <section className="section-padding bg-gray-50">
-        <div className="container-max">
+      <div className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
+        <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our Educational Programs</h2>
             <p className="text-xl text-gray-700 max-w-3xl mx-auto">
@@ -601,12 +631,12 @@ export default function HomePage() {
             </Link>
           </div>
         </div>
-      </section>
+      </div>
 
       {/* CTA Section */}
-      <section className="section-padding bg-blue-900 text-white relative overflow-hidden">
+      <div className="py-16 px-4 sm:px-6 lg:px-8 bg-blue-900 text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-900 via-blue-800 to-teal-800"></div>
-        <div className="container-max text-center relative z-10">
+        <div className="max-w-7xl mx-auto text-center relative z-10">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
             Ready to Transform Your Educational Experience?
           </h2>
@@ -628,7 +658,7 @@ export default function HomePage() {
             </Link>
           </div>
         </div>
-      </section>
+      </div>
     </div>
   )
 }
