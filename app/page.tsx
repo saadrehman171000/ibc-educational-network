@@ -230,7 +230,7 @@ export default function HomePage() {
 
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
                   Interactive Books for a{" "}
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-900 to-teal-600">
+                  <span className="bg-gradient-to-r from-blue-900 to-teal-600 bg-clip-text text-transparent" style={{ WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                     Brighter Future
                   </span>
                 </h1>

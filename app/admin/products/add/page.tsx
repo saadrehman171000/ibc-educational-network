@@ -230,11 +230,10 @@ export default function AddProductPage() {
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Category (Grade) *
+                      Category (Grade)
                     </label>
                     <select
                       name="category"
-                      required
                       value={formData.category}
                       onChange={handleInputChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -271,11 +270,10 @@ export default function AddProductPage() {
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Series *
+                      Series
                     </label>
                     <select
                       name="series"
-                      required
                       value={formData.series}
                       onChange={handleInputChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
