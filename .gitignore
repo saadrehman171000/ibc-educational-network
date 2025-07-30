@@ -26,3 +26,11 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 /lib/generated/prisma
+# Ignore generated QR codes
+scripts/qrcodes/
+
+# Ignore backups
+scripts/backups/
+
+# Optional: ignore workflow summary files
+scripts/workflow-summary.json

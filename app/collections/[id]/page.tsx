@@ -36,7 +36,6 @@ export default function ProductDetailPage() {
   const [loading, setLoading] = useState(true)
   const [imageError, setImageError] = useState(false)
   const [addedToCart, setAddedToCart] = useState(false)
-  const [redirecting, setRedirecting] = useState(false)
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -46,9 +45,8 @@ export default function ProductDetailPage() {
           const data = await response.json()
           setProduct(data)
           
-          // If we found the product and it has a slug, redirect to the new URL
+          // If we found the product and it has a slug, redirect to the new URL immediately
           if (data.slug && data.slug !== productId) {
-            setRedirecting(true)
             router.replace(`/product/${data.slug}`)
             return
           }
@@ -122,14 +120,12 @@ export default function ProductDetailPage() {
     setTimeout(() => setAddedToCart(false), 2000)
   }
 
-  if (loading || redirecting) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">
-            {redirecting ? 'Redirecting to new URL...' : 'Loading product...'}
-          </p>
+          <p className="text-gray-600">Loading product...</p>
         </div>
       </div>
     )
