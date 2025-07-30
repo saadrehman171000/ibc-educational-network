@@ -67,9 +67,7 @@ export default function CollectionsPage() {
       const response = await fetch(`/api/products?${params}`)
       const data = await response.json()
 
-      console.log('Products API Response:', data) // Debug log
-      console.log('Products received:', data.products) // Debug log
-      console.log('First product imageUrl:', data.products?.[0]?.imageUrl) // Debug log
+      
 
       setProducts(data.products || [])
       setPagination(data.pagination)
@@ -101,7 +99,7 @@ export default function CollectionsPage() {
 
   // Convert Google Drive URL to display URL with better handling
   const getImageUrl = (url?: string) => {
-    console.log('getImageUrl called with:', url) // Debug log
+
     
     if (!url || url.trim() === '') {
       console.log('No URL provided, returning placeholder')
@@ -136,7 +134,7 @@ export default function CollectionsPage() {
     const target = e.currentTarget
     const originalSrc = target.src
     
-    console.log('Image load error for:', originalSrc) // Debug log
+    
     
     // If it's already trying the fallback, don't retry
     if (originalSrc.includes('placeholder-logo.png')) {

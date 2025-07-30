@@ -60,9 +60,7 @@ export default function ProgramsPage() {
       const response = await fetch(`/api/events?${params}`)
       const data = await response.json()
 
-      console.log('Events API Response:', data) // Debug log
-      console.log('Events received:', data.events) // Debug log
-      console.log('First event image:', data.events?.[0]?.image) // Debug log
+      
 
       setEvents(data.events || [])
       setPagination(data.pagination)
@@ -79,7 +77,7 @@ export default function ProgramsPage() {
 
   // Convert Google Drive URL to display URL with better handling
   const getImageUrl = (url?: string) => {
-    console.log('getImageUrl called with:', url) // Debug log
+
     
     if (!url) {
       console.log('No URL provided, returning placeholder')

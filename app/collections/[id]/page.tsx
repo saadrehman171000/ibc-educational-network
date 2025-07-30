@@ -68,7 +68,7 @@ export default function ProductDetailPage() {
 
   // Convert Google Drive URL to display URL with better handling
   const getImageUrl = (url?: string) => {
-    console.log('Product detail getImageUrl called with:', url) // Debug log
+
     
     if (!url || url.trim() === '') {
       console.log('No URL provided, returning placeholder')

@@ -37,7 +37,7 @@ export default function AnnouncementDetailPage() {
         }
         
         const data = await response.json()
-        console.log('Announcement detail API Response:', data) // Debug log
+
         setAnnouncement(data.announcement)
       } catch (error) {
         console.error('Error fetching announcement:', error)

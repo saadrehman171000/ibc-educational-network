@@ -117,7 +117,7 @@ export default function ViewOrderPage() {
   }
 
   const getImageUrl = (url?: string) => {
-    console.log('getImageUrl called with:', url) // Debug log
+
     
     if (!url) {
       console.log('No URL provided, returning placeholder')

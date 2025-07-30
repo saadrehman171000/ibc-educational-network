@@ -45,8 +45,7 @@ export default function EventDetailPage() {
         const response = await fetch(`/api/events/${eventId}`)
         if (response.ok) {
           const eventData = await response.json()
-          console.log('Event data received:', eventData) // Debug log
-          console.log('Event image URL:', eventData.image) // Debug log
+          
           setEvent(eventData)
         } else {
           console.error('Event not found')
@@ -67,7 +66,7 @@ export default function EventDetailPage() {
 
   // Convert Google Drive URL to display URL with better handling
   const getImageUrl = (url?: string) => {
-    console.log('Event detail getImageUrl called with:', url) // Debug log
+
     
     if (!url || url.trim() === '') {
       console.log('No URL provided, returning placeholder')
@@ -102,8 +101,7 @@ export default function EventDetailPage() {
     const target = e.currentTarget
     const originalSrc = target.src
     
-    console.log('Image load error for:', originalSrc) // Debug log
-    console.log('Event image from state:', event?.image) // Debug log
+    
     
     // If it's already trying the fallback, don't retry
     if (originalSrc.includes('placeholder-logo.png')) {

@@ -109,7 +109,7 @@ export default function AcademicGradePage() {
 
   // Convert Google Drive URL to display URL with better handling
   const getImageUrl = (url?: string) => {
-    console.log('Academic grades getImageUrl called with:', url) // Debug log
+
     
     if (!url || url.trim() === '') {
       console.log('No URL provided, returning placeholder')
@@ -144,7 +144,7 @@ export default function AcademicGradePage() {
     const target = e.currentTarget
     const originalSrc = target.src
     
-    console.log('Image load error for:', originalSrc) // Debug log
+    
     
     // If it's already trying the fallback, don't retry
     if (originalSrc.includes('placeholder-logo.png')) {

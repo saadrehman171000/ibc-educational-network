@@ -28,7 +28,7 @@ export default function AnnouncementsPage() {
       const response = await fetch('/api/announcements')
       const data = await response.json()
       
-      console.log('Announcements API Response:', data) // Debug log
+      
       setAnnouncements(data.announcements || [])
     } catch (error) {
       console.error('Error fetching announcements:', error)
