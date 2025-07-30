@@ -3,6 +3,7 @@ import { Inter } from "next/font/google"
 import "./globals.css"
 import { ClerkProvider } from '@clerk/nextjs'
 import ConditionalLayout from "@/components/conditional-layout"
+import PreloaderWrapper from "@/components/preloader-wrapper"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -44,7 +45,9 @@ export default function RootLayout({
           }} 
           dynamic
         >
-          <ConditionalLayout>{children}</ConditionalLayout>
+          <PreloaderWrapper>
+            <ConditionalLayout>{children}</ConditionalLayout>
+          </PreloaderWrapper>
         </ClerkProvider>
       </body>
     </html>

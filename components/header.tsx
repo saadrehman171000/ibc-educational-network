@@ -88,16 +88,21 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 bg-white shadow-lg border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-24">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2 flex-shrink-0">
-            <Image
-              src="/images/ibc-logo.png"
-              alt="IBC Educational Network"
-              width={160}
-              height={80}
-              className="h-14 w-auto"
-            />
+          <Link href="/" className="flex items-center space-x-3 flex-shrink-0 group">
+            <div className="relative">
+              <Image
+                src="/images/ibc-logo.png"
+                alt="IBC Educational Network"
+                width={200}
+                height={100}
+                className="h-16 w-auto transition-transform duration-300 group-hover:scale-105"
+                priority
+              />
+              {/* Subtle glow effect on hover */}
+              <div className="absolute inset-0 bg-blue-500 opacity-0 group-hover:opacity-10 rounded-lg transition-opacity duration-300 blur-sm" />
+            </div>
           </Link>
 
           {/* Desktop Navigation */}
@@ -216,7 +221,7 @@ export default function Header() {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="lg:hidden fixed inset-0 top-16 bg-white z-40 overflow-y-auto">
+          <div className="lg:hidden fixed inset-0 top-24 bg-white z-40 overflow-y-auto">
             <nav className="p-4 space-y-4">
               <Link 
                 href="/" 
