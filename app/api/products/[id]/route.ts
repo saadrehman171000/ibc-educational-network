@@ -1,16 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-// GET /api/products/[id] - Get a single product
+// GET /api/products/[id] - Get a single product by ID or slug
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params
-    const product = await prisma.product.findUnique({
+    
+    // Try to find by ID first (for backward compatibility)
+    let product = await prisma.product.findUnique({
       where: { id },
     })
+
+    // If not found by ID, try to find by slug
+    if (!product) {
+      product = await prisma.product.findUnique({
+        where: { slug: id },
+      })
+    }
 
     if (!product) {
       return NextResponse.json(
@@ -59,21 +68,37 @@ export async function PUT(
       )
     }
 
+    // If title is being updated, regenerate slug
+    let updateData: any = {
+      ...(title && { title }),
+      ...(description && { description }),
+      ...(category && { category }),
+      ...(subject && { subject }),
+      ...(series && { series }),
+      ...(type && { type }),
+      ...(price !== undefined && { price }),
+      ...(discount !== undefined && { discount }),
+      ...(imageUrl && { imageUrl }),
+      ...(isNewCollection !== undefined && { isNewCollection }),
+      ...(isFeatured !== undefined && { isFeatured }),
+    }
+
+    // If title is being updated, regenerate slug
+    if (title) {
+      const { generateUniqueSlug } = await import('@/lib/slugify')
+      
+      // Get existing slugs to ensure uniqueness
+      const existingSlugs = await prisma.product.findMany({
+        select: { slug: true }
+      }).then(products => products.map(p => p.slug).filter(Boolean))
+      
+      const newSlug = await generateUniqueSlug(title, existingSlugs)
+      updateData.slug = newSlug
+    }
+
     const product = await prisma.product.update({
       where: { id },
-      data: {
-        ...(title && { title }),
-        ...(description && { description }),
-        ...(category && { category }),
-        ...(subject && { subject }),
-        ...(series && { series }),
-        ...(type && { type }),
-        ...(price !== undefined && { price }),
-        ...(discount !== undefined && { discount }),
-        ...(imageUrl && { imageUrl }),
-        ...(isNewCollection !== undefined && { isNewCollection }),
-        ...(isFeatured !== undefined && { isFeatured }),
-      },
+      data: updateData,
     })
 
     return NextResponse.json(product)

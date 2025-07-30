@@ -29,29 +29,21 @@ interface Product {
 export default function ProductDetailPage() {
   const params = useParams()
   const router = useRouter()
-  const productId = params.id as string
+  const productSlug = params.slug as string
   const { addToCart } = useCart()
 
   const [product, setProduct] = useState<Product | null>(null)
   const [loading, setLoading] = useState(true)
   const [imageError, setImageError] = useState(false)
   const [addedToCart, setAddedToCart] = useState(false)
-  const [redirecting, setRedirecting] = useState(false)
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`/api/products/${productId}`)
+        const response = await fetch(`/api/products/${productSlug}`)
         if (response.ok) {
           const data = await response.json()
           setProduct(data)
-          
-          // If we found the product and it has a slug, redirect to the new URL
-          if (data.slug && data.slug !== productId) {
-            setRedirecting(true)
-            router.replace(`/product/${data.slug}`)
-            return
-          }
         } else {
           router.push('/collections')
         }
@@ -63,10 +55,10 @@ export default function ProductDetailPage() {
       }
     }
 
-    if (productId) {
+    if (productSlug) {
       fetchProduct()
     }
-  }, [productId, router])
+  }, [productSlug, router])
 
   // Convert Google Drive URL to display URL with better handling
   const getImageUrl = (url?: string) => {
@@ -122,15 +114,10 @@ export default function ProductDetailPage() {
     setTimeout(() => setAddedToCart(false), 2000)
   }
 
-  if (loading || redirecting) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">
-            {redirecting ? 'Redirecting to new URL...' : 'Loading product...'}
-          </p>
-        </div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
     )
   }
@@ -381,4 +368,4 @@ export default function ProductDetailPage() {
       </div>
     </div>
   )
-}
+} 

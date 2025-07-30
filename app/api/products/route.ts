@@ -113,9 +113,20 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Generate unique slug from title
+    const { slugify, generateUniqueSlug } = await import('@/lib/slugify')
+    
+    // Get existing slugs to ensure uniqueness
+    const existingSlugs = await prisma.product.findMany({
+      select: { slug: true }
+    }).then(products => products.map(p => p.slug).filter(Boolean))
+    
+    const slug = await generateUniqueSlug(title, existingSlugs)
+
     const product = await prisma.product.create({
       data: {
         title,
+        slug,
         description,
         category,
         subject,

@@ -9,6 +9,7 @@
     "start": "next start",
     "postinstall": "prisma generate",
     "generate-qr": "node scripts/generate-qr-codes.js",
+    "add-slugs": "node scripts/add-slugs-to-products.js",
     "backup-db": "node scripts/backup-database.js",
     "backup-products": "node scripts/backup-database.js --products",
     "qr-workflow": "node scripts/qr-and-backup-workflow.js"

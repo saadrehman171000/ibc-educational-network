@@ -31,8 +31,10 @@ function ensureDirectoryExists(dirPath) {
 // Function to generate QR code for a single product
 async function generateQRCode(product) {
   try {
-    // Create the URL for the product
-    const productUrl = `https://www.ibcedu.com/collections/${product.id}`
+    // Create the URL for the product - use slug if available, otherwise use ID
+    const productUrl = product.slug 
+      ? `https://www.ibcedu.com/product/${product.slug}`
+      : `https://www.ibcedu.com/collections/${product.id}`
     
     // Generate slugified filename from product title
     const filename = slugify(product.title) + '.png'
@@ -57,12 +59,14 @@ async function generateQRCode(product) {
     console.log(`✅ Generated QR code for: ${product.title}`)
     console.log(`   📁 File: ${filename}`)
     console.log(`   🔗 URL: ${productUrl}`)
+    console.log(`   📝 Type: ${product.slug ? 'Slug-based' : 'ID-based'}`)
     
     return {
       success: true,
       product: product.title,
       filename: filename,
-      url: productUrl
+      url: productUrl,
+      type: product.slug ? 'slug' : 'id'
     }
     
   } catch (error) {
@@ -90,6 +94,7 @@ async function generateAllQRCodes() {
       select: {
         id: true,
         title: true,
+        slug: true,
         category: true,
         subject: true
       },
@@ -166,6 +171,7 @@ async function generateQRCodeById(productId) {
       select: {
         id: true,
         title: true,
+        slug: true,
         category: true,
         subject: true
       }
@@ -211,6 +217,7 @@ async function generateQRCodesBySearch(searchTerm) {
       select: {
         id: true,
         title: true,
+        slug: true,
         category: true,
         subject: true
       },
