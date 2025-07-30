@@ -12,17 +12,18 @@ export default function PreloaderWrapper({ children }: PreloaderWrapperProps) {
   const [hasLoaded, setHasLoaded] = useState(false)
 
   useEffect(() => {
-    // Check if this is the first visit
-    const hasVisited = sessionStorage.getItem('ibc-has-visited')
+    // Always show preloader on first load
+    // You can uncomment the sessionStorage logic if you want to skip preloader on subsequent visits
+    // const hasVisited = sessionStorage.getItem('ibc-has-visited')
     
-    if (hasVisited) {
-      // If user has visited before, skip preloader
-      setIsLoading(false)
-      setHasLoaded(true)
-    } else {
-      // Mark as visited
-      sessionStorage.setItem('ibc-has-visited', 'true')
-    }
+    // if (hasVisited) {
+    //   // If user has visited before, skip preloader
+    //   setIsLoading(false)
+    //   setHasLoaded(true)
+    // } else {
+    //   // Mark as visited
+    //   sessionStorage.setItem('ibc-has-visited', 'true')
+    // }
   }, [])
 
   const handlePreloaderComplete = () => {

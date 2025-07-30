@@ -46,10 +46,15 @@ export default function HomePage() {
   const fetchNewCollections = async () => {
     try {
       const response = await fetch('/api/products?newCollection=true&limit=3')
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
       const data = await response.json()
       setNewCollections(data.products || [])
     } catch (error) {
       console.error('Error fetching new collections:', error)
+      // Set empty array to prevent errors
+      setNewCollections([])
     }
   }
 
@@ -57,10 +62,15 @@ export default function HomePage() {
   const fetchPrograms = async () => {
     try {
       const response = await fetch('/api/events?featured=true&limit=3')
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
       const data = await response.json()
       setPrograms(data.events || [])
     } catch (error) {
       console.error('Error fetching programs:', error)
+      // Set empty array to prevent errors
+      setPrograms([])
     } finally {
       setLoading(false)
     }

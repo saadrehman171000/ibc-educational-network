@@ -57,6 +57,10 @@ export default function Preloader({ onComplete }: PreloaderProps) {
                 height={100}
                 className="h-24 w-auto"
                 priority
+                onError={(e) => {
+                  // Fallback if logo fails to load
+                  e.currentTarget.style.display = 'none'
+                }}
               />
               
               {/* Animated ring around logo */}
