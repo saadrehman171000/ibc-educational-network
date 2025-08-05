@@ -34,3 +34,6 @@ scripts/backups/
 
 # Optional: ignore workflow summary files
 scripts/workflow-summary.json
+
+# clerk configuration (can include secrets)
+/.clerk/

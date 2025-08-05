@@ -64,6 +64,9 @@ export default function NewCollectionPage() {
 
       setProducts(data.products)
       setPagination(data.pagination)
+      
+      // Scroll to top when page changes
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     } catch (error) {
       console.error('Error fetching products:', error)
     } finally {
@@ -119,7 +122,7 @@ export default function NewCollectionPage() {
     }, 3000)
   }
 
-  // Get unique values for filters
+  // Get unique values for filters from current products
   const getUniqueValues = (field: keyof Product) => {
     const values = products.map(product => product[field]).filter(Boolean)
     return [...new Set(values)] as string[]

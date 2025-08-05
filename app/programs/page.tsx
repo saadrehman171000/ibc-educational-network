@@ -64,6 +64,9 @@ export default function ProgramsPage() {
 
       setEvents(data.events || [])
       setPagination(data.pagination)
+      
+      // Scroll to top when page changes
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     } catch (error) {
       console.error('Error fetching events:', error)
     } finally {
