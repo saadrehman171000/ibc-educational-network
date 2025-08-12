@@ -35,6 +35,7 @@ const subjects = [
   'Drawing',
   'Handwriting',
   'Computer',
+  '3 in 1',
   '5 in 1',
   'Writing Journey',
   'Art & Craft',
