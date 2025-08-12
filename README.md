@@ -156,7 +156,7 @@ This project is proprietary software owned by IBC Educational Network. All right
 **IBC Educational Network**
 - Address: Office No. 7, Shan Plaza, Gawali Lane #2, New Urdu Bazar, Karachi, Pakistan
 - Phone: +92 313 3849727, +92 314 2353805
-- Email: info@ibceducational.com
+- Email: info@ibcedu.com
 - Website: [IBC Educational Network](https://github.com/saadrehman171000/ibc-educational-network)
 
 ## Support

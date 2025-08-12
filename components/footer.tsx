@@ -139,7 +139,7 @@ export default function Footer() {
               </div>
               <div className="flex items-center space-x-3">
                 <Mail className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                <p className="text-gray-300 text-sm">info@ibceducational.com</p>
+                <p className="text-gray-300 text-sm">info@ibcedu.com</p>
               </div>
             </div>
           </div>
