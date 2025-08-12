@@ -149,7 +149,7 @@ The application includes several API endpoints for:
 
 ## License
 
-This project is proprietary software owned by IBC Educational Network. All rights reserved.
+This project is proprietary software owned by IBC Educational Network. All rights are reserved.
 
 ## Contact
 
